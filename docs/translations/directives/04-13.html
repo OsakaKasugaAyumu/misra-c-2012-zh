@@ -1,0 +1,39 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Dir 4.13 · 按适当顺序调用资源操作函数 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-1">译文目录</a><span>§7 · Directive</span></nav><p class="eyebrow">中文译文　/　23 · 38</p><h1 id="dir-4-13">Dir 4.13 · 按适当顺序调用资源操作函数</h1><p class="muted locator">底本定位 §7.4 · PDF 43–44／印刷 35–36，从 Dir 4.13 标题起，止于第 45 页 §8 标题前。</p><section class="source-translation" aria-labelledby="dir-4-13-text">
+<h2 id="dir-4-13-text"><a class="header" href="#dir-4-13-text">原文译文</a></h2>
+<p class="guideline"><strong>Dir 4.13</strong>　为操作某一资源而设计的函数，应按适当的顺序调用。</p>
+<dl class="attributes"><dt>类别</dt><dd>建议（Advisory）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>一组用于操作某一资源的函数，通常提供三类操作：</p>
+<ol>
+<li>分配资源，例如打开文件；</li>
+<li>释放资源，例如关闭文件；</li>
+<li>其他操作，例如读取文件。</li>
+</ol>
+<p>对于每一组这样的函数，只要用到其中的操作，就应遵循适当的调用顺序。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>静态分析工具可以进行路径分析检查，找出程序中哪些执行路径没有调用操作序列中的资源释放函数。因此，为了充分利用这类自动检查，鼓励开发者设计成组配对的函数，并向静态分析工具声明它们的配对关系，以便工具进行这些检查。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">/* These functions are intended to be paired */
+extern mutex_t mutex_lock   ( void );
+extern void    mutex_unlock ( mutex_t m );
+
+extern int16_t x;
+
+void f ( void )
+{
+  mutex_t m = mutex_lock ( );
+
+  if ( x &gt; 0 )
+  {
+    mutex_unlock ( m );
+  }
+  else
+  {
+    /* Mutex not unlocked on this path */
+  }
+}
+</code></pre>
+<p>原书代码注释（译）：声明前的注释是“这些函数应配对使用”；<code>else</code> 分支中的注释是“在这条路径上没有解锁互斥锁”。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p>Rule 22.1、Rule 22.2、Rule 22.6。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/dir-4-13.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="04-12.html">上一篇：Dir 4.12 · 不得使用动态内存分配</a><a href="../index.html">全部译文</a><a href="../rules/01-01.html">下一篇：Rule 1.1 · 语法、约束与翻译限度</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

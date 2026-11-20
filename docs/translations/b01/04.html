@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>4　必备知识 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-0">译文目录</a><span>卷首与 §1–6</span></nav><p class="eyebrow">中文译文　/　05 · 38</p><h1 id="s4">4　必备知识</h1><p class="muted locator">底本定位 PDF 14–15 ／ 印刷 6–7</p><details class="jump"><summary>本页目录</summary><ul><li><a href="#s4-1">4.1 培训</a></li><li><a href="#s4-2">4.2 了解编译器</a></li><li><a href="#s4-3">4.3 了解静态分析工具</a></li></ul></details><section class="source-translation b01-text" aria-labelledby="s4-text">
+<p class="textlabel" id="s4-text">原文译文</p>
+<h2 id="s4-1"><a class="header" href="#s4-1">4.1 培训</a></h2>
+<p>为确保编写 C 源代码的人员具备适当的技能与胜任能力，应当在以下方面提供正规培训：</p>
+<ul>
+<li>使用 C 语言开发嵌入式应用；</li>
+<li>在高完整性系统和安全相关系统中使用 C 语言。</li>
+</ul>
+<p>由于编译器和静态分析工具都是复杂的软件，还应考虑就其使用方法提供培训。对静态分析工具而言，还有可能获得专门针对使用这些工具检查 MISRA C 的培训。</p>
+<h2 id="s4-2"><a class="header" href="#s4-2">4.2 了解编译器</a></h2>
+<p>本文件所说的“编译器”，即 ISO C 标准 [2]、[8] 所称的“实现”，既包括编译器本身，也包括相关工具，如链接器、库管理器和可执行文件格式转换工具。</p>
+<p>编译器可能提供多种控制其行为的选项。理解各选项的作用很重要，因为是否使用它们可能影响：</p>
+<ul>
+<li>哪些语言扩展可用；</li>
+<li>编译器对 ISO C 标准的符合程度；</li>
+<li>程序需要的资源，特别是处理时间和存储空间；</li>
+<li>暴露编译器缺陷的可能性，例如执行复杂的深度优化代码变换时，就可能暴露缺陷。</li>
+</ul>
+<p>理解编译器如何实现 ISO C 标准称为“实现定义”的语言特性很重要。了解编译器可能提供的各种语言扩展也很重要。</p>
+<p>编译器开发者可能维护一份影响该编译器的已知缺陷清单，并列出可用的规避方法。在启动使用该编译器的项目前先了解清单内容，显然会有益处。如果开发者不提供此类清单，就应当自行维护一份：每当发现缺陷或疑似缺陷并向编译器开发者报告时，便记入清单。</p>
+<h2 id="s4-3"><a class="header" href="#s4-3">4.3 了解静态分析工具</a></h2>
+<p>应当查阅项目所用每一种静态分析工具的文档，以了解：</p>
+<ul>
+<li>如何配置分析器，使其与编译器的实现定义行为一致，例如与各整数类型的大小一致；</li>
+<li>分析器能够检查哪些 MISRA C 准则（<a href="05.html#s5-3">§5.3</a>）；</li>
+<li>能否配置分析器，使其处理项目将使用的语言扩展；</li>
+<li>能否调整分析器的行为，在分析时间与分析精度之间取得不同的平衡。</li>
+</ul>
+<p>工具开发者可能维护一份影响该工具的已知缺陷清单，并列出可用的规避方法。在启动使用该工具的项目前先了解清单内容，显然会有益处。如果工具开发者不提供此类清单，就应当自行维护一份：每当发现缺陷或疑似缺陷并向工具开发者报告时，便记入清单。</p>
+</section><nav class="navline" aria-label="篇目切换"><a href="03.html">上一篇：3　工具选择</a><a href="../index.html">全部译文</a><a href="05.html">下一篇：5　采用和使用 MISRA C</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

@@ -1,0 +1,190 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>卷首与原书目录 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-0">译文目录</a><span>卷首与 §1–6</span></nav><p class="eyebrow">中文译文　/　01 · 38</p><h1 id="front">卷首与原书目录</h1><p class="muted locator">底本定位 PDF 1–8 ／ 印刷页：封面、版权页、i–vi</p><details class="jump"><summary>本页目录</summary><ul><li><a href="#cover">封面</a></li><li><a href="#copyright">版权与版本说明</a></li><li><a href="#title">扉页</a></li><li><a href="#mission">MISRA 使命宣言</a></li><li><a href="#foreword">前言</a></li><li><a href="#credits">致谢</a></li><li><a href="#contents">目录</a></li></ul></details><section class="source-translation b01-text" aria-labelledby="front-text">
+<p class="textlabel" id="front-text">原文译文</p>
+<h2 id="cover"><a class="header" href="#cover">封面</a></h2>
+
+<p><strong>MISRA C:2012</strong><br>
+<strong>关键系统中 C 语言的使用指南</strong><br>
+2013 年 3 月</p>
+<h2 id="copyright"><a class="header" href="#copyright">版权与版本说明</a></h2>
+
+<p>2013 年 3 月由 MIRA Limited 首次出版。地址：英国，Warwickshire 郡 Nuneaton 市 Watling Street，邮编 CV10 0TU。网站：<code>www.misra.org.uk</code>。</p>
+<p>© MIRA Limited 2013。</p>
+<p>“MISRA”“MISRA C”和三角形标志均为 MIRA Limited 代表 MISRA 联盟持有的注册商标。</p>
+<p>保留所有权利。未经出版方事先书面许可，不得以任何形式或任何方式（电子、机械、影印、录制或其他方式）复制本出版物的任何部分，将其存入检索系统，或予以传播。</p>
+<p>ISBN 978-1-906400-10-1（平装本）<br>
+ISBN 978-1-906400-11-8（PDF）</p>
+<p><strong>英国国家图书馆在版编目数据</strong><br>
+本书的目录记录可从英国国家图书馆取得。</p>
+<p>本《MISRA C:2012：关键系统中 C 语言的使用指南》副本签发给〔个人信息已隐去〕。</p>
+<p>不得以任何方式改动本文件。未授予分发本文件的许可。这包括但不限于通过电子邮件向他人提供副本、将其置于服务器上供内网或互联网访问，以及打印并分发纸质副本。任何此类使用均构成侵犯版权。</p>
+<p>MISRA 不保证本指南 PDF 版所载信息的准确性。应以正式出版的纸本文献为准。</p>
+<p>有关如何购买本文件印刷本的信息，可在 MISRA 网站上查阅。</p>
+<h2 id="title"><a class="header" href="#title">扉页</a></h2>
+<p><strong>MISRA C:2012</strong><br>
+<strong>关键系统中 C 语言的使用指南</strong><br>
+2013 年 3 月</p>
+<h2 id="mission"><a class="header" href="#mission">MISRA 使命宣言</a></h2>
+<p>我们为嵌入式控制系统和独立软件的安全应用提供世界领先的最佳实践指南。</p>
+<p>MISRA（汽车工业软件可靠性协会，The Motor Industry Software Reliability Association）由制造商、零部件供应商和工程咨询机构协作组成，致力于推广开发安全相关嵌入式电子系统和其他软件密集型应用的最佳实践。为此，MISRA 出版供工程技术人员和管理人员阅读、易于理解的资料，并举办活动，让从业者交流经验。</p>
+<p><code>www.misra.org.uk</code></p>
+<h3 id="disclaimer"><a class="header" href="#disclaimer">免责声明</a></h3>
+<p>遵守本文件的要求，本身并不能确保软件无错且健壮，也不能保证其可移植或可复用。</p>
+<p>符合本文件或任何其他标准的要求，本身并不免除法律义务。</p>
+<h2 id="foreword"><a class="header" href="#foreword">前言</a></h2>
+<p>乍看之下，MISRA C 指南的这第三次修订似乎令人望而却步。它的篇幅约为上一版的两倍，读者可能会以为准则的数量也翻了一番，而遵守这些准则要花上两倍的功夫。</p>
+<p>实际上，准则数量的增幅相对有限，约为 10%。篇幅的其余增量来自指导内容的改进，例如：</p>
+<ul>
+<li>更充分地解释了制定准则的理由；</li>
+<li>描述更精确；</li>
+<li>为大部分准则提供了展示合规与不合规情形的代码示例；</li>
+<li>对合规检查和偏离程序给出了更详细的指导；</li>
+<li>提供了可用于支持合规声明的检查表。</li>
+</ul>
+<p>最后，我想请大家留意本文件的导论部分。这些章节不仅就如何使用 MISRA C 提供了实用指导，而且比以往版本更为简练。我鼓励每一位使用者熟悉这部分材料。</p>
+<p>Steve Montgomery，剑桥大学文学硕士（MA (Cantab)）、博士（PhD）<br>
+MISRA C 工作组主席</p>
+<h2 id="credits"><a class="header" href="#credits">致谢</a></h2>
+<p>MISRA 联盟谨向以下为本文件撰写工作作出重要贡献的人士致谢：</p>
+<div class="table-wrapper"><table><thead><tr><th>姓名</th><th>单位</th></tr></thead><tbody>
+<tr><td>Dave Banham</td><td>Rolls-Royce plc（曾任职于 Alstom Grid）</td></tr>
+<tr><td>Andrew Banks</td><td>Intuitive Consulting</td></tr>
+<tr><td>Mark Bradbury</td><td>Aero Engine Controls</td></tr>
+<tr><td>Paul Burden</td><td>Programming Research Ltd</td></tr>
+<tr><td>Mark Dawson-Butterworth</td><td>Zytek Automotive Ltd</td></tr>
+<tr><td>Mike Hennell</td><td>LDRA Ltd</td></tr>
+<tr><td>Chris Hills</td><td>Phaedrus Systems Ltd</td></tr>
+<tr><td>Steve Montgomery</td><td>Ricardo UK Ltd</td></tr>
+<tr><td>Chris Tapp</td><td>LDRA Ltd（亦任职于 Keylevel Consultants Ltd）</td></tr>
+<tr><td>Liz Whiting</td><td>LDRA Ltd（曾任职于 QinetiQ plc）</td></tr>
+</tbody></table>
+</div>
+<p>MISRA 联盟也感谢以下人士在编制和审查过程中所作的贡献：</p>
+<div class="credits-grid" role="list" aria-label="编制与审查贡献者">
+<span role="listitem">Roberto Bagnara</span>
+<span role="listitem">William Forbes</span>
+<span role="listitem">Voilmy Laurent</span>
+<span role="listitem">Koki Onoda</span>
+<span role="listitem">John Bailey</span>
+<span role="listitem">Takao Futagami</span>
+<span role="listitem">Fred Long</span>
+<span role="listitem">Paulo Pinheiro</span>
+<span role="listitem">Johan Bezem</span>
+<span role="listitem">Jim Gimpel</span>
+<span role="listitem">Daniel Lundin</span>
+<span role="listitem">Mohanraj Ragupathi</span>
+<span role="listitem">Gunter Blache</span>
+<span role="listitem">Gilles Goulas</span>
+<span role="listitem">Gavin McCall</span>
+<span role="listitem">Paul Rigas</span>
+<span role="listitem">Michael Burke</span>
+<span role="listitem">Wolfgang von Hansen</span>
+<span role="listitem">Douglas Mearns</span>
+<span role="listitem">Andrew Scholan</span>
+<span role="listitem">Andrew Burnard</span>
+<span role="listitem">Takahiro Hashimoto</span>
+<span role="listitem">Svante Möller</span>
+<span role="listitem">Marco Sorich</span>
+<span role="listitem">Paul Butler</span>
+<span role="listitem">Dave Higham</span>
+<span role="listitem">Frederic Mondot</span>
+<span role="listitem">Takuji Takuma</span>
+<span role="listitem">Mirko Conrad</span>
+<span role="listitem">Shinya Ito</span>
+<span role="listitem">Jürgen Mottok</span>
+<span role="listitem">Martin Thompson</span>
+<span role="listitem">David Cozens</span>
+<span role="listitem">David Jennings</span>
+<span role="listitem">Yannick Moy</span>
+<span role="listitem">Takafumi Wakita</span>
+<span role="listitem">David Crocker</span>
+<span role="listitem">Peter Jesty</span>
+<span role="listitem">Alexander Much</span>
+<span role="listitem">David Ward</span>
+<span role="listitem">Greg Davis</span>
+<span role="listitem">Grzegorz Konopko</span>
+<span role="listitem">Robert Mummé</span>
+<span role="listitem">Tetsuhiro Yamamoto</span>
+<span role="listitem">Manoj Dwivedi</span>
+<span role="listitem">Taneli Korhonen</span>
+<span role="listitem">Tadanori Nakagawa</span>
+<span role="listitem">Naoki Yoshikawa</span>
+<span role="listitem">Carl Edmunds</span>
+<span role="listitem">Joel Kuehner</span>
+<span role="listitem">Greg Newman</span>
+<span role="listitem">Achim Olaf Zacher</span>
+</div>
+<p>特别感谢 David Crocker 为编制附录 H 作出的重要贡献。</p>
+<p>附录 G 中有关实现定义行为的描述转载自 BSI Standards Limited 出版的 ISO 标准版本；文字与 ISO 版本相同。BSI Standards Limited（BSI）依许可证编号 2013ET0003 授予摘录英国标准的转载许可。不允许将该材料作其他用途。英国标准的 PDF 版或纸质版可在 BSI 网上商店（<code>www.bsigroup.com/Shop</code>）购买；若仅购买纸质版，也可联系 BSI 客户服务，电话：+44 20 8996 9001，电子邮件：<code>cservices@bsigroup.com</code>。</p>
+<p>本文件的起草过程广泛使用了 DokuWiki。我们感谢所有参与其开发的人士。</p>
+<p>本文件使用 Open Sans 排版。Open Sans 是 Google 的商标，在某些司法管辖区可能已注册。数字化数据版权 © 2010–2011，Google Corporation。依 Apache 许可证 2.0 版授权。</p>
+<h2 id="contents"><a class="header" href="#contents">目录</a></h2>
+<ol class="source-toc" aria-label="原书目录与印刷页码">
+<li class="toc-0"><span><a href="01.html#s1">1　愿景</a></span><span>1</span></li>
+<li class="toc-0"><span><a href="02.html#s2">2　MISRA C 的背景</a></span><span>2</span></li>
+<li class="toc-1"><span><a href="02.html#s2-1">2.1　C 语言为何广受使用</a></span><span>2</span></li>
+<li class="toc-1"><span><a href="02.html#s2-2">2.2　C 语言的不足</a></span><span>2</span></li>
+<li class="toc-0"><span><a href="03.html#s3">3　工具选择</a></span><span>4</span></li>
+<li class="toc-1"><span><a href="03.html#s3-1">3.1　C 语言及其编译器</a></span><span>4</span></li>
+<li class="toc-1"><span><a href="03.html#s3-2">3.2　分析工具</a></span><span>5</span></li>
+<li class="toc-0"><span><a href="04.html#s4">4　必备知识</a></span><span>6</span></li>
+<li class="toc-1"><span><a href="04.html#s4-1">4.1　培训</a></span><span>6</span></li>
+<li class="toc-1"><span><a href="04.html#s4-2">4.2　了解编译器</a></span><span>6</span></li>
+<li class="toc-1"><span><a href="04.html#s4-3">4.3　了解静态分析工具</a></span><span>6</span></li>
+<li class="toc-0"><span><a href="05.html#s5">5　采用和使用 MISRA C</a></span><span>8</span></li>
+<li class="toc-1"><span><a href="05.html#s5-1">5.1　采用</a></span><span>8</span></li>
+<li class="toc-1"><span><a href="05.html#s5-2">5.2　软件开发过程</a></span><span>8</span></li>
+<li class="toc-1"><span><a href="05.html#s5-3">5.3　合规性</a></span><span>9</span></li>
+<li class="toc-1"><span><a href="05.html#s5-4">5.4　偏离程序</a></span><span>11</span></li>
+<li class="toc-1"><span><a href="05.html#s5-5">5.5　声称合规</a></span><span>12</span></li>
+<li class="toc-0"><span><a href="06.html#s6">6　准则导读</a></span><span>13</span></li>
+<li class="toc-1"><span><a href="06.html#s6-1">6.1　准则的种类</a></span><span>13</span></li>
+<li class="toc-1"><span><a href="06.html#s6-2">6.2　准则的类别</a></span><span>13</span></li>
+<li class="toc-1"><span><a href="06.html#s6-3">6.3　准则的编排</a></span><span>14</span></li>
+<li class="toc-1"><span><a href="06.html#s6-4">6.4　准则中的冗余</a></span><span>14</span></li>
+<li class="toc-1"><span><a href="06.html#s6-5">6.5　规则的可判定性</a></span><span>14</span></li>
+<li class="toc-1"><span><a href="06.html#s6-6">6.6　分析范围</a></span><span>15</span></li>
+<li class="toc-1"><span><a href="06.html#s6-7">6.7　多组织协作项目</a></span><span>15</span></li>
+<li class="toc-1"><span><a href="06.html#s6-8">6.8　自动生成的代码</a></span><span>16</span></li>
+<li class="toc-1"><span><a href="06.html#s6-9">6.9　准则的呈现方式</a></span><span>17</span></li>
+<li class="toc-1"><span><a href="06.html#s6-10">6.10　如何理解来源引用</a></span><span>18</span></li>
+<li class="toc-0"><span><a href="../directives/01.html#s7">7　指令</a></span><span>21</span></li>
+<li class="toc-1"><span><a href="../directives/01.html#dir-1-1">7.1　实现</a></span><span>21</span></li>
+<li class="toc-1"><span><a href="../directives/02.html#dir-2-1">7.2　编译与构建</a></span><span>23</span></li>
+<li class="toc-1"><span><a href="../directives.html#dir-3-1">7.3　需求可追溯性</a></span><span>23</span></li>
+<li class="toc-1"><span><a href="../directives/04-01.html#s7-4">7.4　代码设计</a></span><span>24</span></li>
+<li class="toc-0"><span><a href="../rules/01-01.html#s8">8　规则</a></span><span>37</span></li>
+<li class="toc-1"><span><a href="../rules/01-01.html#s8-1">8.1　标准 C 环境</a></span><span>37</span></li>
+<li class="toc-1"><span><a href="../rules/02-01.html#s8-2">8.2　未使用的代码</a></span><span>39</span></li>
+<li class="toc-1"><span><a href="../rules/03-01.html#s8-3">8.3　注释</a></span><span>45</span></li>
+<li class="toc-1"><span><a href="../rules/04-01.html#s8-4">8.4　字符集与词法约定</a></span><span>46</span></li>
+<li class="toc-1"><span>8.5　标识符</span><span>48</span></li>
+<li class="toc-1"><span>8.6　类型</span><span>58</span></li>
+<li class="toc-1"><span>8.7　字面量和常量</span><span>59</span></li>
+<li class="toc-1"><span>8.8　声明与定义</span><span>63</span></li>
+<li class="toc-1"><span>8.9　初始化</span><span>75</span></li>
+<li class="toc-1"><span>8.10　本质类型模型</span><span>81</span></li>
+<li class="toc-1"><span>8.11　指针类型转换</span><span>93</span></li>
+<li class="toc-1"><span>8.12　表达式</span><span>103</span></li>
+<li class="toc-1"><span>8.13　副作用</span><span>108</span></li>
+<li class="toc-1"><span>8.14　控制语句表达式</span><span>115</span></li>
+<li class="toc-1"><span>8.15　控制流</span><span>122</span></li>
+<li class="toc-1"><span>8.16　switch 语句</span><span>130</span></li>
+<li class="toc-1"><span>8.17　函数</span><span>136</span></li>
+<li class="toc-1"><span>8.18　指针与数组</span><span>143</span></li>
+<li class="toc-1"><span>8.19　重叠存储</span><span>153</span></li>
+<li class="toc-1"><span>8.20　预处理指令</span><span>155</span></li>
+<li class="toc-1"><span>8.21　标准库</span><span>165</span></li>
+<li class="toc-1"><span>8.22　资源</span><span>172</span></li>
+<li class="toc-0"><span>9　参考文献</span><span>178</span></li>
+<li class="toc-0" id="annex-a"><span>附录 A　准则汇总</span><span>180</span></li>
+<li class="toc-0" id="annex-b"><span>附录 B　准则属性</span><span>189</span></li>
+<li class="toc-0" id="annex-c"><span>附录 C　C 的类型安全问题</span><span>193</span></li>
+<li class="toc-0" id="annex-d"><span>附录 D　本质类型</span><span>196</span></li>
+<li class="toc-0" id="annex-e"><span>附录 E　对自动生成代码的适用性</span><span>202</span></li>
+<li class="toc-0" id="annex-f"><span>附录 F　过程与工具检查表</span><span>205</span></li>
+<li class="toc-0" id="annex-g"><span>附录 G　实现定义行为检查表</span><span>206</span></li>
+<li class="toc-0" id="annex-h"><span>附录 H　未定义行为及关键的未指定行为</span><span>210</span></li>
+<li class="toc-0" id="annex-i"><span>附录 I　偏离记录示例</span><span>220</span></li>
+<li class="toc-0" id="annex-j"><span>附录 J　术语表</span><span>223</span></li>
+</ol>
+</section><aside class="note"><b>补充说明（非原文）</b> 卷首目录右栏为原书印刷页码，不是 PDF 页序。目录保留全书条目，只为本站已有对应译文的条目提供链接。签发对象和逐页的副本标记不予收录。印刷装饰线未作为正文重制。</aside><p class="muted">公开页面保留卷首译文及版权标注，不附原书标志图像或原版 PDF。</p><nav class="navline" aria-label="篇目切换"><a href="../index.html">全部译文</a><a href="01.html">下一篇：1　愿景</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

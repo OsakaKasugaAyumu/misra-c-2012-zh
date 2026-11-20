@@ -1,0 +1,69 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 2.1 · 不可达代码 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-2">译文目录</a><span>§8 · Rule 与试点</span></nav><p class="eyebrow">中文译文　/　27 · 38</p><h1 id="rule-2-1">Rule 2.1 · 不可达代码</h1><p class="muted locator">底本定位 §8.2 · PDF 47–49／印刷 39–41</p><section class="source-translation" aria-labelledby="rule-2-1-text">
+<h2 id="rule-2-1-text"><a class="header" href="#rule-2-1-text">原文译文</a></h2>
+<h3 id="s8-2"><a class="header" href="#s8-2">8.2　未使用的代码</a></h3>
+<p class="guideline"><strong>Rule 2.1</strong>　项目中不得含有不可达代码。</p>
+<p>[IEC 61508-7 第 C.5.9 节]，[DO-178C 第 6.4.4.3.c 节]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>不可判定（Undecidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>只要程序不表现出任何未定义行为，不可达代码就不可能被执行，也不可能对程序输出产生任何影响。因此，不可达代码的存在可能意味着程序逻辑有误。</p>
+<p>编译器可以删除任何不可达代码，但没有义务这样做。编译器未删除的不可达代码会浪费资源，例如：</p>
+<ul>
+<li>它会占用目标机的存储空间；</li>
+<li>当控制流需要绕过不可达代码时，它的存在可能使编译器选择更长、更慢的跳转指令；</li>
+<li>如果它在循环内部，就可能使整个循环无法全部放入指令缓存。</li>
+</ul>
+<p>为了处理异常情况，有时确实希望插入看似不可达的代码。例如，在一条 <code>switch</code> 语句中，即使控制表达式的每个可能值都有显式的 <code>case</code> 对应，按照 Rule 16.4 仍然必须有 <code>default</code> 子句。该子句用于捕获通常不应出现、但可能因以下原因产生的值：</p>
+<ul>
+<li>程序中存在未定义行为；</li>
+<li>处理器硬件发生故障。</li>
+</ul>
+<p>如果编译器能证明某个 <code>default</code> 子句不可达，它就可能删除该子句，从而消除防护动作。如果这项防护很重要，就必须在以下两种做法中择一：证明编译器尽管知道代码不可达，仍不会将其删除；或者采取措施，使防护代码可达。前一种做法需要办理对本规则的偏离，可能要通过审查目标代码或单元测试来支持偏离。后一种做法通常可通过 <code>volatile</code> 访问实现。例如，对于如下形式的 <code>switch</code> 语句，编译器可能判定 <code>case</code> 子句已覆盖 <code>x</code> 的取值范围：</p>
+<pre><code class="language-c">uint16_t  x;
+
+switch ( x )
+</code></pre>
+<p>如果强制通过一个具有 <code>volatile</code> 限定类型的左值访问 <code>x</code>，编译器就必须假定控制表达式可能取任意值：</p>
+<pre><code class="language-c">switch ( *( volatile uint16_t * ) &amp;x )
+</code></pre>
+<p><strong>注：</strong> 被预处理指令有条件排除的代码不受本规则约束，因为它不会进入后续的翻译阶段。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">enum light { red, amber, red_amber, green };
+
+enum light next_light ( enum light c )
+{
+  enum light res;
+
+  switch ( c )
+  {
+    case red:
+      res = red_amber;
+      break;
+    case red_amber:
+      res = green;
+      break;
+    case green:
+      res = amber;
+      break;
+    case amber:
+      res = red;
+      break;
+    default:
+    {
+      /*
+       * This default will only be reachable if the parameter c
+       * holds a value that is not a member of enum light.
+       */
+      error_handler ( );
+      break;
+    }
+  }
+
+  return res;
+  res = c;                      /* Non-compliant - this statement is
+                                 * certainly unreachable               */
+}
+</code></pre>
+<p><strong>原书代码注释中译：</strong> 仅当形参 <code>c</code> 保存的值不是 <code>enum light</code> 的任何一个成员值时，这个 <code>default</code> 分支才可达。<code>return</code> 后的 <code>res = c;</code> 不合规——这条语句一定不可达。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p>Rule 14.3、Rule 16.4。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-2-1.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="01-03.html">上一篇：Rule 1.3 · 未定义行为与关键的未指定行为</a><a href="../index.html">全部译文</a><a href="02-02.html">下一篇：Rule 2.2 · 死代码</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

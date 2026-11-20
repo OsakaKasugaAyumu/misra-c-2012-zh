@@ -1,0 +1,11 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Dir 3.1 · 需求可追溯性 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../assets/reader.css"><link rel="stylesheet" href="../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../index.html">首页</a><a href="index.html#group-1">译文目录</a><span>§7 · Directive</span></nav><p class="eyebrow">中文译文　/　10 · 38</p><h1 id="dir-3-1">Dir 3.1 · 需求可追溯性</h1><p class="muted locator">底本定位 §7.3 · PDF 31 / 印刷 23</p><section class="source-translation" aria-labelledby="dir-3-1-text">
+<h2 id="dir-3-1-text"><a class="header" href="#dir-3-1-text">原文译文</a></h2>
+<h3 id="s7-3"><a class="header" href="#s7-3">7.3　需求可追溯性</a></h3>
+<p class="guideline"><strong>Dir 3.1</strong>　所有代码都必须能够追溯到已形成文档的需求。</p>
+<p>[DO-178C 第 6.4.4.3.d 节]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>满足项目需求并不需要的功能会引入不必要的执行路径。软件开发人员可能没有意识到这些附加功能会带来哪些更广泛的影响。例如，开发人员可能会加入一段代码，使程序每次执行到某个特定位置时，都翻转处理器某个输出引脚的状态。在开发期间，这对测量时序或触发仿真器、逻辑分析仪可能很有用。然而，软件需求规格说明书没有提到该引脚，因而它看起来可能没有使用；但在目标控制器中，它可能连接着执行器，从而在外部产生非预期的效果。</p>
+<p>将代码追溯到已形成文档的需求，具体采用什么方法，必须由项目确定。实现可追溯性的一种方法是：先对照需求审查设计文档，再对照相应的设计文档审查代码。</p>
+<p><strong>注：</strong> 本指令与采用防护性编码策略之间不应存在冲突，因为在关键系统中，这种策略本就应当是需求的一部分。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../lab/dir-3-1.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="directives/02.html">上一篇：Dir 2.1 · 所有源文件均须无编译错误</a><a href="index.html">全部译文</a><a href="directives/04-01.html">下一篇：Dir 4.1 · 尽可能减少运行时失效</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

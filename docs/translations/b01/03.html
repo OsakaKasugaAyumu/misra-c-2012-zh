@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>3　工具选择 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-0">译文目录</a><span>卷首与 §1–6</span></nav><p class="eyebrow">中文译文　/　04 · 38</p><h1 id="s3">3　工具选择</h1><p class="muted locator">底本定位 PDF 12–13 ／ 印刷 4–5</p><details class="jump"><summary>本页目录</summary><ul><li><a href="#s3-1">3.1 C 语言及其编译器</a></li><li><a href="#s3-2">3.2 分析工具</a></li></ul></details><section class="source-translation b01-text" aria-labelledby="s3-text">
+<p class="textlabel" id="s3-text">原文译文</p>
+<h2 id="s3-1"><a class="header" href="#s3-1">3.1 C 语言及其编译器</a></h2>
+<p>本文件开始编写时，C 语言的 ISO 标准是 ISO/IEC 9899:1999 [8]，并经 [9]、[10] 和 [11] 勘误。下文将此版本简称为 C99。不过，仍有许多编译器可用于其前一版本；该版本由 ISO/IEC 9899:1990 [2] 定义，并经 [4]、[5] 和 [6] 修订和勘误，下文简称为 C90。有些编译器提供选项，可在这两个语言版本之间选择。</p>
+<p>现行的 C 语言 ISO 标准是 ISO/IEC 9899:2011 [13]，并经 [14] 勘误。该标准发布时，本版 MISRA C 指南的编写已接近完成，因此未能纳入针对这个较新版本的指导。</p>
+<p><strong>注：</strong> 使用 MISRA C 并不以持有相应标准的副本为前提，不过有副本可供查阅可能会有帮助。</p>
+<p>选择 C90 还是 C99，可能取决于项目复用既有代码的数量、目标处理器有哪些编译器可用等因素。</p>
+<p>项目所选的编译器应满足所选 C 语言版本对符合标准的独立式实现（freestanding implementation）的要求。它可以超出这些要求，例如提供语言的全部特性（独立式实现只需提供一个明确定义的子集），也可以提供语言标准允许的扩展。</p>
+<p>理想情况下，应由编译器开发者确认编译器确实符合标准，例如提供已执行的一致性测试的详细情况及所得结果。</p>
+<p>有时可选的编译器很少，其质量也可能未知。如果很难从编译器开发者处取得信息，可采取下列步骤来辅助选择：</p>
+<ul>
+<li>检查编译器开发者是否遵循适宜的软件开发过程，例如依照 ISO 90003:2004 [22] 评估，确认该过程满足 ISO 9001:2008 [21] 的要求；</li>
+<li>阅读关于该编译器的评测和用户经验报告；</li>
+<li>考察其用户群规模，以及使用该编译器开发的应用类型；</li>
+<li>独立开展确认测试并记录结果，例如使用一致性测试套件或编译已有的应用程序。</li>
+</ul>
+<p><strong>注：</strong> 一些过程标准要求在特定情形下对编译器进行资格鉴定，例如 IEC 61508:2010 [32]、ISO 26262:2011 [23] 和 DO-178C [24]。</p>
+<h2 id="s3-2"><a class="header" href="#s3-2">3.2 分析工具</a></h2>
+<p>仅靠人工检查也有可能核查 C 源代码是否符合 MISRA C。但这样做很可能极为耗时，而且容易出错。因此，任何切实可行的 MISRA C 代码检查过程都会使用至少一种静态分析工具。</p>
+<p>选择编译器时适用的所有考虑因素，同样适用于静态分析工具的选择，但分析工具的确认与编译器的确认略有不同。理想的静态分析工具应当：</p>
+<ul>
+<li>检出所有违反 MISRA C 准则的情况；</li>
+<li>不产生任何“误报”：只报告确实存在的违规，不报告未违规或可能违规的情况。</li>
+</ul>
+<p>由于 <a href="06.html#s6-5">§6.5</a> 所述的原因，现在不可能，将来也不可能造出达到这种理想效果的静态分析工具。因此，选择工具的重要因素是：在尽量减少误报消息的同时，尽可能多地检出违规。</p>
+<p>可用的工具很多，运行时间从几秒到数天不等。粗略地说，耗时较少的工具往往比耗时很多的工具更容易误报。因此，选择工具时还应权衡分析时间与分析精度。</p>
+<p>各分析工具的侧重点不同。有些是通用工具，有些则可能专注于彻底分析一部分潜在问题。因此，要尽可能广泛地覆盖各种问题，可能需要使用不止一种工具。</p>
+<p><strong>注：</strong> 包括 IEC 61508:2010 [32]、ISO 26262:2011 [23] 和 DO-178C [24] 在内的一些过程标准，要求在特定情形下对静态分析器等验证工具进行资格鉴定。</p>
+</section><aside class="note"><b>补充说明（非原文）</b> 本节的“现行”指原书编写时。版次、年份和引文编号按底本保留，不是对今天适用标准的更新。</aside><nav class="navline" aria-label="篇目切换"><a href="02.html">上一篇：2　MISRA C 的背景</a><a href="../index.html">全部译文</a><a href="04.html">下一篇：4　必备知识</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

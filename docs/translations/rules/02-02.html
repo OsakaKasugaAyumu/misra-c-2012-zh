@@ -1,0 +1,53 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 2.2 · 死代码 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-2">译文目录</a><span>§8 · Rule 与试点</span></nav><p class="eyebrow">中文译文　/　28 · 38</p><h1 id="rule-2-2">Rule 2.2 · 死代码</h1><p class="muted locator">底本定位 §8.2 · PDF 49–50／印刷 41–42</p><section class="source-translation" aria-labelledby="rule-2-2-text">
+<h2 id="rule-2-2-text"><a class="header" href="#rule-2-2-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 2.2</strong>　不得含有死代码。</p>
+<p>[IEC 61508-7 第 C.5.10 节]，[ISO 26262-6 第 9.4.5 节]，[DO-178C 第 6.4.4.3.c 节]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>不可判定（Undecidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>凡是会执行、但删除后不会影响程序行为的操作，均构成死代码。由语言扩展引入的操作，一律视为会对程序行为产生影响。</p>
+<p><strong>注：</strong> 嵌入式系统的行为往往不仅取决于它执行什么动作，也取决于执行动作的时间。</p>
+<p><strong>注：</strong> 不可达代码不属于死代码，因为它不能被执行。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>存在死代码可能表明程序逻辑有误。由于编译器可能删除死代码，它的存在还可能造成困惑。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<p>强制转换为 <code>void</code> 被视为表明某个值是有意不使用的。因此，该转换本身不是死代码。它也被视为使用了其操作数，所以该操作数同样不是死代码。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>在本例中，假定 <code>p</code> 指向的对象在其他函数中会被使用。</p>
+<pre><code class="language-c">extern volatile uint16_t v;
+
+extern char *p;
+
+void f ( void )
+{
+  uint16_t  x;
+
+  ( void ) v;      /* Compliant     - v is accessed for its side effect
+                    *                 and the cast to void is permitted
+                    *                 by exception                       */
+  ( int32_t ) v;   /* Non-compliant - the cast operator is dead          */
+  v &gt;&gt; 3;          /* Non-compliant - the &gt;&gt; operator is dead            */
+  x = 3;           /* Non-compliant - the = operator is dead
+                    *               - x is not subsequently read         */
+  *p++;            /* Non-compliant - result of * operator is not used   */
+  ( *p )++;        /* Compliant     - *p is incremented                  */
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> ① 合规：访问 <code>v</code> 是为了产生副作用，例外允许转为 <code>void</code>。② 不合规：强制转换运算符是死代码。③ 不合规：<code>&gt;&gt;</code> 运算符是死代码。④ 不合规：赋值运算符 <code>=</code> 是死代码，之后并未读取 <code>x</code>。⑤ 不合规：未使用 <code>*</code> 运算符的结果。⑥ 合规：<code>*p</code>（即 <code>p</code> 所指对象的值）被递增。</p>
+<p>在下面的合规示例中，<code>__asm</code> 关键字是语言扩展，不是函数调用操作，因此不是死代码：</p>
+<pre><code class="language-c">__asm ( "NOP" );
+</code></pre>
+<p>在下例中，函数 <code>g</code> 不含死代码；由于它不含任何操作，函数本身也不是死代码。然而，对它的调用是死代码，因为删除该调用不会影响程序行为。</p>
+<pre><code class="language-c">void g ( void )
+{
+  /* Compliant - there are no operations in this function */
+}
+
+void h ( void )
+{
+  g ( );   /* Non-compliant - the call could be removed   */
+}
+</code></pre>
+<p><strong>原书代码注释中译：</strong> <code>g</code> 的函数体合规——其中没有操作。<code>h</code> 中的调用不合规——可以删除这次调用。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p>Rule 17.7。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-2-2.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="02-01.html">上一篇：Rule 2.1 · 不可达代码</a><a href="../index.html">全部译文</a><a href="02-03.html">下一篇：Rule 2.3 · 未使用的类型声明</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

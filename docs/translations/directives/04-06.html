@@ -1,0 +1,55 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Dir 4.6 · 用类型名表明位宽和符号性 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-1">译文目录</a><span>§7 · Directive</span></nav><p class="eyebrow">中文译文　/　16 · 38</p><h1 id="dir-4-6">Dir 4.6 · 用类型名表明位宽和符号性</h1><p class="muted locator">底本定位 §7.4 · PDF 36–38／印刷 28–30，止于 Dir 4.7 标题前。</p><section class="source-translation" aria-labelledby="dir-4-6-text">
+<h2 id="dir-4-6-text"><a class="header" href="#dir-4-6-text">原文译文</a></h2>
+<p class="guideline"><strong>Dir 4.6</strong>　应使用能表明大小和符号性的 <code>typedef</code> 类型名，代替基本数值类型。</p>
+<dl class="attributes"><dt>类别</dt><dd>建议（Advisory）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>不应使用 <code>char</code>、<code>short</code>、<code>int</code>、<code>long</code>、<code>long long</code>（C99）、<code>float</code>、<code>double</code> 和 <code>long double</code> 这些基本数值类型，而应使用指定长度的 <code>typedef</code> 类型名。</p>
+<p>对于 C99，应使用 <code>&lt;stdint.h&gt;</code> 提供的类型。对于 C90，应定义并使用等价的类型。</p>
+<p>除非底层类型在该实现上确实具有所指定的长度，否则不得将类型定义为该长度。</p>
+<p>声明位域时，不必使用 <code>typedef</code> 类型名。</p>
+<p>例如，在一个 32 位 C90 实现上，以下定义可能是合适的：</p>
+<pre><code class="language-c">typedef signed   char   int8_t;
+typedef signed   short  int16_t;
+typedef signed   int    int32_t;
+typedef signed   long   int64_t;
+
+typedef unsigned char   uint8_t;
+typedef unsigned short  uint16_t;
+typedef unsigned int    uint32_t;
+typedef unsigned long   uint64_t;
+
+typedef          float  float32_t;
+typedef          double float64_t;
+typedef long     double float128_t;
+</code></pre>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>在分配多少内存很重要的场合，使用指定长度的类型，可以清楚地看出为每个对象预留了多少存储空间。</p>
+<p>遵守本准则并不能保证可移植性，因为 <code>int</code> 类型的大小可能决定一个表达式是否会发生整数提升。例如，如果 <code>int</code> 在实现中是 16 位，类型为 <code>int16_t</code> 的表达式就不会被提升；如果 <code>int</code> 在实现中是 32 位，该表达式就会被提升。<a href="../b01/front.html#annex-c">附录 C</a> 中有关整数提升的部分对此有更详细的讨论。</p>
+<p><strong>注：</strong> 如果定义的定长类型与实现中底层类型的实际大小不符，那么无论就存储需求还是就可移植性而言，都会适得其反。应注意避免把类型的大小定义错。</p>
+<p>如果抽象类型建立在定长类型之上，就不必再在抽象类型中指明大小或符号性；指明这些信息甚至可能并不合适。例如，以下代码定义了一个以千克为单位表示质量的抽象类型，但没有指明其大小或符号性：</p>
+<pre><code class="language-c">typedef uint16_t mass_kg_t;
+</code></pre>
+<p>与标准库或项目无法控制的代码对接时，不应用本准则可能更为合适。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<ol>
+<li>可在 <code>typedef</code> 中使用基本数值类型来定义指定长度的类型。</li>
+<li>对于函数 <code>main</code>，其返回类型可以用 <code>int</code>，而不必使用 <code>typedef</code> 类型名。因此，允许 <code>int main (void)</code>。</li>
+<li>对于函数 <code>main</code>，其输入参数 <code>argc</code> 可以用 <code>int</code>，而不必使用 <code>typedef</code> 类型名。</li>
+<li>对于函数 <code>main</code>，其输入参数 <code>argv</code> 可以用 <code>char</code>，而不必使用 <code>typedef</code> 类型名。</li>
+</ol>
+<p>因此，允许 <code>int main( int argc, char *argv[] )</code>（C99 §5.1.2.2.1）。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">/* Non-compliant - int used to define an object                      */
+int x = 0;
+
+/* Compliant     - int used to define specific-length type           */
+typedef int SINT_16;
+
+/* Non-compliant - no sign or size specified                         */
+typedef int speed_t;
+
+/* Compliant     - further abstraction does not need specific length */
+typedef int16_t torque_t;
+</code></pre>
+<p>原书代码注释（译），依次为：① 不合规——用 <code>int</code> 定义对象；② 合规——用 <code>int</code> 定义指定长度的类型；③ 不合规——未指明符号性或大小；④ 合规——进一步抽象时不需要再指定长度。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/dir-4-6.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="04-05.html">上一篇：Dir 4.5 · 避免字形容易混淆的标识符</a><a href="../index.html">全部译文</a><a href="04-07.html">下一篇：Dir 4.7 · 检查函数返回的错误信息</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

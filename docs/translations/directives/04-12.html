@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Dir 4.12 · 不得使用动态内存分配 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-1">译文目录</a><span>§7 · Directive</span></nav><p class="eyebrow">中文译文　/　22 · 38</p><h1 id="dir-4-12">Dir 4.12 · 不得使用动态内存分配</h1><p class="muted locator">底本定位 §7.4 · PDF 42–43／印刷 34–35，止于 Dir 4.13 标题前。</p><section class="source-translation" aria-labelledby="dir-4-12-text">
+<h2 id="dir-4-12-text"><a class="header" href="#dir-4-12-text">原文译文</a></h2>
+<p class="guideline"><strong>Dir 4.12</strong>　不得使用动态内存分配。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>本规则适用于所有动态内存分配软件包，包括：</p>
+<ul>
+<li>标准库提供的软件包；</li>
+<li>第三方软件包。</li>
+</ul>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>如 Rule 21.3 所述，标准库中动态分配和释放内存的例程可能导致未定义行为。其他动态内存分配系统也很可能表现出与标准库类似的未定义行为。</p>
+<p>必须核查第三方例程的规格说明，确保没有在不知情的情况下使用动态内存分配。</p>
+<p>如果决定使用动态内存，就必须谨慎处理，确保软件以可预测的方式运行。例如，存在下列风险：</p>
+<ul>
+<li>可用内存可能不足以满足请求——必须确保分配失败时，软件能作出安全、适当的响应；</li>
+<li>分配或释放内存所需的执行时间可能波动很大，这取决于内存的使用模式以及由此产生的碎片化程度。</li>
+</ul>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>为便于说明，这些例子采用标准库的动态内存函数，因为这些函数的接口为人熟知。</p>
+<p>在本例中，第一次调用 <code>free</code> 之后，指针 <code>p</code> 的值变为不确定值，因此随后的行为是未定义的。虽然调用 <code>free</code> 后指针中存储的值没有改变，但在某些目标平台上，它指向的内存可能已经不存在；仅仅复制该指针，就可能引发内存异常。</p>
+<pre><code class="language-c">#include &lt;stdlib.h&gt;
+
+void f ( void )
+{
+  char     *p = ( char * ) malloc ( 10 );
+  char     *q;
+
+  free ( p );
+  q = p;         /* Undefined behaviour - value of p is indeterminate    */
+
+
+  p = ( char * ) malloc ( 20 );
+  free ( p );
+  p = NULL;      /* Assigning NULL to freed pointer makes it determinate */
+}
+</code></pre>
+<p>原书代码注释（译）：<code>q = p;</code> 一行是“未定义行为——<code>p</code> 的值不确定”；<code>p = NULL;</code> 一行是“给已释放内存所对应的指针赋 <code>NULL</code>，使其具有确定值”。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="04-01.html#dir-4-1">Dir 4.1</a>、Rule 18.7、Rule 21.3、Rule 22.1、Rule 22.2。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/dir-4-12.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="04-11.html">上一篇：Dir 4.11 · 检查传给库函数的值</a><a href="../index.html">全部译文</a><a href="04-13.html">下一篇：Dir 4.13 · 按适当顺序调用资源操作函数</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

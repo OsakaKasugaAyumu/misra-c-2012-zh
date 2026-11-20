@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Dir 1.1 · 记录并理解实现定义行为 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-1">译文目录</a><span>§7 · Directive</span></nav><p class="eyebrow">中文译文　/　08 · 38</p><h1 id="dir-1-1">Dir 1.1 · 记录并理解实现定义行为</h1><p class="muted locator">底本定位 §7.1 · PDF 29–31／印刷 21–23；至 §7.2 标题前。</p><section class="source-translation" aria-labelledby="dir-1-1-text">
+<h2 id="dir-1-1-text"><a class="header" href="#dir-1-1-text">原文译文</a></h2>
+<h3 id="s7"><a class="header" href="#s7">7　指令</a></h3>
+<h4 id="s7-1"><a class="header" href="#s7-1">7.1　实现</a></h4>
+<p class="guideline"><strong>Dir 1.1</strong>　程序输出所依赖的任何实现定义行为，都必须记录在文档中，并为开发者所理解。</p>
+<p>C90 [附录 G.3]，C99 [附录 J.3]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>本文件的<a href="../b01/front.html#annex-g" title="仅定位原书目录；未译附录正文">附录 G</a> 分别针对 C90 和 C99 列出了同时满足以下条件的实现定义行为：</p>
+<ul>
+<li>被认为可能导致程序以非预期的方式运行；并且</li>
+<li>即使程序符合所有其他 MISRA C 准则，这些行为仍可能存在于程序中。</li>
+</ul>
+<p>在这些实现定义行为中，凡是程序输出所依赖的，都必须：</p>
+<ul>
+<li>记录在文档中；并且</li>
+<li>为开发者所理解。</li>
+</ul>
+<p><strong>注：</strong> 符合标准的实现必须在文档中说明它如何处理每一种实现定义行为。如果文档有缺漏，应向该实现的开发者咨询。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>重要的是，要知道程序的输出确实是设计者想要的，而不是碰巧产生的。</p>
+<p>下面说明安全相关嵌入式软件很可能依赖的一些较常见的实现定义行为。</p>
+<h4 id="核心行为"><a class="header" href="#%E6%A0%B8%E5%BF%83%E8%A1%8C%E4%B8%BA">核心行为</a></h4>
+<p>大多数程序很可能都需要了解的基本实现定义行为包括：</p>
+<ul>
+<li>如何识别翻译过程中产生的诊断消息；</li>
+<li>函数 <code>main</code> 的类型；在独立式实现中，它通常声明为 <code>void main (void)</code>；</li>
+<li>标识符中有意义的字符数——配置分析工具以检查 Rule 5.2 时需要此项信息；</li>
+<li>源字符集和执行字符集；</li>
+<li>各整数类型的大小；</li>
+<li><code>#include</code> 中指定的名称如何映射到文件名，以及如何在宿主文件系统中定位该文件。</li>
+</ul>
+<h4 id="扩展"><a class="header" href="#%E6%89%A9%E5%B1%95">扩展</a></h4>
+<p>嵌入式系统经常使用扩展来访问外设，或将对象置于具有特殊属性的存储区域，例如 Flash EEPROM 或可快速访问的 RAM。符合标准的实现可以提供扩展，前提是这些扩展不改变任何严格符合标准的程序的含义。</p>
+<p>某些 C90 实现提供的扩展可能实现了 C99 的一部分特性。</p>
+<p>实现提供扩展的方式包括：</p>
+<ul>
+<li><code>#pragma</code> 预处理指令或 <code>_Pragma</code> 运算符（后者仅适用于 C99）；</li>
+<li>新的关键字。</li>
+</ul>
+<h4 id="标准库"><a class="header" href="#%E6%A0%87%E5%87%86%E5%BA%93">标准库</a></h4>
+<p>标准库的实现中，以下方面可能很重要：</p>
+<ul>
+<li>使用某些标准库函数时赋给 <code>errno</code> 的值；</li>
+<li>时钟函数和时间函数的实现方式；</li>
+<li>文件系统的特性。</li>
+</ul>
+<h4 id="应用程序二进制接口"><a class="header" href="#%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%8E%A5%E5%8F%A3">应用程序二进制接口</a></h4>
+<p>有时需要将 C 代码与汇编语言对接，例如在执行速度至关重要的地方提高速度。也可能需要对接由不同编译器生成的代码，这些代码甚至可能使用不同语言编写。</p>
+<p>编译器的应用程序二进制接口（ABI）提供了完成这项工作所需的信息，其中包括某些实现定义行为。它通常规定：</p>
+<ul>
+<li>函数参数如何通过寄存器和栈传递；</li>
+<li>函数的返回值如何传回；</li>
+<li>函数必须保留哪些寄存器；</li>
+<li>具有自动存储期的对象如何分配到栈帧中；</li>
+<li>每种数据类型的对齐要求；</li>
+<li>结构体如何布局，以及位域如何分配到存储单元中。</li>
+</ul>
+<p>有些处理器有标准 ABI，所有实现都会使用它。如果没有标准 ABI，实现就会提供自己的 ABI。</p>
+<h4 id="整数除法"><a class="header" href="#%E6%95%B4%E6%95%B0%E9%99%A4%E6%B3%95">整数除法</a></h4>
+<p>在 C90 中，进行有符号整数除法或取余运算时，如果任一操作数为负，相应的商既可以向下取整，也可以向零取整。在 C99 中，保证向零取整。</p>
+<h4 id="浮点实现"><a class="header" href="#%E6%B5%AE%E7%82%B9%E5%AE%9E%E7%8E%B0">浮点实现</a></h4>
+<p>浮点类型的实现方式可能对程序行为有显著影响，例如：</p>
+<ul>
+<li>可表示的数值范围，以及存储这些值时的精度；</li>
+<li>浮点运算后的舍入方向；</li>
+<li>转换到较窄的浮点类型或整数类型时的舍入方向；</li>
+<li>出现下溢、上溢或非数（NaN）时的行为；</li>
+<li>发生定义域错误或值域错误时库函数的行为。</li>
+</ul>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p>Rule 5.1、Rule 5.2。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/dir-1-1.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="../b01/06.html">上一篇：6　准则导读</a><a href="../index.html">全部译文</a><a href="02.html">下一篇：Dir 2.1 · 所有源文件均须无编译错误</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

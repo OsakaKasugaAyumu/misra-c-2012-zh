@@ -1,0 +1,16 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 2.3 · 未使用的类型声明 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-2">译文目录</a><span>§8 · Rule 与试点</span></nav><p class="eyebrow">中文译文　/　29 · 38</p><h1 id="rule-2-3">Rule 2.3 · 未使用的类型声明</h1><p class="muted locator">底本定位 §8.2 · PDF 51／印刷 43</p><section class="source-translation" aria-labelledby="rule-2-3-text">
+<h2 id="rule-2-3-text"><a class="header" href="#rule-2-3-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 2.3</strong>　项目中不应含有未使用的类型声明。</p>
+<dl class="attributes"><dt>类别</dt><dd>建议（Advisory）</dd><dt>分析</dt><dd>可判定（Decidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>如果一个类型已声明却未使用，审查人员就难以判断该类型是多余的，还是由于疏忽才没有用上。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">int16_t unusedtype ( void )
+{
+  typedef int16_t local_Type;   /* Non-compliant */
+
+  return 67;
+}
+</code></pre>
+<p><strong>原书代码注释中译：</strong> <code>local_Type</code> 的声明不合规。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-2-3.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="02-02.html">上一篇：Rule 2.2 · 死代码</a><a href="../index.html">全部译文</a><a href="02-04.html">下一篇：Rule 2.4 · 未使用的标记声明</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

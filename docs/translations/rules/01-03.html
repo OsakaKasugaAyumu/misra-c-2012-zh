@@ -1,0 +1,18 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 1.3 · 未定义行为与关键的未指定行为 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-2">译文目录</a><span>§8 · Rule 与试点</span></nav><p class="eyebrow">中文译文　/　26 · 38</p><h1 id="rule-1-3">Rule 1.3 · 未定义行为与关键的未指定行为</h1><p class="muted locator">底本定位 §8.1 · PDF 46–47／印刷 38–39</p><section class="source-translation" aria-labelledby="rule-1-3-text">
+<h2 id="rule-1-3-text"><a class="header" href="#rule-1-3-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 1.3</strong>　不得出现未定义行为或关键的未指定行为。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>不可判定（Undecidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>某些未定义行为和未指定行为已有专门规则处理。本规则用于防止其余所有未定义行为和关键的未指定行为。<a href="../b01/front.html#annex-h">附录 H</a> 列出了未定义行为以及被认为是关键的未指定行为。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>任何引发未定义行为或未指定行为的程序都可能不按预期运行。在许多情况下，这会使程序失去可移植性，但也可能产生更严重的后果。例如，未定义行为可能影响某次计算的结果。如果软件的正确运行依赖这次计算，系统安全就可能受到损害。如果未定义行为只在罕见的情况下显现，问题就尤其难以发现。</p>
+<p>许多 MISRA C 准则的目的正是避免某些未定义行为和未指定行为。例如，同时遵守 Rule 11.4、Rule 11.8 和 Rule 19.2，就能保证在 C 中不可能为一个以 <code>const</code> 限定类型声明的对象创建一个指向非 <code>const</code> 限定类型的指针。这避免了 C90 [Undefined 39] 和 C99 [Undefined 61]。不过，另一些行为没有专门准则涵盖，例如，原因可能是：</p>
+<ul>
+<li>实际遇到该行为的可能性很低；</li>
+<li>除了显而易见地指出应避免该行为外，无法给出切实可行的指导。</li>
+</ul>
+<p>MISRA C 指南没有为每一种未定义行为和关键的未指定行为各设一条准则，而是直接处理其中被认为最重要、且在实践中最可能出现的行为。没有专门准则的那些行为全部由本规则统一涵盖。附录 H 列出全部未定义行为和关键的未指定行为，以及防止它们发生的 MISRA C 准则。因此，附录 H 表明哪些行为应由本规则防止，哪些由其他规则涵盖。</p>
+<p><strong>注：</strong> 对于标准所列的某些未定义行为和未指定行为，一些实现可能给出明确定义的行为。如果程序依赖这类明确定义的行为，包括通过语言扩展产生依赖，就必须针对所涉及的行为办理对此规则的偏离。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="../directives/04-01.html#dir-4-1">Dir 4.1</a>。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-1-3.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="01-02.html">上一篇：Rule 1.2 · 语言扩展</a><a href="../index.html">全部译文</a><a href="02-01.html">下一篇：Rule 2.1 · 不可达代码</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

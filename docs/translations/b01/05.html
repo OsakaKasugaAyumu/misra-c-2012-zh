@@ -1,0 +1,117 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>5　采用和使用 MISRA C · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-0">译文目录</a><span>卷首与 §1–6</span></nav><p class="eyebrow">中文译文　/　06 · 38</p><h1 id="s5">5　采用和使用 MISRA C</h1><p class="muted locator">底本定位 PDF 16–20 ／ 印刷 8–12</p><details class="jump"><summary>本页目录</summary><ul><li><a href="#s5-1">5.1 采用</a></li><li><a href="#s5-2">5.2 软件开发过程</a></li><li><a href="#s5-3">5.3 合规性</a></li><li><a href="#s5-4">5.4 偏离程序</a></li><li><a href="#s5-5">5.5 声称合规</a></li></ul></details><section class="source-translation b01-text" aria-labelledby="s5-text">
+<p class="textlabel" id="s5-text">原文译文</p>
+<h2 id="s5-1"><a class="header" href="#s5-1">5.1 采用</a></h2>
+<p>项目应从一开始就采用 MISRA C。</p>
+<p>如果项目是在已经过实际使用验证的既有代码基础上开发，为使代码合规而作修改可能引入缺陷，其风险可能超过符合 MISRA C 带来的收益。这种情况下，应当根据可能获得的净收益判断是否采用 MISRA C。</p>
+<h2 id="s5-2"><a class="header" href="#s5-2">5.2 软件开发过程</a></h2>
+<p>MISRA C 预期在已形成文档的软件开发过程框架内使用。虽然也可以单独使用，但将它纳入开发过程，以确保其他活动也得到正确执行，益处更大。例如，借此确保：</p>
+<ul>
+<li>软件需求（包括所有安全需求）完整、无歧义且正确；</li>
+<li>进入编码阶段的设计规格正确，与需求一致，且不含需求以外的功能；</li>
+<li>编译器生成的目标模块按照相应设计中规定的方式运行；</li>
+<li>各目标模块都已单独测试，也已组合测试，以发现并消除错误。</li>
+</ul>
+<p>程序员应在提交代码供审查或单元测试之前就使用 MISRA C。若项目到生命周期后期才检查 MISRA C 合规性，很可能需要花费大量时间重新编码、重新审查和重新测试。因此，预期软件开发过程会要求尽早应用 MISRA C 的原则。</p>
+<p>全面讨论安全相关软件开发过程的要求超出了本文件的范围。开发过程的例子见 IEC 61508:2010 [32]、ISO 26262:2011 [23]、DO-178C [24]、EN 50128:2011 [33]、IEC 62304:2006 [34] 等标准和指南。本节余下部分讨论 MISRA C 与软件开发过程的相互关系。</p>
+<h3 id="s5-2-1"><a class="header" href="#s5-2-1">5.2.1 MISRA C 要求的过程活动</a></h3>
+<p>为使用 MISRA C，有必要制定以下两项内容并形成文档：</p>
+<ul>
+<li>一份合规矩阵，说明如何检查每条 MISRA C 准则的合规性；</li>
+<li>一个偏离流程，以授权并记录有正当理由的不合规情形。</li>
+</ul>
+<p>软件开发过程还应记录将采取哪些步骤来避免运行时错误，以及如何证明这些错误已被避免。例如，应描述通过什么过程证明并记录下列事项：</p>
+<ul>
+<li>执行环境为程序提供了足够的资源，尤其是处理时间和栈空间；</li>
+<li>在程序的相应部分中不存在算术溢出等运行时错误；例如，程序在计算前检查输入值是否在允许的范围内，从而避免这类错误。</li>
+</ul>
+<h3 id="s5-2-2"><a class="header" href="#s5-2-2">5.2.2 MISRA C 所期望的过程活动</a></h3>
+<p>大家公认，一致的风格有助于程序员理解他人编写的代码。然而，风格是各组织自行决定的事，因此 MISRA C 不提出纯粹与编程风格有关的建议。预期各组织会制定自己的风格指南，并在软件开发过程中使用。</p>
+<p>许多软件过程标准推荐使用度量指标，借此识别可能需要额外审查和测试的代码。然而，收集哪些指标以及相应的阈值，由行业、组织和／或项目的性质决定。因此，本文件不对软件度量提供指导。</p>
+<h2 id="s5-3"><a class="header" href="#s5-3">5.3 合规性</a></h2>
+<p>为了确保代码符合全部 MISRA C 准则，应当编制合规矩阵。该矩阵逐项列出准则，并指出如何检查。对大多数准则而言，最简便、最可靠且最具成本效益的方法，是使用一种或多种静态分析工具、编译器，或将二者结合使用。工具不能完整检查某条准则时，就需要人工审查。</p>
+<p>有些自动代码生成器的开发者随工具提供合规声明。声明指出：只要按开发者规定配置工具，生成的代码就不会违反哪些 MISRA C 准则。例如，声明可以：</p>
+<ul>
+<li>列出不会违反的准则；或者</li>
+<li>声明不会违反任何强制类和必需类准则。</li>
+</ul>
+<p>使用自动代码生成器的合规声明，可以显著减少需用其他手段检查的 MISRA C 准则数量。</p>
+<p>合规矩阵示例见<a href="#table-1">表 1</a>。准则汇总见<a href="front.html#annex-a" title="原书目录条目；该附录正文不在本批">附录 A</a>，它可以帮助编制完整的合规矩阵。</p>
+<table id="table-1"><caption>表 1：合规矩阵示例</caption><thead><tr><th rowspan="2" scope="col">准则</th><th colspan="2" scope="colgroup">编译器</th><th colspan="2" scope="colgroup">检查工具</th><th rowspan="2" scope="col">人工审查</th></tr><tr><th scope="col">A</th><th scope="col">B</th><th scope="col">A</th><th scope="col">B</th></tr></thead><tbody>
+<tr><th scope="row">Dir 1.1</th><td></td><td></td><td></td><td></td><td>规程 x</td></tr>
+<tr><th scope="row">Dir 2.1</th><td>无错误</td><td>无错误</td><td></td><td></td><td></td></tr>
+<tr><th scope="row">…</th><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th scope="row">Rule 4.1</th><td></td><td></td><td>消息 38</td><td></td><td></td></tr>
+<tr><th scope="row">Rule 4.2</th><td></td><td></td><td></td><td>警告 97</td><td></td></tr>
+<tr><th scope="row">Rule 5.1</th><td>警告 347</td><td></td><td></td><td></td><td></td></tr>
+<tr><th scope="row">…</th><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody></table>
+<p>有了合规矩阵，就可以配置并使用编译器和分析器，生成需要调查的消息清单。</p>
+<p>对检查过程中所用的每种工具，应记录：</p>
+<ul>
+<li>版本号；</li>
+<li>调用工具时使用的选项；</li>
+<li>工具使用的所有配置数据。</li>
+</ul>
+<h3 id="s5-3-1"><a class="header" href="#s5-3-1">5.3.1 编译器配置</a></h3>
+<p>如果编译器允许选择 C90 或 C99，必须将其配置为项目所用的版本。同样，如果编译器允许选择目标平台，就必须针对所选目标的正确变体进行配置。</p>
+<p>应仔细审查和选择编译器的优化选项，以确保在执行速度与代码大小之间取得适当平衡。更激进的优化可能增大暴露编译器缺陷的风险。</p>
+<p>即便不用编译器来确保合规，它也可能在翻译过程中产生提示潜在缺陷的消息。如果编译器允许控制消息的数量与种类，就应审查相关选项并选择适当的级别。</p>
+<h3 id="s5-3-2"><a class="header" href="#s5-3-2">5.3.2 静态分析工具配置</a></h3>
+<p>编译器通常针对某一处理器或处理器系列，而静态分析工具往往是通用的。因此，必须重视对每个静态分析工具的配置，以反映编译器在实现中作出的选择。例如，静态分析器需要知道各整数类型的大小。</p>
+<p>如果静态分析器同时支持 C90 和 C99，就需要将它配置为项目实际使用的版本。</p>
+<p>应尽可能将分析器配置为支持语言扩展。如果做不到，就需要另行制定核查流程，用来检查代码是否符合扩展后的语言规则。</p>
+<p>为使静态分析器能检查某些准则，可能还需要进行专门配置。例如，除非项目使用 <code>_Bool</code> 表示布尔数据，否则要检查某些 MISRA C 准则，就需让分析器知道哪个类型是本质布尔类型（<a href="front.html#annex-d" title="原书目录条目；该附录正文不在本批">附录 D</a>）。</p>
+<h3 id="s5-3-3"><a class="header" href="#s5-3-3">5.3.3 调查消息</a></h3>
+<p>合规检查过程或翻译过程产生的消息分为以下几类：</p>
+<ol>
+<li>正确诊断出违反某条 MISRA C 准则；</li>
+<li>诊断出可能违反某条 MISRA C 准则；</li>
+<li>误诊为违反某条 MISRA C 准则；</li>
+<li>诊断出的问题不属于违反 MISRA C 准则的情形。</li>
+</ol>
+<p>对于第（1）类消息，首选补救措施是修改源代码，使之符合该条 MISRA C 准则。如果不宜或无法使代码符合 MISRA C，可能需要提出偏离申请（见 <a href="05.html#s5-4">§5.4</a>）。</p>
+<p>其他类别的消息也应调查。有时最简便快捷的办法是修改源代码，消除消息。但这样做未必可行或适宜，在这种情况下应保留调查记录。记录的目的是：</p>
+<ul>
+<li>对第（2）类消息，解释为何尽管被诊断为可能违规，代码实际上却符合该条 MISRA C 准则；</li>
+<li>对第（3）类消息，解释工具对该条 MISRA C 准则的违规作出了错误诊断，并尽可能取得工具开发者的认同；</li>
+<li>对第（4）类消息，说明为何可以安全地不予理会。</li>
+</ul>
+<p>所有此类调查记录都应由具备相应资格的技术负责人审查并批准。</p>
+<h2 id="s5-4"><a class="header" href="#s5-4">5.4 偏离程序</a></h2>
+<p>在某些情形下，可能有必要偏离本文件给出的准则。例如，访问固定地址上的存储器映射 I/O 端口有一种常见方法，因为涉及整数到指针的转换，它不符合 MISRA C：</p>
+<pre><code class="language-c">#define PORT (*(volatile unsigned char *)0x0002)
+
+PORT = 0x10u;
+</code></pre>
+<p>必须重视对此类偏离的适当记录和授权。采用正式的授权程序，可以防止程序员自行偏离准则。正式保留记录是良好实践，也能为可能针对该软件提出的安全论证提供支持。</p>
+<p>应在软件开发过程中将偏离程序正式化。MISRA C 不强制规定具体流程，因为不同组织采用的方法不同，例如：</p>
+<ul>
+<li>提出、审查及批准偏离的具体方式不同；</li>
+<li>批准偏离所需的审查程度和证据不同，还可能随所涉及的准则而异。</li>
+</ul>
+<p>每条 MISRA C 准则都指定了一个类别，该类别影响采用偏离的方式（见 <a href="06.html#s6-2">§6.2</a>）。</p>
+<p>偏离分为两类：项目偏离（Project Deviation）和特定偏离（Specific Deviation）。</p>
+<p>当一条 MISRA C 准则会在某一类特定情形下被偏离时，使用项目偏离。例如，若一种通信驱动程序使用存储器映射 I/O，则可考虑申请项目偏离，覆盖构成该驱动程序的所有文件中对此类 I/O 的使用。项目偏离通常在项目早期提出，但不限定于早期。</p>
+<p>当某条 MISRA C 准则仅在单个文件中的一个具体位置被偏离时，使用特定偏离。</p>
+<p>偏离记录应包括：</p>
+<ul>
+<li>所偏离的准则；</li>
+<li>允许偏离的情形：项目偏离可以使用概括性描述，例如“模块 X 中的所有代码”；特定偏离则要标明不合规代码出现的位置；</li>
+<li>偏离的理由，其中包括将偏离所伴随的风险与其他可行方案的风险进行比较评估；</li>
+<li>如何保证安全的论证，例如证明某个不安全状态不可能出现，同时说明需要增加的审查或测试；</li>
+<li>偏离可能造成的后果，以及已采取的缓解措施。</li>
+</ul>
+<p><a href="front.html#annex-i" title="原书目录条目；该附录正文不在本批">附录 I</a> 给出了一份偏离记录示例。</p>
+<h2 id="s5-5"><a class="header" href="#s5-5">5.5 声称合规</a></h2>
+<p>只能就某个项目声称合规，不能就一个组织声称合规。</p>
+<p>开发者声称项目符合 MISRA C 时，表示有证据证明以下事项：</p>
+<ol>
+<li>已完成一份合规矩阵，表明是如何落实合规要求的；</li>
+<li>项目中的所有 C 代码均符合本文件的准则，或已就不合规之处取得偏离批准；</li>
+<li>每一项已批准的偏离都有记录；</li>
+<li>已采用本节以及 <a href="03.html#s3">§3</a>、<a href="04.html#s4">§4</a> 给出的指导；</li>
+<li>人员具备适当技能，并拥有足够广泛的经验。</li>
+</ol>
+<p><strong>注：</strong> 声称代码符合准则，是以工具或审查人员已识别所有不合规之处为前提的。其他工具或审查人员可能找出不同的不合规之处，因此必须认识到，合规声明并非绝对结论，而取决于所采用的检查过程。</p>
+<p>第（4）项所指指导内容的汇总以检查表形式给出，见<a href="front.html#annex-f" title="原书目录条目；该附录正文不在本批">附录 F</a>。</p>
+</section><aside class="note"><b>补充说明（非原文）</b> 附录链接指向原书目录中的题名和印刷页码，不是附录正文。</aside><nav class="navline" aria-label="篇目切换"><a href="04.html">上一篇：4　必备知识</a><a href="../index.html">全部译文</a><a href="06.html">下一篇：6　准则导读</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

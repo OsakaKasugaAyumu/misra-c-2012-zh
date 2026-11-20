@@ -1,0 +1,36 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Dir 4.11 · 检查传给库函数的值 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-1">译文目录</a><span>§7 · Directive</span></nav><p class="eyebrow">中文译文　/　21 · 38</p><h1 id="dir-4-11">Dir 4.11 · 检查传给库函数的值</h1><p class="muted locator">底本定位 §7.4 · PDF 41–42／印刷 33–34，从 Dir 4.11 标题起，止于 Dir 4.12 标题前。</p><section class="source-translation" aria-labelledby="dir-4-11-text">
+<h2 id="dir-4-11-text"><a class="header" href="#dir-4-11-text">原文译文</a></h2>
+<p class="guideline"><strong>Dir 4.11</strong>　必须检查传给库函数的值是否有效。</p>
+<p>C90 [Undefined 60, 63, 96; Implementation 45–47]<br>
+C99 [Unspecified 30, 31, 44, 48–50; Undefined 102, 103, 107, 112, 180, 181, 183, 187, 189; Implementation J.3(8–11)]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>项目的性质和组织方式决定哪些库，以及这些库中的哪些函数，应当受本指令约束。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>C 标准并不要求标准库中的许多函数检查传入参数的有效性。即便标准要求检查，或者编译器开发者声称会检查参数，也不能保证这些检查足够充分。</p>
+<p>同样，其他库的函数接口说明未必写明这些函数会做哪些检查。即便写明了，也有可能检查得不充分。</p>
+<p>对于输入域受限的所有库函数，无论来自标准库、第三方库还是内部开发的库，程序员都必须对输入值进行适当的检查。</p>
+<p>标准库中，输入域受限、需要检查的函数有以下例子：</p>
+<ul>
+<li><code>&lt;math.h&gt;</code> 中的许多数学函数，例如：
+<ul>
+<li>不得将负数传给 <code>sqrt</code> 或 <code>log</code>；</li>
+<li><code>fmod</code> 的第二个参数不应为零；</li>
+</ul>
+</li>
+<li>在某些实现中，传给 <code>toupper</code> 的实参如果不是小写字母，可能得到意外结果（<code>tolower</code> 的情形与之类似）；</li>
+<li>如果传入无效值，<code>&lt;ctype.h&gt;</code> 中的字符分类函数会表现出未定义行为；</li>
+<li>对最小的负整数调用 <code>abs</code> 会产生未定义行为。</li>
+</ul>
+<p>尽管 <code>&lt;math.h&gt;</code> 中的大多数数学库函数都规定了允许的输入域，但发生定义域错误时，函数的返回值可能因编译器而异。因此，对这些函数而言，预先检查输入值的有效性尤为重要。</p>
+<p>程序员应当明确所用函数在实际使用中应有哪些合理的输入域约束（接口说明中可能记载了这些约束，也可能没有），并作适当检查，确保一个或多个输入值落在该域内。当然，如有需要，还可以根据参数代表什么、怎样的取值范围对它才合理，进一步限定取值。</p>
+<p>满足本准则要求的方式不止一种，包括：</p>
+<ul>
+<li>在调用函数之前检查这些值；</li>
+<li>在被调用的库函数内部检查这些值。这种方式特别适用于内部设计的库；对于外购库，如果供应商能够证明库中内置了这些检查，也可以采用这种方式；</li>
+<li>编写函数的包装版本，由包装函数先检查，再调用原函数；</li>
+<li>通过静态分析或推理，证明输入参数不可能取到无效值。</li>
+</ul>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="04-01.html#dir-4-1">Dir 4.1</a>、<a href="04-07.html#dir-4-7">Dir 4.7</a>。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/dir-4-11.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="04-10.html">上一篇：Dir 4.10 · 防止头文件内容被重复包含</a><a href="../index.html">全部译文</a><a href="04-12.html">下一篇：Dir 4.12 · 不得使用动态内存分配</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

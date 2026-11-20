@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Dir 4.10 · 防止头文件内容被重复包含 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-1">译文目录</a><span>§7 · Directive</span></nav><p class="eyebrow">中文译文　/　20 · 38</p><h1 id="dir-4-10">Dir 4.10 · 防止头文件内容被重复包含</h1><p class="muted locator">底本定位 §7.4 · PDF 40–41／印刷 32–33，止于 Dir 4.11 标题前。</p><section class="source-translation" aria-labelledby="dir-4-10-text">
+<h2 id="dir-4-10-text"><a class="header" href="#dir-4-10-text">原文译文</a></h2>
+<p class="guideline"><strong>Dir 4.10</strong>　必须采取预防措施，防止<em>头文件</em>的内容被多次包含。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>当一个翻译单元含有层层嵌套、关系复杂的<em>头文件</em>时，同一个<em>头文件</em>可能被包含多次。即使没有造成其他后果，这也可能使人困惑。如果重复包含导致多重定义或相互冲突的定义，就可能造成未定义行为或错误行为。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">/* file.h */
+#ifndef FILE_H
+/* Non-compliant - does not #define FILE_H */
+#endif
+</code></pre>
+<p>原书代码注释（译）：文件名为 <code>file.h</code>；“不合规——没有用 <code>#define</code> 定义 <code>FILE_H</code>”。</p>
+<p>为便于检查，应当采用以下两种形式之一，保护头文件的内容，使其不会被多次包含：</p>
+<pre><code class="language-c">&lt;start-of-file&gt;
+#if !defined ( identifier )
+#define identifier
+  /* Contents of file */
+#endif
+&lt;end-of-file&gt;
+</code></pre>
+<pre><code class="language-c">&lt;start-of-file&gt;
+#ifndef identifier
+#define identifier
+  /* Contents of file */
+#endif
+&lt;end-of-file&gt;
+</code></pre>
+<p>两段原书代码中的标记和注释（译）：<code>&lt;start-of-file&gt;</code> 表示“文件开头”，<code>&lt;end-of-file&gt;</code> 表示“文件结尾”；<code>identifier</code> 表示“标识符”，块内注释为“文件内容”。</p>
+<p><em>注：</em> 用来检查并记录某个<em>头文件</em>是否已经被包含的标识符，在项目的所有<em>头文件</em>中必须唯一。</p>
+<p><em>注：</em> 在上述形式中的任何位置都允许写注释。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/dir-4-10.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="04-09.html">上一篇：Dir 4.9 · 可以互换时优先使用函数</a><a href="../index.html">全部译文</a><a href="04-11.html">下一篇：Dir 4.11 · 检查传给库函数的值</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

@@ -14,3 +14,9 @@
 !/docs/examples/**/
 !/docs/examples/**/*.c
 !/docs/examples/**/*.h
+!/docs/translations/
+!/docs/translations/**/
+!/docs/translations/**/*.html
+!/docs/assets/translation.css
+!/docs/assets/translation-search.js
+!/docs/assets/translated-pages.json

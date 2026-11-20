@@ -1,0 +1,11 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Dir 4.4 · 不应用注释停用代码 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-1">译文目录</a><span>§7 · Directive</span></nav><p class="eyebrow">中文译文　/　14 · 38</p><h1 id="dir-4-4">Dir 4.4 · 不应用注释停用代码</h1><p class="muted locator">底本定位 §7.4 · PDF 35／印刷 27，止于 Dir 4.5 标题前。</p><section class="source-translation" aria-labelledby="dir-4-4-text">
+<h2 id="dir-4-4-text"><a class="header" href="#dir-4-4-text">原文译文</a></h2>
+<p class="guideline"><strong>Dir 4.4</strong>　不应把成段代码“注释掉”。</p>
+<dl class="attributes"><dt>类别</dt><dd>建议（Advisory）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>本规则既适用于 <code>//</code> 形式的注释，也适用于 <code>/* ... */</code> 形式的注释。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>需要让某些源代码段不参与编译时，应当使用条件编译来实现（例如，采用 <code>#if</code> 或 <code>#ifdef</code> 结构，并附上注释）。用注释的起止标记来达到这个目的是危险的：C 不支持嵌套注释，代码段中原本就有的注释会改变这样做的效果。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p>Rule 3.1、Rule 3.2。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/dir-4-4.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="04-03.html">上一篇：Dir 4.3 · 封装并隔离汇编语言</a><a href="../index.html">全部译文</a><a href="04-05.html">下一篇：Dir 4.5 · 避免字形容易混淆的标识符</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

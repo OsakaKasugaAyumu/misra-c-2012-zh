@@ -1,0 +1,37 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Dir 4.9 · 可以互换时优先使用函数 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-1">译文目录</a><span>§7 · Directive</span></nav><p class="eyebrow">中文译文　/　19 · 38</p><h1 id="dir-4-9">Dir 4.9 · 可以互换时优先使用函数</h1><p class="muted locator">底本定位 §7.4 · PDF 39–40／印刷 31–32，止于 Dir 4.10 标题前。</p><section class="source-translation" aria-labelledby="dir-4-9-text">
+<h2 id="dir-4-9-text"><a class="header" href="#dir-4-9-text">原文译文</a></h2>
+<p class="guideline"><strong>Dir 4.9</strong>　在函数与<em>函数式宏</em>可以互换的场合，应优先使用函数。</p>
+<p>[Koenig 78–81]</p>
+<dl class="attributes"><dt>类别</dt><dd>建议（Advisory）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>本准则仅适用于语言标准的语法和约束允许使用函数的场合。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>在大多数情况下，应使用函数而不是宏。函数会对实参进行类型检查，并且每个实参只求值一次，从而避免了<em>副作用</em>可能多次发生所带来的问题。在许多调试系统中，单步跟踪函数的执行比单步跟踪宏的执行更容易。不过，在某些场合，宏仍然有用。</p>
+<p>决定使用函数还是宏时，应考虑的因素包括：</p>
+<ul>
+<li>对函数实参和返回结果进行类型检查的好处；</li>
+<li>C99 提供了<em>内联函数</em>，但要注意，实现会在多大程度上采纳 <code>inline</code>，是实现定义的；</li>
+<li>代码大小与执行速度之间的取舍；</li>
+<li>对当前用途而言，编译时求值的可能性是否重要：实参为常量的宏比相应的函数调用更有可能在编译时求值；</li>
+<li>这些实参对函数而言是否合法：宏的实参是文本，而函数的实参是表达式；</li>
+<li>是否易于理解和维护。</li>
+</ul>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>下例合规。这里的<em>函数式宏</em>以一个 C 运算符作为实参，因此不能用函数替换：</p>
+<pre><code class="language-c">#define EVAL_BINOP( OP, L, R ) ( ( L ) OP ( R ) )
+
+uint32_t  x = EVAL_BINOP ( +, 1, 2 );
+</code></pre>
+<p>下例中，用宏初始化具有静态存储期的对象是合规的，因为此处不允许函数调用。</p>
+<pre><code class="language-c">#define DIV2(X) ( ( X ) / 2 )
+
+void f ( void )
+{
+  static uint16_t x = DIV2 ( 10 );   /* Compliant - call not permitted */
+         uint16_t y = DIV2 ( 10 );   /* Non-compliant - call permitted */
+}
+</code></pre>
+<p>原书代码注释（译）：<code>x</code> 所在行：“合规——此处不允许调用函数”；<code>y</code> 所在行：“不合规——此处允许调用函数”。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p>Rule 13.2、Rule 20.7。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/dir-4-9.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="04-08.html">上一篇：Dir 4.8 · 不解引用指针时隐藏对象的实现</a><a href="../index.html">全部译文</a><a href="04-10.html">下一篇：Dir 4.10 · 防止头文件内容被重复包含</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

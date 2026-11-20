@@ -1,0 +1,26 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 3.2 · 单行注释中的行拼接 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-2">译文目录</a><span>§8 · Rule 与试点</span></nav><p class="eyebrow">中文译文　/　35 · 38</p><h1 id="rule-3-2">Rule 3.2 · 单行注释中的行拼接</h1><p class="muted locator">底本定位 §8.3 · PDF 54／印刷 46</p><section class="source-translation" aria-labelledby="rule-3-2-text">
+<h2 id="rule-3-2-text"><a class="header" href="#rule-3-2-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 3.2</strong>　不得在 <code>//</code> 注释中使用行拼接。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>当 <code>\</code> 字符后紧跟一个换行字符时，就会发生行拼接。如果源文件含有多字节字符，它们会在任何行拼接发生之前被转换为源字符集中的字符。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>如果含有 <code>//</code> 注释的源代码行以源字符集中的 <code>\</code> 字符结尾，下一行就会成为这条注释的一部分。这可能无意中去掉本应保留的代码。</p>
+<p><strong>注：</strong> C90 和 C99 均在第 5.1.1.2(2) 节描述了行拼接。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>在下面这个不合规示例中，含有 <code>if</code> 关键字的物理行在逻辑上属于前一行，因而是注释。</p>
+<pre><code class="language-c">extern bool_t b;
+
+void f ( void )
+{
+  uint16_t  x = 0;   // comment \
+  if ( b )
+  {
+    ++x;             /* This is always executed */
+  }
+}
+</code></pre>
+<p><strong>原书代码注释中译：</strong> <code>x</code> 的初始化行标有“注释”，行末是反斜杠；<code>++x;</code> 一行的注释是“这一句总会执行”。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="../directives/04-04.html#dir-4-4">Dir 4.4</a>。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-3-2.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="03-01.html">上一篇：Rule 3.1 · 注释中的注释起始符</a><a href="../index.html">全部译文</a><a href="04-01.html">下一篇：Rule 4.1 · 八进制与十六进制转义序列</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

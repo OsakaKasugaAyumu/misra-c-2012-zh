@@ -1,0 +1,15 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Dir 4.7 · 检查函数返回的错误信息 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-1">译文目录</a><span>§7 · Directive</span></nav><p class="eyebrow">中文译文　/　17 · 38</p><h1 id="dir-4-7">Dir 4.7 · 检查函数返回的错误信息</h1><p class="muted locator">底本定位 §7.4 · PDF 38／印刷 30，止于 Dir 4.8 标题前。</p><section class="source-translation" aria-labelledby="dir-4-7-text">
+<h2 id="dir-4-7-text"><a class="header" href="#dir-4-7-text">原文译文</a></h2>
+<p class="guideline"><strong>Dir 4.7</strong>　如果函数返回错误信息，就必须检查该错误信息。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>哪些函数被视为会返回错误信息，必须由项目确定并列成清单。</p>
+<p>函数返回的错误信息必须以有实际意义的方式进行检查。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>一个函数，无论它是标准库函数、第三方库函数还是用户自定义函数，都可能被视为提供了某种机制，用以指示错误已经发生。这种机制可以是错误标志、某个特殊的返回值，也可以是其他方式。只要函数提供了这样的机制，调用程序就必须在函数返回后立即检查是否有错误指示。</p>
+<p>不过，应当注意：与等到函数执行完毕再试图检测错误相比，检查传给函数的输入值被认为是更稳健的错误预防手段（见 Dir 4.11）。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<p>如果能够证明某个函数不可能返回错误指示，例如通过检查实参来证明，就不必再检查错误指示。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p>Dir 4.11、Rule 17.7。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/dir-4-7.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="04-06.html">上一篇：Dir 4.6 · 用类型名表明位宽和符号性</a><a href="../index.html">全部译文</a><a href="04-08.html">下一篇：Dir 4.8 · 不解引用指针时隐藏对象的实现</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

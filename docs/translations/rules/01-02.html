@@ -1,0 +1,11 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 1.2 · 语言扩展 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#group-2">译文目录</a><span>§8 · Rule 与试点</span></nav><p class="eyebrow">中文译文　/　25 · 38</p><h1 id="rule-1-2">Rule 1.2 · 语言扩展</h1><p class="muted locator">底本定位 §8.1 · PDF 46／印刷 38</p><section class="source-translation" aria-labelledby="rule-1-2-text">
+<h2 id="rule-1-2-text"><a class="header" href="#rule-1-2-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 1.2</strong>　不应使用语言扩展。</p>
+<dl class="attributes"><dt>类别</dt><dd>建议（Advisory）</dd><dt>分析</dt><dd>不可判定（Undecidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>与不使用语言扩展的程序相比，依赖语言扩展的程序可能较难移植。虽然标准要求符合标准的实现用文档说明它提供的所有语言扩展，但文档仍有可能没有完整描述它们在各种情形下的行为。</p>
+<p>如果不采用本规则，则应在项目设计文档中说明使用每一项语言扩展的理由。还应记录将如何确保每项扩展得到正确使用，例如检查编译器及其诊断信息。</p>
+<p>本文件承认，嵌入式系统中有使用语言扩展的必要。标准要求扩展不得改变任何严格符合标准的程序的行为。例如，标准规定二元逻辑运算符的结果一经确定，求值即停止；但某个编译器可能以扩展的方式对两个操作数都求值。这种扩展不符合标准，因为逻辑与运算符右操作数中的副作用将总是发生，从而产生不同的行为。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="01-01.html#rule-1-1">Rule 1.1</a>。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-1-2.html">阅读这条准则的自编源码、验证记录和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="01-01.html">上一篇：Rule 1.1 · 语法、约束与翻译限度</a><a href="../index.html">全部译文</a><a href="01-03.html">下一篇：Rule 1.3 · 未定义行为与关键的未指定行为</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>
