@@ -1,0 +1,51 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 8.3 · 各次声明中的名称和类型限定符 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b05">译文目录</a><span>B05 · §8.8–§8.9</span></nav><p class="eyebrow">中文译文　/　55 · 71</p><h1 id="rule-8-3">Rule 8.3 · 各次声明中的名称和类型限定符</h1><p class="muted locator">底本定位 §8.8 · PDF／印刷 74–75／66–67</p><section class="source-translation" aria-labelledby="rule-8-3-text">
+<h2 id="rule-8-3-text"><a class="header" href="#rule-8-3-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 8.3</strong>　同一对象或函数的所有声明必须使用相同的名称和类型限定符。</p>
+<p>C90 [未定义 10]，C99 [未定义 14]，[Koenig 59–62]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>存储类说明符不在本规则的范围内。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>在同一对象或函数的各次声明中一致地使用类型和限定符，有助于加强类型约束。</p>
+<p>在函数原型中指定形参名，使得可以对照函数的声明检查其定义的接口是否一致。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<p>同一基本类型的兼容写法可以互换。例如，<code>int</code>、<code>signed</code> 和 <code>signed int</code> 三者等价。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">extern void f ( signed int );
+       void f (        int );    /* Compliant     - Exception       */
+extern void g ( int * const );
+       void g ( int *       );   /* Non-compliant - type qualifiers */
+</code></pre>
+<p><strong>注：</strong> 以上各项均不符合 <a href="../directives/04-06.html#dir-4-6">Dir 4.6</a>。</p>
+<pre><code class="language-c">extern int16_t func ( int16_t num, int16_t den );
+
+/* Non-compliant - parameter names do not match */
+int16_t func ( int16_t den, int16_t num )
+{
+  return num / den;
+}
+</code></pre>
+<p>在下例中，<code>area</code> 的定义对形参 <code>h</code> 使用的类型名与声明中使用的不同。即使 <code>width_t</code> 和 <code>height_t</code> 是相同的基本类型，这种写法仍不符合本规则。</p>
+<pre><code class="language-c">typedef uint16_t width_t;
+typedef uint16_t height_t;
+typedef uint32_t area_t;
+
+extern area_t area ( width_t w, height_t h );
+
+area_t area ( width_t w, width_t h )
+{
+  return ( area_t ) w * h;
+}
+</code></pre>
+<p>本规则不要求函数指针声明使用与函数声明相同的名称。所以下例是符合的。</p>
+<pre><code class="language-c">extern void f1 ( int16_t x );
+extern void f2 ( int16_t y );
+
+void f ( bool_t b )
+{
+  void ( *fp1 ) ( int16_t z ) = b ? f1 : f2;
+}
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="08.html#rule-8-4">Rule 8.4</a></p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> f 的两种基本类型写法按例外符合；g 的类型限定符不同，不符合。func 的形参名与对应位置不一致，不符合。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-8-3.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="08-02.html">上一篇：Rule 8.2 · 函数原型与具名形参</a><a href="../index.html">全部译文</a><a href="08.html">下一篇：Rule 8.4 · 外部链接对象与函数的声明</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

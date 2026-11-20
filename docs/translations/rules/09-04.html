@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 9.4 · 同一元素的重复初始化 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b05">译文目录</a><span>B05 · §8.8–§8.9</span></nav><p class="eyebrow">中文译文　/　70 · 71</p><h1 id="rule-9-4">Rule 9.4 · 同一元素的重复初始化</h1><p class="muted locator">底本定位 §8.9 · PDF／印刷 87–88／79–80</p><section class="source-translation" aria-labelledby="rule-9-4-text">
+<h2 id="rule-9-4-text"><a class="header" href="#rule-9-4-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 9.4</strong>　对象的同一个元素不得被初始化多次。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>本规则同时适用于对象和子对象的初始化器。</p>
+<p>C99 提供的指定初始化器允许在初始化列表中指名聚合（结构体或数组）或联合中的组成部分，并允许通过指定相应的数组下标或结构体成员名，以任意顺序初始化对象的各个元素（没有给出初始值的元素采用未初始化对象的默认值）。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>使用指定初始化器时需要小心，因为可能无意中重复初始化某个元素，从而覆盖先前对该元素的初始化。C99 标准未规定被覆盖的初始化器中的副作用是否发生，尽管附录 J 没有列出这一点。</p>
+<p>为允许使用稀疏的数组和结构体，只初始化应用所需要的那些元素是可以接受的。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>数组初始化：</p>
+<pre><code class="language-c">/*
+ * Required behaviour using positional initialization
+ * Compliant - a1 is -5, -4, -3, -2, -1
+ */
+int16_t a1[ 5 ] = { -5, -4, -3, -2, -1 };
+
+/*
+ * Similar behaviour using designated initializers
+ * Compliant - a2 is -5, -4, -3, -2, -1
+ */
+int16_t a2[ 5 ] = { [ 0 ] = -5, [ 1 ] = -4, [ 2 ] = -3,
+                    [ 3 ] = -2, [ 4 ] = -1              };
+</code></pre>
+<pre><code class="language-c">/*
+ * Repeated designated initializer element values overwrite earlier ones
+ * Non-compliant - a3 is -5, -4, -2, 0, -1
+ */
+int16_t a3[ 5 ] = { [ 0 ] = -5, [ 1 ] = -4, [ 2 ] = -3,
+                    [ 2 ] = -2, [ 4 ] = -1              };
+</code></pre>
+<p>在下面这个不符合本规则的示例中，副作用是否发生是未指定的：</p>
+<pre><code class="language-c">uint16_t *p;
+
+void f ( void )
+{
+  uint16_t a[ 2 ] = { [ 0 ] = *p++, [ 0 ] = 1 };
+}
+</code></pre>
+<p>结构体初始化：</p>
+<pre><code class="language-c">struct mystruct
+{
+  int32_t a;
+  int32_t b;
+  int32_t c;
+  int32_t d;
+};
+
+/*
+ * Required behaviour using positional initialization
+ * Compliant - s1 is 100, -1, 42, 999
+ */
+struct mystruct s1 = { 100, -1, 42, 999 };
+
+/*
+ * Similar behaviour using designated initializers
+ * Compliant - s2 is 100, -1, 42, 999
+ */
+struct mystruct s2 = { .a = 100, .b = -1, .c = 42, .d = 999 };
+
+/*
+ * Repeated designated initializer element values overwrite earlier ones
+ * Non-compliant - s3 is 42, -1, 0, 999
+ */
+struct mystruct s3 = { .a = 100, .b = -1, .a = 42, .d = 999 };
+</code></pre>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> a1 按位置给出所需行为，a2 用指定项实现相似行为；两者符合，值均为 −5、−4、−3、−2、−1。a3 的重复指定项覆盖先前的值，不符合，结果为 −5、−4、−2、0、−1。s1 按位置初始化，s2 用指定项，均符合并得到 100、−1、42、999；s3 的重复指定项覆盖先前的值，不符合，结果为 42、−1、0、999。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-9-4.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="09-03.html">上一篇：Rule 9.3 · 数组的部分初始化</a><a href="../index.html">全部译文</a><a href="09-05.html">下一篇：Rule 9.5 · 使用指定初始化器时的数组大小</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

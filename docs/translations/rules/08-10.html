@@ -1,0 +1,12 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 8.10 · 内联函数的存储类 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b05">译文目录</a><span>B05 · §8.8–§8.9</span></nav><p class="eyebrow">中文译文　/　62 · 71</p><h1 id="rule-8-10">Rule 8.10 · 内联函数的存储类</h1><p class="muted locator">底本定位 §8.8 · PDF／印刷 80／72</p><section class="source-translation" aria-labelledby="rule-8-10-text">
+<h2 id="rule-8-10-text"><a class="header" href="#rule-8-10-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 8.10</strong>　内联函数必须以 <code>static</code> 存储类声明。</p>
+<p>C99 [未指定 20；未定义 67]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>若内联函数声明为具有外部链接属性，但未在同一翻译单元中定义，则行为未定义。</p>
+<p>调用具有外部链接属性的内联函数时，可能调用该函数的外部定义，也可能使用内联定义。虽然这不应影响被调用函数的行为，但可能影响执行时序，从而影响实时程序。</p>
+<p><strong>注：</strong> 可将内联函数的定义放在头文件中，从而使多个翻译单元都能使用它。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="05-09.html#rule-5-9">Rule 5.9</a></p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-8-10.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="08-09.html">上一篇：Rule 8.9 · 仅在一个函数中出现的对象名</a><a href="../index.html">全部译文</a><a href="08-11.html">下一篇：Rule 8.11 · 外部数组声明的长度</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

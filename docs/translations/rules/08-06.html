@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 8.6 · 外部定义的唯一性 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b05">译文目录</a><span>B05 · §8.8–§8.9</span></nav><p class="eyebrow">中文译文　/　58 · 71</p><h1 id="rule-8-6">Rule 8.6 · 外部定义的唯一性</h1><p class="muted locator">底本定位 §8.8 · PDF／印刷 77–78／69–70</p><section class="source-translation" aria-labelledby="rule-8-6-text">
+<h2 id="rule-8-6-text"><a class="header" href="#rule-8-6-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 8.6</strong>　具有外部链接属性的标识符必须恰有一个外部定义。</p>
+<p>C90 [未定义 44]，C99 [未定义 78]，[Koenig 55、63–65]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>如果一个被使用的标识符有多个定义（在不同文件中），或者根本没有定义，则行为未定义。即使定义相同，本规则也不允许在不同文件中有多个定义。如果声明不同，或者把该标识符初始化为不同的值，则行为未定义。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>在本例中，对象 <code>i</code> 被定义了两次。</p>
+<pre><code class="language-c">/* file1.c */
+int16_t i = 10;
+
+/* file2.c */
+int16_t i = 20;   /* Non-compliant - two definitions of i    */
+</code></pre>
+<p>在本例中，对象 <code>j</code> 有一个暂定定义和一个外部定义。</p>
+<pre><code class="language-c">/* file3.c */
+int16_t j;        /* Tentative definition                    */
+int16_t j = 1;    /* Compliant - external definition         */
+</code></pre>
+<p>下例不符合本规则，因为对象 <code>k</code> 有两个外部定义。<code>file4.c</code> 中的暂定定义在该翻译单元结束时成为外部定义。</p>
+<pre><code class="language-c">/* file4.c */
+int16_t k;        /* Tentative definition - becomes external */
+
+/* file5.c */
+int16_t k = 0;    /* External definition                     */
+</code></pre>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> file1.c 与 file2.c 中有 i 的两个定义，不符合。file3.c 中 j 的暂定定义后面是外部定义，符合。file4.c 中 k 的暂定定义成为外部定义；file5.c 中还有一个外部定义。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-8-6.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="08-05.html">上一篇：Rule 8.5 · 外部对象或函数的声明来源</a><a href="../index.html">全部译文</a><a href="08-07.html">下一篇：Rule 8.7 · 仅在一个翻译单元中引用</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

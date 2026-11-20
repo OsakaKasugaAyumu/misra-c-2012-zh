@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 8.9 · 仅在一个函数中出现的对象名 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b05">译文目录</a><span>B05 · §8.8–§8.9</span></nav><p class="eyebrow">中文译文　/　61 · 71</p><h1 id="rule-8-9">Rule 8.9 · 仅在一个函数中出现的对象名</h1><p class="muted locator">底本定位 §8.8 · PDF／印刷 79–80／71–72</p><section class="source-translation" aria-labelledby="rule-8-9-text">
+<h2 id="rule-8-9-text"><a class="header" href="#rule-8-9-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 8.9</strong>　如果对象的标识符只出现在一个函数中，则该对象应当定义在块作用域内。</p>
+<dl class="attributes"><dt>类别</dt><dd>建议（Advisory）</dd><dt>分析</dt><dd>可判定（Decidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>在块作用域内定义对象，可降低被无意访问的可能性，并明确表达不应从别处访问它的意图。</p>
+<p>在一个函数内，将对象定义在最外层块还是最内层块，主要是风格问题。</p>
+<p>确实存在可能无法遵守本规则的情况。例如，在块作用域声明的、具有静态存储期的对象不能从块外直接访问。因此，如果不通过间接访问该对象，就无法设置单元测试用例的初始状态并检查其结果。在这类情况下，有些项目可能宁愿不应用本规则。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>在这个符合本规则的示例中，<code>i</code> 在块作用域声明，因为它是循环计数器。同一文件中的其他函数不需要把同一对象用于任何其他目的。</p>
+<pre><code class="language-c">void func ( void )
+{
+  int32_t i;
+
+  for ( i = 0; i &lt; N; ++i )
+  {
+  }
+}
+</code></pre>
+<p>在这个符合本规则的示例中，函数 <code>count</code> 记录自己被调用的次数并返回该次数。没有其他函数需要知道 <code>count</code> 的实现细节，所以调用计数器定义在块作用域内。</p>
+<pre><code class="language-c">uint32_t count ( void )
+{
+  static uint32_t call_count = 0;
+
+  ++call_count;
+  return call_count;
+}
+</code></pre>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-8-9.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="08-08.html">上一篇：Rule 8.8 · 内部链接声明中的 static</a><a href="../index.html">全部译文</a><a href="08-10.html">下一篇：Rule 8.10 · 内联函数的存储类</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

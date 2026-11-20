@@ -1,0 +1,39 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 9.3 · 数组的部分初始化 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b05">译文目录</a><span>B05 · §8.8–§8.9</span></nav><p class="eyebrow">中文译文　/　69 · 71</p><h1 id="rule-9-3">Rule 9.3 · 数组的部分初始化</h1><p class="muted locator">底本定位 §8.9 · PDF／印刷 86–87／78–79</p><section class="source-translation" aria-labelledby="rule-9-3-text">
+<h2 id="rule-9-3-text"><a class="header" href="#rule-9-3-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 9.3</strong>　不得对数组只作部分初始化。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>若显式初始化了数组对象或子对象中的任何一个元素，则必须显式初始化该对象或子对象的全部元素。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>对每个元素提供显式初始化，能清楚表明每个元素都经过了考虑。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<ol>
+<li>可用形式为 <code>{ 0 }</code> 的初始化器显式初始化数组对象或子对象的全部元素。</li>
+<li>可以使用初始化器完全由指定初始化项组成的数组，例如用它进行稀疏初始化。</li>
+<li>用字符串字面量初始化的数组不必为每个元素都提供一个初始化项。</li>
+</ol>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">/* Compliant */
+int32_t x[ 3 ] = { 0, 1, 2 };
+
+/* Non-compliant - y[ 2 ] is implicitly initialized */
+int32_t y[ 3 ] = { 0, 1 };
+</code></pre>
+<pre><code class="language-c">/* Non-compliant - t[ 0 ] and t[ 3 ] are implicitly initialized */
+float32_t t[ 4 ]  = { [ 1 ] = 1.0f, 2.0f };
+
+/* Compliant - designated initializers for sparse matrix */
+float32_t z[ 50 ] = { [ 1 ] = 1.0f, [ 25 ] = 2.0f };
+</code></pre>
+<p>在下面这个符合本规则的示例中，数组 <code>arr</code> 的每一个元素都得到了初始化：</p>
+<pre><code class="language-c">float32_t arr[ 3 ][ 2 ] =
+{
+  { 0.0f, 0.0f },
+  { PI / 4.0f, -PI / 4.0f },
+  { 0 }   /* initializes all elements of array subobject arr[ 2 ] */
+};
+</code></pre>
+<p>在下例中，数组的第 6 至第 9 号元素被隐式初始化为 <code>'\0'</code>：</p>
+<pre><code class="language-c">char h[ 10 ] = "Hello";   /* Compliant by Exception 3 */
+</code></pre>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> x 符合；y 不符合，y[2] 隐式初始化。t 不符合，第 0、3 号元素隐式初始化；z 使用指定初始化项表示稀疏矩阵，符合。{0} 初始化 arr[2] 的所有元素；h 按例外 3 符合。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-9-3.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="09-02.html">上一篇：Rule 9.2 · 聚合与联合初始化器的花括号</a><a href="../index.html">全部译文</a><a href="09-04.html">下一篇：Rule 9.4 · 同一元素的重复初始化</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>
