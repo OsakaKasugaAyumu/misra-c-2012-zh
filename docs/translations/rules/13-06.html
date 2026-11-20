@@ -1,0 +1,39 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 13.6 · sizeof 与潜在副作用 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b07">译文目录</a><span>B07 · §8.12–§8.14</span></nav><p class="eyebrow">中文译文　/　98 · 102</p><h1 id="rule-13-6">Rule 13.6 · sizeof 与潜在副作用</h1><p class="muted locator">底本定位 规则 PDF／印刷 122–123／114–115。</p><section class="source-translation" aria-labelledby="rule-13-6-text">
+<h2 id="rule-13-6-text"><a class="header" href="#rule-13-6-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 13.6</strong>　sizeof 运算符的操作数不得含有任何具有潜在副作用的表达式。</p>
+<p>C99 [未指定 21]</p>
+<dl class="attributes"><dt>类别</dt><dd>强制（Mandatory）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>出现在 <code>sizeof</code> 操作数中的表达式通常不求值。本规则强制要求：对其中任一表达式求值都不得产生副作用，无论实际上是否对它求值。</p>
+<p>就本规则而言，函数调用视为副作用。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p><code>sizeof</code> 的操作数可以是表达式，也可以指定一种类型。如果操作数中包含表达式，程序员可能错误地期待它会被求值，而实际上大多数情况下并不会求值。</p>
+<p>C90 标准规定，操作数中出现的表达式不在运行时求值。</p>
+<p>在 C99 中，操作数中出现的表达式通常不在运行时求值。不过，如果操作数包含变长数组类型，则在有必要时会对数组大小表达式求值。如果无需求该大小表达式的值即可确定结果，则是否对它求值是未指定的。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<p>允许使用 <code>sizeof ( V )</code> 形式的表达式，其中 <code>V</code> 是具有 <code>volatile</code> 限定类型、且不是变长数组的左值。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">volatile int32_t i;
+         int32_t j;
+         size_t  s;
+
+s = sizeof ( j );         /* Compliant             */
+s = sizeof ( j++ );       /* Non-compliant         */
+s = sizeof ( i );         /* Compliant - exception */
+s = sizeof ( int32_t );   /* Compliant             */
+</code></pre>
+<p>下例最后一个 <code>sizeof</code> 表达式展示了变长数组的大小表达式如何可能不影响类型的大小。操作数的类型为“由 <code>n</code> 个函数指针构成的数组；所指函数有一个形参，其类型写作由 <code>v</code> 个 <code>int32_t</code> 构成的数组”。由于操作数具有变长数组类型，它会被求值。然而，这 <code>n</code> 个函数指针所占的大小不受所指函数形参列表的影响。因此，是否对具有 <code>volatile</code> 限定的对象 <code>v</code> 求值都可能，其副作用也可能发生或不发生。</p>
+<pre><code class="language-c">volatile uint32_t v;
+
+void f ( int32_t n )
+{
+  size_t s;
+
+  s = sizeof ( int32_t[ n ] );                         /* Compliant     */
+  s = sizeof ( int32_t[ n++ ] );                       /* Non-compliant */
+  s = sizeof ( void ( *[ n ] ) ( int32_t a[ v ] ) );   /* Non-compliant */
+}
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p>Rule 18.8。</p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> sizeof ( j ) 符合；以 j++ 作操作数不符合；sizeof ( i ) 按例外符合；以 int32_t 作操作数符合。三个涉及变长数组的例子依次标为符合、不符合、不符合。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-13-6.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="13-05.html">上一篇：Rule 13.5 · 短路右侧的持久副作用</a><a href="../index.html">全部译文</a><a href="14-01.html">下一篇：Rule 14.1 · 辨认浮点循环计数器</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

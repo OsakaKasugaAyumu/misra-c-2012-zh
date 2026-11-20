@@ -1,0 +1,97 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 12.1 · 运算符优先级与括号 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"><style>.table-scroll>table{min-width:38rem}</style></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b07">译文目录</a><span>B07 · §8.12–§8.14</span></nav><p class="eyebrow">中文译文　/　89 · 102</p><h1 id="rule-12-1">Rule 12.1 · 运算符优先级与括号</h1><p class="muted locator">底本定位 规则 PDF／印刷 111–113／103–105。</p><section class="source-translation" aria-labelledby="rule-12-1-text">
+<h2 id="rule-12-1-text"><a class="header" href="#rule-12-1-text">原文译文</a></h2>
+<h3 id="s8-12"><a class="header" href="#s8-12">8.12　表达式</a></h3>
+<p class="guideline"><strong>Rule 12.1</strong>　应明确表示表达式中运算符的优先级。</p>
+<dl class="attributes"><dt>类别</dt><dd>建议（Advisory）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>本规则的定义使用下表。</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="可左右滚动的数据表"><table id="precedence"><thead><tr><th scope="col">说明</th><th scope="col">运算符或操作数</th><th scope="col">优先级</th></tr></thead><tbody><tr><th scope="row">基本表达式</th><td>标识符、常量、字符串字面量、( 表达式 )</td><td>16（高）</td></tr><tr><th scope="row">后缀</th><td>[]　()（函数调用）　.　-&gt;　++（后置自增）　--（后置自减）　() {}（C99：复合字面量）</td><td>15</td></tr><tr><th scope="row">一元</th><td>++（前置自增）　--（前置自减）　&amp;　*　+　-　~　!　sizeof　defined（预处理器）</td><td>14</td></tr><tr><th scope="row">强制转换</th><td>()</td><td>13</td></tr><tr><th scope="row">乘法类</th><td>*　/　%</td><td>12</td></tr><tr><th scope="row">加法类</th><td>+　-</td><td>11</td></tr><tr><th scope="row">按位移位</th><td>&lt;&lt;　&gt;&gt;</td><td>10</td></tr><tr><th scope="row">关系</th><td>&lt;　&gt;　&lt;=　&gt;=</td><td>9</td></tr><tr><th scope="row">相等</th><td>==　!=</td><td>8</td></tr><tr><th scope="row">按位与</th><td>&amp;</td><td>7</td></tr><tr><th scope="row">按位异或</th><td>^</td><td>6</td></tr><tr><th scope="row">按位或</th><td>|</td><td>5</td></tr><tr><th scope="row">逻辑与</th><td>&amp;&amp;</td><td>4</td></tr><tr><th scope="row">逻辑或</th><td>||</td><td>3</td></tr><tr><th scope="row">条件</th><td>?:</td><td>2</td></tr><tr><th scope="row">赋值</th><td>=　*=　/=　%=　+=　-=　&lt;&lt;=　&gt;&gt;=　&amp;=　^=　|=</td><td>1</td></tr><tr><th scope="row">逗号</th><td>,</td><td>0（低）</td></tr></tbody></table></div>
+<p>表中选用的优先级是为了简明地描述本规则，不一定与其他资料描述运算符优先级时使用的级别相同。</p>
+<p>就本规则而言，表达式的优先级是该表达式解析树的根元素（操作数或运算符）的优先级。</p>
+<p>例如，表达式 <code>a &lt;&lt; b + c</code> 的解析树可以表示如下：</p>
+<pre><code class="language-text">     &lt;&lt;
+    /  \
+   a    +
+       / \
+      b   c
+</code></pre>
+<p>这棵解析树的根元素是 <code>&lt;&lt;</code>，因此该表达式的优先级为 10。</p>
+<p>建议如下：</p>
+<ul>
+<li><code>sizeof</code> 运算符的操作数应括在圆括号内；</li>
+<li>对于优先级在 2 至 12 范围内的表达式，凡同时满足以下两个条件的操作数，均应加圆括号：
+<ul>
+<li>操作数的优先级小于 13，并且</li>
+<li>操作数的优先级高于该表达式的优先级。</li>
+</ul>
+</li>
+</ul>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>C 语言的运算符较多，它们之间的相对优先级并不直观，经验较少的程序员因此可能犯错。用圆括号明示运算符优先级，可以排除程序员对优先级抱有错误预期的可能，也能让审查者和维护者看清原程序员的意图。</p>
+<p>另一方面，过多的圆括号会使代码杂乱，降低可读性。本规则旨在两种难读的写法之间取得平衡：一种括号太多，另一种括号太少。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>下例中，一元或后缀运算符的操作数或者是基本表达式，或者是顶层运算符优先级为 15 的表达式。</p>
+<pre><code class="language-c">a[ i ]-&gt;n;      /* Compliant - no need to write ( a[ i ] )-&gt;n          */
+*p++;           /* Compliant - no need to write *( p++ )               */
+sizeof x + y;   /* Non-compliant - write either sizeof ( x ) + y
+                 * or sizeof ( x + y )                                 */
+</code></pre>
+<p>以下表达式中的运算符处于同一优先级。这些写法均符合本规则；不过，视 <code>a</code>、<code>b</code> 和 <code>c</code> 的类型而定，含有多个运算符的表达式可能违反其他规则。</p>
+<pre><code class="language-c">a + b;
+a + b + c;
+( a + b ) + c;
+a + ( b + c );
+a + b - c + d;
+( a + b ) - ( c + d );
+</code></pre>
+<p>以下示例展示了多种混合使用运算符的表达式：</p>
+<pre><code class="language-c">/* Compliant - no need to write f ( ( a + b ), c ) */
+x = f ( a + b, c );
+
+/* Non-compliant
+ * Operands of conditional operator (precedence 2) are:
+ *   == precedence 8 needs parentheses
+ *   a  precedence 16 does not need parentheses
+ *   -  precedence 11 needs parentheses
+ */
+x = a == b ? a : a - b;
+
+/* Compliant */
+x = ( a == b ) ? a : ( a - b );
+</code></pre>
+<pre><code class="language-c">/* Compliant
+ * Operands of &lt;&lt; operator (precedence 10) are:
+ *   a  precedence 16 does not need parentheses
+ *  ( E ) precedence 16 already parenthesized
+ */
+x = a &lt;&lt; ( b + c );
+
+/* Compliant
+ * Operands of &amp;&amp; operator (precedence 4) are:
+ *   a  precedence 16 does not need parentheses
+ *   &amp;&amp; precedence 4 does not need parentheses
+ */
+if ( a &amp;&amp; b &amp;&amp; c )
+{
+}
+
+/* Compliant
+ * Operands of &amp;&amp; operator (precedence 4) are:
+ *   defined(X) precedence 14 does not need parentheses
+ *   (E) precedence 16 already parenthesized
+ */
+#if defined ( X ) &amp;&amp; ( ( X + Y ) &gt; Z )
+
+/* Compliant
+ * Operands of &amp;&amp; operator (precedence 4) are:
+ *   !defined ( X ) precedence 14 does not need parentheses
+ *    defined ( Y ) precedence 14 does not need parentheses
+ * Operand of ! operator (precedence 14) is:
+ *    defined ( X ) precedence 14 does not need parentheses
+ */
+#if !defined ( X ) &amp;&amp; defined ( Y )
+</code></pre>
+<p><strong>注：</strong> 本规则不要求用圆括号括住逗号运算符 <code>,</code> 的操作数。<a href="12-03.html#rule-12-3">Rule 12.3</a> 禁止使用逗号运算符。</p>
+<pre><code class="language-c">x = a, b; /* Compliant - parsed as ( x = a ), b */
+</code></pre>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> 前三式依次为：符合，不必改写为 ( a[ i ] )-&gt;n；符合，不必写成 *( p++ )；不符合，应根据意图写 sizeof ( x ) + y 或 sizeof ( x + y )。函数调用符合，不必给 a + b 再加一层括号。未加括号的条件运算符（级别 2）不符合：其 ==（8）与减号（11）操作数需加括号，a（16）不需要；改写后符合。移位例符合：a 为 16，( E ) 已有括号、为 16。连续逻辑与的底本注释标为“优先级 4”，并列出 a（16）和 &amp;&amp;（4），都无需括号。第一个 #if 的注释同样将 &amp;&amp; 标为 4：defined(X) 为 14，无需括号，(E) 为 16，已有括号。另一个 #if 的注释将 &amp;&amp; 标为 4：!defined(X) 和 defined(Y) 都为 14；其中 ! 的操作数 defined(X) 也是 14，无需括号。这两个预处理写法均标为符合。最后的逗号表达式按 ( x = a ), b 解析，注释指符合本条。</p></aside><aside class="note"><p><strong>源页核对：</strong> PDF 113 的注将 Rule 12.3 的措辞写为“禁止”，PDF 114 的 Rule 12.3 主句用 should、类别为 Advisory。两处照录，不将建议级改成必需级。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-12-1.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="11-09.html">上一篇：Rule 11.9 · 整型空指针常量与 NULL</a><a href="../index.html">全部译文</a><a href="12-02.html">下一篇：Rule 12.2 · 移位量的上下界</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

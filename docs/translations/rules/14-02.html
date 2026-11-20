@@ -1,0 +1,49 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 14.2 · for 的三子句与循环体 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b07">译文目录</a><span>B07 · §8.12–§8.14</span></nav><p class="eyebrow">中文译文　/　100 · 102</p><h1 id="rule-14-2">Rule 14.2 · for 的三子句与循环体</h1><p class="muted locator">底本定位 规则 PDF／印刷 126–127／118–119。</p><section class="source-translation" aria-labelledby="rule-14-2-text">
+<h2 id="rule-14-2-text"><a class="header" href="#rule-14-2-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 14.2</strong>　for 循环必须具有规范的结构。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>不可判定（Undecidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p><code>for</code> 语句的三个子句如下。</p>
+<p>第一子句必须是以下三者之一：</p>
+<ul>
+<li>留空；或者</li>
+<li>给循环计数器赋值；或者</li>
+<li>定义并初始化循环计数器（C99）。</li>
+</ul>
+<p>第二子句必须同时满足：</p>
+<ul>
+<li>是一个没有持久副作用的表达式；并且</li>
+<li>使用循环计数器，还可使用循环控制标志；并且</li>
+<li>不使用任何其他在 <code>for</code> 循环体内被修改的对象。</li>
+</ul>
+<p>第三子句必须同时满足：</p>
+<ul>
+<li>是一个表达式，其唯一的持久副作用是修改循环计数器的值；并且</li>
+<li>不使用在 <code>for</code> 循环体内被修改的对象。</li>
+</ul>
+<p>一个 <code>for</code> 循环必须只有一个循环计数器，且不得在循环体内修改它。</p>
+<p>循环控制标志定义为单个标识符，它指代一个具有本质布尔类型、且在第二子句中使用的对象。</p>
+<p><code>for</code> 循环体的行为包括该语句内调用的任何函数的行为。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p><code>for</code> 语句提供通用的循环机制。限制 <code>for</code> 循环的形式，可以使代码更容易审查和分析。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<p>为了允许无限循环，三个子句可以全部留空，例如 <code>for ( ; ; )</code>。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>在下面这个 C99 示例中，<code>i</code> 是循环计数器，<code>flag</code> 是循环控制标志。</p>
+<pre><code class="language-c">bool_t flag = false;
+
+for ( int16_t i = 0; ( i &lt; 5 ) &amp;&amp; !flag; i++ )
+{
+  if ( C )
+  {
+    flag = true;                /* Compliant - allows early termination
+                                 * of loop                               */
+  }
+
+  i = i + 3;                    /* Non-compliant - altering the loop
+                                 * counter                               */
+}
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="14-01.html#rule-14-1">Rule 14.1</a>、<a href="14-03.html#rule-14-3">Rule 14.3</a>、<a href="14-04.html#rule-14-4">Rule 14.4</a>。</p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> 设置 flag 符合，因为它允许循环提前终止。在循环体内给 i 加 3 不符合，因为这改变了循环计数器。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-14-2.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="14-01.html">上一篇：Rule 14.1 · 辨认浮点循环计数器</a><a href="../index.html">全部译文</a><a href="14-03.html">下一篇：Rule 14.3 · 恒定的控制表达式</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

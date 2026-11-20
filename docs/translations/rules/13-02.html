@@ -1,0 +1,67 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 13.2 · 求值顺序、别名与持久副作用 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b07">译文目录</a><span>B07 · §8.12–§8.14</span></nav><p class="eyebrow">中文译文　/　94 · 102</p><h1 id="rule-13-2">Rule 13.2 · 求值顺序、别名与持久副作用</h1><p class="muted locator">底本定位 规则 PDF／印刷 117–118／109–110。</p><section class="source-translation" aria-labelledby="rule-13-2-text">
+<h2 id="rule-13-2-text"><a class="header" href="#rule-13-2-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 13.2</strong>　在所有允许的求值顺序下，表达式的值及其持久副作用都必须相同。</p>
+<p>C90 [未指定 7–9；未定义 18]；C99 [未指定 15–18；未定义 32]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>不可判定（Undecidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>在任意两个相邻的序列点之间，或在任一完整表达式之内：</p>
+<ol>
+<li>不得多次修改同一对象；</li>
+<li>不得既修改又读取同一对象，除非对该对象值的每次读取都用于计算要存回该对象的值；</li>
+<li>对具有 <code>volatile</code> 限定类型的修改访问不得多于一次；</li>
+<li>对具有 <code>volatile</code> 限定类型的读取访问不得多于一次。</li>
+</ol>
+<p><strong>注：</strong> 表达式既可能直接访问对象，也可能通过指针或被调用函数间接访问对象。</p>
+<p><strong>注：</strong> 本段进一步说明有意比规则主句更严格。例如，下列表达式：</p>
+<pre><code class="language-c">x = x = 0;
+</code></pre>
+<p>不为本规则所允许，即使在 <code>x</code> 不具有 <code>volatile</code> 限定的前提下，表达式的值及其持久副作用均与求值顺序或副作用的发生顺序无关。</p>
+<p>C90 和 C99 标准各自的附录 C 均汇总了序列点。C90 的序列点是 C99 序列点的子集。</p>
+<p>完整表达式的定义见 C90 标准 §6.6 及 C99 标准 §6.8。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>C 标准在表达式求值上给编译器相当大的自由。大多数运算符的操作数可以按任意顺序求值。主要例外如下：</p>
+<ul>
+<li>逻辑与 <code>&amp;&amp;</code>：仅当第一操作数求值为非零时才求第二操作数的值；</li>
+<li>逻辑或 <code>||</code>：仅当第一操作数求值为零时才求第二操作数的值；</li>
+<li>条件运算符 <code>?:</code>：总是先求第一操作数的值，随后只对第二或第三操作数中的一个求值；</li>
+<li>逗号运算符 <code>,</code>：先求第一操作数的值，再求第二操作数的值。</li>
+</ul>
+<p><strong>注：</strong> 括号可能改变运算符的作用顺序，但并不改变最底层各操作数可以任意顺序求值这一点。</p>
+<p>遵循 <a href="13-03.html#rule-13-3">Rule 13.3</a> 和 <a href="13-04.html#rule-13-4">Rule 13.4</a> 的建议，可以避免许多常见的、与表达式求值有关的不可预测行为。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>在下列不符合本规则的示例中，调用宏 <code>COPY_ELEMENT</code> 时，<code>i</code> 被读取两次、修改两次。对 <code>i</code> 的操作按以下哪种顺序发生，未作指定：</p>
+<ul>
+<li>读、修改、读、修改；或者</li>
+<li>读、读、修改、修改。</li>
+</ul>
+<pre><code class="language-c">#define COPY_ELEMENT ( index ) ( a[( index )] = b[( index )] )
+
+COPY_ELEMENT ( i++ );
+</code></pre>
+<p>在下列不符合本规则的示例中，读取 <code>v1</code> 和 <code>v2</code> 的顺序未指定。</p>
+<pre><code class="language-c">extern volatile uint16_t v1, v2;
+uint16_t t;
+
+t = v1 + v2;
+</code></pre>
+<p>在下列符合本规则的示例中，<code>PORT</code> 被读取并被修改。</p>
+<pre><code class="language-c">extern volatile uint8_t PORT;
+
+PORT = PORT &amp; 0x80u;
+</code></pre>
+<p>下列不符合本规则的示例表明，函数实参的求值顺序与副作用发生的顺序均未指定。</p>
+<pre><code class="language-c">uint16_t i = 0;
+
+/*
+ * Unspecified whether this call is equivalent to:
+ *      f ( 0, 0 )
+ * or   f ( 0, 1 )
+ */
+f ( i++, i );
+</code></pre>
+<p>函数指示符与函数实参的相对求值顺序未指定。在下列不符合本规则的示例中，如果调用 <code>g</code> 会修改 <code>p</code>，则函数指示符 <code>p-&gt;f</code> 使用的是调用 <code>g</code> 之前还是之后的 <code>p</code> 值，未作指定。</p>
+<pre><code class="language-c">p-&gt;f ( g ( &amp;p ) );
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="../directives/04-09.html#dir-4-9">Dir 4.9</a>、<a href="13-01.html#rule-13-1">Rule 13.1</a>、<a href="13-03.html#rule-13-3">Rule 13.3</a>、<a href="13-04.html#rule-13-4">Rule 13.4</a>。</p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> 实参示例的底本注释称，未指定此次调用相当于 f ( 0, 0 ) 还是 f ( 0, 1 )。这是原注释所列的两种情形，不是可据以运行反例的结果保证。</p></aside><aside class="note"><p><strong>源页核对：</strong> PDF 118：页图中 COPY_ELEMENT 与左括号之间确有空格，按字面不是函数式宏定义，而正文描述的是传参调用，保留两者不擅改。同页将 f(i++, i) 的可能实参写成两组；同一序列点区间对 i 的修改与无关读取会产生未定义行为，并非只能得到这两组值。原书片段不运行。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-13-2.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="13-01.html">上一篇：Rule 13.1 · 初始化器列表中的持久副作用</a><a href="../index.html">全部译文</a><a href="13-03.html">下一篇：Rule 13.3 · 自增、自减与其他潜在副作用</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

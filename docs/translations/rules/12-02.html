@@ -1,0 +1,21 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 12.2 · 移位量的上下界 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b07">译文目录</a><span>B07 · §8.12–§8.14</span></nav><p class="eyebrow">中文译文　/　90 · 102</p><h1 id="rule-12-2">Rule 12.2 · 移位量的上下界</h1><p class="muted locator">底本定位 规则 PDF／印刷 113–114／105–106。</p><section class="source-translation" aria-labelledby="rule-12-2-text">
+<h2 id="rule-12-2-text"><a class="header" href="#rule-12-2-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 12.2</strong>　移位运算符的右操作数必须在零至左操作数本质类型的位宽减一的范围内。</p>
+<p>C90 [未定义 32]；C99 [未定义 48]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>不可判定（Undecidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>若右操作数为负，或大于等于左操作数的宽度，则行为未定义。</p>
+<p>例如，如果左移或右移运算符的左操作数是 16 位整数，就必须确保移位量仅在 0 至 15 的范围内。</p>
+<p>关于本质类型及移位操作数本质类型的限制，见 <a href="10-01.html#s8-10">§8.10</a>。</p>
+<p>有多种方法可以确保遵守本规则。最简单的是让右操作数为常量（从而可以静态检查其值）。使用无符号整数类型可以保证操作数非负，这样只需检查上限（运行期间动态检查，或通过审查检查）。否则必须同时检查上下限。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">u8a = u8a &lt;&lt; 7;                 /* Compliant     */
+u8a = u8a &lt;&lt; 8;                 /* Non-compliant */
+u16a = ( uint16_t ) u8a &lt;&lt; 9;   /* Compliant     */
+</code></pre>
+<p>为便于理解以下示例，应注意 <code>1u</code> 的本质类型是本质无符号 <code>char</code>，而 <code>1UL</code> 的本质类型是本质无符号 <code>long</code>。</p>
+<pre><code class="language-c">1u &lt;&lt; 10u;                      /* Non-compliant */
+( uint16_t ) 1u &lt;&lt; 10u;         /* Compliant     */
+1UL &lt;&lt; 10u;                     /* Compliant     */
+</code></pre>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> 8 位操作数移 7 位符合，移 8 位不符合；先转成 uint16_t 再移 9 位符合。1u 移 10 位不符合；先转为 uint16_t 或改用 1UL 的两式符合。</p></aside><aside class="note"><p><strong>源页核对：</strong> PDF 113–114：规则以左操作数的本质位宽为界。底本理由对未定义行为的说明，不等于所有超出本质位宽的移位在 ISO C 中都未定义；C 的判断要另看整型提升后的宽度。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-12-2.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="12-01.html">上一篇：Rule 12.1 · 运算符优先级与括号</a><a href="../index.html">全部译文</a><a href="12-03.html">下一篇：Rule 12.3 · 逗号运算符与列表分隔符</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

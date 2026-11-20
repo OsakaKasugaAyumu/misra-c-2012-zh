@@ -1,0 +1,106 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 14.3 · 恒定的控制表达式 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b07">译文目录</a><span>B07 · §8.12–§8.14</span></nav><p class="eyebrow">中文译文　/　101 · 102</p><h1 id="rule-14-3">Rule 14.3 · 恒定的控制表达式</h1><p class="muted locator">底本定位 规则 PDF／印刷 127–129／119–121。</p><section class="source-translation" aria-labelledby="rule-14-3-text">
+<h2 id="rule-14-3-text"><a class="header" href="#rule-14-3-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 14.3</strong>　控制表达式不得恒定不变。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>不可判定（Undecidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>本规则适用于：</p>
+<ul>
+<li><code>if</code>、<code>while</code>、<code>for</code>、<code>do … while</code> 和 <code>switch</code> 语句的控制表达式；</li>
+<li><code>?:</code> 运算符的第一操作数。</li>
+</ul>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>控制表达式的值若恒定不变，可能意味着有编程错误。因恒定表达式的存在而不可达的代码，可能被编译器移除。例如，这可能会从可执行程序中移除防御性代码。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<ol>
+<li>允许使用恒定式构成无限循环。</li>
+<li>允许 <code>do … while</code> 循环使用求值为 0 的本质布尔型控制表达式。</li>
+</ol>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">s8a = ( u16a &lt; 0u ) ? 0 : 1;    /* Non-compliant - u16a always &gt;= 0 */
+
+if ( u16a &lt;= 0xffffu )
+{
+                                /* Non-compliant - always true      */
+}
+</code></pre>
+<pre><code class="language-c">if ( 2 &gt; 3 )
+{
+                                /* Non-compliant - always false     */
+}
+
+for ( s8a = 0; s8a &lt; 130; ++s8a )
+{
+                                /* Non-compliant - always true      */
+}
+
+if ( ( s8a &lt; 10 ) &amp;&amp; ( s8a &gt; 20 ) )
+{
+                                /* Non-compliant - always false     */
+}
+
+if ( ( s8a &lt; 10 ) || ( s8a &gt; 5 ) )
+{
+                                /* Non-compliant - always true      */
+}
+
+while ( s8a &gt; 10 )
+{
+  if ( s8a &gt; 5 )
+  {
+                                /* Non-compliant - s8a not volatile */
+  }
+}
+
+while ( true )
+{
+  /* Compliant by exception 1 */
+}
+
+do
+{
+  /* Compliant by exception 2 */
+} while ( 0u == 1u );
+
+const uint8_t numcyl = 4u;
+
+/*
+ * Non-compliant - compiler is permitted to assume that numcyl always
+ * has value 4
+ */
+if ( numcyl == 4u )
+{
+}
+
+const volatile uint8_t numcyl_cal = 4u;
+
+/*
+ * Compliant - compiler assumes numcyl_cal may be changed by
+ * an external method, e.g. automotive calibration tool, even
+ * though the program cannot modify its value
+ */
+if ( numcyl_cal == 4u )
+{
+}
+</code></pre>
+<pre><code class="language-c">uint16_t n;     /* 10 &lt;= n &lt;= 100 */
+uint16_t sum;
+
+sum = 0;
+
+for ( uint16_t i = ( n - 6u ); i &lt; n; ++i )
+{
+  sum += i;
+}
+
+if ( ( sum % 2u ) == 0u )
+{
+  /*
+   * Non-compliant - sum is the sum of 6 consecutive non-negative
+   * integers so must be an odd number. The controlling expression
+   * of the if statement will always be false.
+   */
+}
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="02-01.html#rule-2-1">Rule 2.1</a>、<a href="14-02.html#rule-14-2">Rule 14.2</a>。</p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> u16a 总是大于等于 0，第一项不符合；随后两个 if 的条件分别恒真、恒假。for 的比较恒真；其后两个组合条件分别恒假、恒真，均不符合。嵌套的 if 不符合，s8a 并非 volatile。无限循环符合例外 1；do … while 符合例外 2。编译器可以假定 numcyl 总为 4，因此该 if 不符合；numcyl_cal 可由汽车标定工具等外部手段更改，即使程序本身不能修改其值，编译器也按可能变化处理，此项符合。末例给定 10 ≤ n ≤ 100，六个连续非负整数之和必为奇数，故 if 的控制表达式恒假，不符合。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-14-3.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="14-02.html">上一篇：Rule 14.2 · for 的三子句与循环体</a><a href="../index.html">全部译文</a><a href="14-04.html">下一篇：Rule 14.4 · 控制表达式的本质布尔类型</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>
