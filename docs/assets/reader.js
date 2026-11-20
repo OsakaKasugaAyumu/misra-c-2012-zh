@@ -1,0 +1,4 @@
+'use strict';
+const side = document.querySelector('.side details');
+if(side){const wide = matchMedia('(min-width:54.01rem)');function sizeNav(){side.open=wide.matches}sizeNav();wide.addEventListener('change',sizeNav)}
+const box=document.querySelector('#find');if(box){document.querySelector('.search').hidden=false;const cards=[...document.querySelectorAll('.card')], groups=[...document.querySelectorAll('.labgroup')];const norm=s=>s.normalize('NFKC').toLowerCase().replace(/[\s.\-_/]+/g,'');function filter(){const q=norm(box.value);let n=0;cards.forEach(c=>{const yes=norm(c.dataset.key).includes(q);c.hidden=!yes;if(yes)n++});groups.forEach(g=>{g.hidden=!g.querySelector('.card:not([hidden])')});document.querySelector('#matches').textContent='找到 '+n+' 个实验';document.querySelector('#empty').hidden=n!==0}box.addEventListener('input',filter);filter()}

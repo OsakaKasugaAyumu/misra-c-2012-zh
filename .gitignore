@@ -1,0 +1,16 @@
+*
+!/.gitignore
+!/.gitattributes
+!/README.md
+!/docs/
+!/docs/index.html
+!/docs/.nojekyll
+!/docs/lab/
+!/docs/lab/*.html
+!/docs/assets/
+!/docs/assets/reader.css
+!/docs/assets/reader.js
+!/docs/examples/
+!/docs/examples/**/
+!/docs/examples/**/*.c
+!/docs/examples/**/*.h
