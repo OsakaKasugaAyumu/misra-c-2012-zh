@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 11.4 · 对象指针与整数 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b06">译文目录</a><span>B06 · §8.10–§8.11</span></nav><p class="eyebrow">中文译文　/　83 · 88</p><h1 id="rule-11-4">Rule 11.4 · 对象指针与整数</h1><p class="muted locator">底本定位 规则 PDF／印刷 105–106／97–98。</p><section class="source-translation" aria-labelledby="rule-11-4-text">
+<h2 id="rule-11-4-text"><a class="header" href="#rule-11-4-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 11.4</strong>　不应在指向对象的指针与整数类型之间进行转换。</p>
+<p>C90 [未定义 20；实现定义 24]；C99 [未定义 21、34；实现定义 J.3.7(1)]</p>
+<dl class="attributes"><dt>类别</dt><dd>建议（Advisory）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>不应将指针转换为整数。不应将整数转换为指针。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>将整数转换为指向对象的指针，可能产生未正确对齐的指针，导致未定义行为。</p>
+<p>将指向对象的指针转换为整数，可能产生所选整数类型无法表示的值，导致未定义行为。</p>
+<p><strong>注：</strong> C99 在 <code>&lt;stdint.h&gt;</code> 中声明的 <code>intptr_t</code> 和 <code>uintptr_t</code> 分别是能够表示指针值的有符号、无符号整数类型。尽管如此，本规则仍不允许在指向对象的指针与这两种类型之间转换，因为使用它们并不能避免指针未对齐所涉及的未定义行为。</p>
+<p>应尽可能避免在指针与整数类型之间进行强制转换，但在寻址内存映射寄存器或使用其他硬件特有功能时，这种转换可能不可或缺。如果使用了整数与指针之间的强制转换，就应注意确保所得指针不会引发 <a href="11-03.html#rule-11-3">Rule 11.3</a> 讨论的未定义行为。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<p>具有整数类型的空指针常量可转换为指向对象的指针。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">uint8_t *PORTA = ( uint8_t * ) 0x0002;    /* Non-compliant */
+
+uint16_t *p;
+
+int32_t   addr = ( int32_t ) &amp;p;          /* Non-compliant */
+uint8_t  *q    = ( uint8_t * ) addr;      /* Non-compliant */
+bool_t    b    = ( bool_t ) p;            /* Non-compliant */
+
+enum etag { A, B } e = ( enum etag ) p;   /* Non-compliant */
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="11-03.html#rule-11-3">Rule 11.3</a>、<a href="11-07.html#rule-11-7">Rule 11.7</a>、<a href="11-09.html#rule-11-9">Rule 11.9</a>。</p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> 从整数地址初始化 PORTA 不符合；取得整数 addr、把 addr 转回指针、把指针转为 bool_t 或枚举的四个写法也都不符合。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-11-4.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="11-03.html">上一篇：Rule 11.3 · 不同对象类型之间的指针强转</a><a href="../index.html">全部译文</a><a href="11-05.html">下一篇：Rule 11.5 · 从 void 指针到对象指针</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

@@ -1,0 +1,22 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 10.8 · 对复合结果的强制转换 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b06">译文目录</a><span>B06 · §8.10–§8.11</span></nav><p class="eyebrow">中文译文　/　79 · 88</p><h1 id="rule-10-8">Rule 10.8 · 对复合结果的强制转换</h1><p class="muted locator">底本定位 规则 PDF／印刷 100／92。</p><section class="source-translation" aria-labelledby="rule-10-8-text">
+<h2 id="rule-10-8-text"><a class="header" href="#rule-10-8-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 10.8</strong>　不得将复合表达式的值强制转换为不同的本质类型类别或较宽的本质类型。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>理由见关于复合运算符与复合表达式的导言（<a href="10-06.html#s8-10-3">§8.10.3</a>）。</p>
+<p>不允许强制转换为较宽类型，因为结果可能因实现而异。考虑下例：</p>
+<pre><code class="language-c">( uint32_t ) ( u16a + u16b );
+</code></pre>
+<p>在 16 位机器上，加法按 16 位进行，结果按模 2 回绕后才强制转换为 32 位。而在 32 位机器上，加法按 32 位进行，可以保留在 16 位机器上本会丢失的高位。</p>
+<p>强制转换到同一本质类型类别中的较窄类型是可接受的，因为显式截短结果总会产生相同的信息损失。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">( uint16_t ) ( u32a + u32b )   /* Compliant                             */
+( uint16_t ) ( s32a + s32b )   /* Non-compliant - different essential
+                                *                 type category         */
+( uint16_t ) s32a              /* Compliant     - s32a is not composite */
+( uint32_t ) ( u16a + u16b )   /* Non-compliant - cast to wider
+                                *                 essential type        */
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="10-05.html#rule-10-5">Rule 10.5</a>、<a href="10-06.html#s8-10-3">§8.10.3</a>。</p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> 四式分别为：符合；不符合，本质类型类别不同；符合，s32a 不是复合表达式；不符合，转换到了较宽的本质类型。</p></aside><aside class="note"><p><strong>源页核对：</strong> PDF 100：放大底本图像后，行末实际印作 modulo-2，未见指数 16。译文保留“按模 2”；对 16 位无符号运算，数学上的回绕模数为 2¹⁶。后者是技术说明，不是补写原文。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-10-8.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="10-07.html">上一篇：Rule 10.7 · 复合操作数与另一侧的宽度</a><a href="../index.html">全部译文</a><a href="11-01.html">下一篇：Rule 11.1 · 函数指针与兼容类型</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

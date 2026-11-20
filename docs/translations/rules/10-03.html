@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 10.3 · 赋值的类别与宽度 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b06">译文目录</a><span>B06 · §8.10–§8.11</span></nav><p class="eyebrow">中文译文　/　74 · 88</p><h1 id="rule-10-3">Rule 10.3 · 赋值的类别与宽度</h1><p class="muted locator">底本定位 规则 PDF／印刷 94–95／86–87。</p><section class="source-translation" aria-labelledby="rule-10-3-text">
+<h2 id="rule-10-3-text"><a class="header" href="#rule-10-3-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 10.3</strong>　不得将表达式的值赋给本质类型较窄或本质类型类别不同的对象。</p>
+<p>C90 [未定义 15；实现定义 16]；C99 [未定义 15、16；实现定义 3.5(4)]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>本规则涵盖以下操作：</p>
+<ol>
+<li>术语表所定义的赋值；</li>
+<li><code>switch</code> 语句中，把 <code>case</code> 标号的常量表达式转换为控制表达式经提升后的类型。</li>
+</ol>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>C 语言给程序员很大自由，允许不同算术类型之间自动赋值。然而，使用这些隐式转换可能产生意外结果，可能损失数值、符号或精度。有关 C 类型系统的问题，附录 C 有更详细的说明。</p>
+<p>MISRA 本质类型模型实施更强的类型约束，从而降低这些问题出现的可能性。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<ol>
+<li>本质有符号型的非负整型常量表达式可赋给本质无符号型对象，前提是目标类型能够表示该值。</li>
+<li>可以用初始化器 <code>{ 0 }</code> 初始化聚合类型或联合类型的对象。</li>
+</ol>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">enum enuma { A1, A2, A3   } ena;
+enum enumb { B1, B2, B3   } enb;
+enum       { K1=1, K2=128 };
+</code></pre>
+<p>以下示例符合本规则：</p>
+<pre><code class="language-c">uint8_t u8a  = 0;               /* By exception                         */
+bool_t  flag = ( bool_t ) 0;
+bool_t  set  = true;            /* true is essentially Boolean          */
+bool_t  get  = ( u8b &gt; u8c );
+
+ena  = A1;
+s8a  = K1;            /* Constant value fits                            */
+u8a  = 2;             /* By exception                                   */
+u8a  = 2 * 24;        /* By exception                                   */
+cha += 1;             /* cha = cha + 1 assigns character to character   */
+</code></pre>
+<pre><code class="language-c">pu8a = pu8b;                  /* Same essential type                    */
+u8a  = u8b + u8c + u8d;       /* Same essential type                    */
+u8a  = ( uint8_t ) s8a;       /* Cast gives same essential type         */
+</code></pre>
+<pre><code class="language-c">u32a = u16a;                  /* Assignment to a wider essential type   */
+u32a = 2U + 125U;             /* Assignment to a wider essential type   */
+use_uint16 ( u8a  );          /* Assignment to a wider essential type   */
+use_uint16 ( u8a + u16b );    /* Assignment to same essential type      */
+</code></pre>
+<p>以下示例不符合本规则，因为其本质类型类别不同：</p>
+<pre><code class="language-c">uint8_t u8a = 1.0f;    /* unsigned and floating                         */
+bool_t  bla = 0;       /* boolean and signed                            */
+cha  = 7;              /* character and signed                          */
+u8a  = 'a';            /* unsigned and character                        */
+u8b  = 1 - 2;          /* unsigned and signed                           */
+u8c += 'a';            /* u8c = u8c + 'a' assigns character to unsigned */
+use_uint32 ( s32a );   /* signed and unsigned                           */
+</code></pre>
+<p>以下示例不符合本规则，因为其中含有向较窄本质类型的赋值：</p>
+<pre><code class="language-c">s8a  = K2;                     /* Constant value does not fit           */
+u16a = u32a;                   /* uint32_t to uint16_t                  */
+
+use_uint16 ( u32a );           /* uint32_t to uint16_t                  */
+
+uint8_t foo1 ( uint16_t x )
+{
+   return x;                   /* uint16_t to uint8_t                   */
+}
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="10-04.html#rule-10-4">Rule 10.4</a>、<a href="10-05.html#rule-10-5">Rule 10.5</a>、<a href="10-06.html#rule-10-6">Rule 10.6</a>。</p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> 初值 0 适用例外；true 是本质布尔型。K1 的值可表示；2 和 2 * 24 适用例外；cha += 1 是把字符赋给字符。接下来两行本质类型相同，第三行经强转后本质类型相同。第 95 页开头前三行赋给较宽的本质类型，第四行赋给相同的本质类型。不同类别的对照依次为无符号／浮点、布尔／有符号、字符／有符号、无符号／字符、无符号／有符号、把字符和赋给无符号对象，以及有符号／无符号。窄化对照依次是常量值放不下、uint32_t 到 uint16_t、实参从 uint32_t 到 uint16_t、返回时从 uint16_t 到 uint8_t。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-10-3.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="10-02.html">上一篇：Rule 10.2 · 字符加减的方向与结果</a><a href="../index.html">全部译文</a><a href="10-04.html">下一篇：Rule 10.4 · 通常算术转换的两侧</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

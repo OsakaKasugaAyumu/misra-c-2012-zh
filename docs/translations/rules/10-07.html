@@ -1,0 +1,25 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 10.7 · 复合操作数与另一侧的宽度 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b06">译文目录</a><span>B06 · §8.10–§8.11</span></nav><p class="eyebrow">中文译文　/　78 · 88</p><h1 id="rule-10-7">Rule 10.7 · 复合操作数与另一侧的宽度</h1><p class="muted locator">底本定位 规则 PDF／印刷 99–100／91–92。</p><section class="source-translation" aria-labelledby="rule-10-7-text">
+<h2 id="rule-10-7-text"><a class="header" href="#rule-10-7-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 10.7</strong>　如果实施通常算术转换的运算符以复合表达式为一个操作数，则另一个操作数不得具有较宽的本质类型。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>理由见关于复合运算符与复合表达式的导言（<a href="10-06.html#s8-10-3">§8.10.3</a>）。</p>
+<p>限制对复合表达式的隐式转换，意味着表达式内连续的算术运算必须在完全相同的本质类型中进行。这减少了开发者产生混淆的可能性。</p>
+<p><strong>注：</strong> 这并不意味着一个表达式中的所有操作数都具有相同的本质类型。</p>
+<p>表达式 <code>u32a + u16b + u16c</code> 符合本规则，因为从本质类型看，两次加法都在 <code>uint32_t</code> 类型中进行。此时只有非复合表达式发生隐式转换。</p>
+<p>表达式 <code>(u16a + u16b) + u32c</code> 不符合本规则，因为从本质类型看，左边的加法在 <code>uint16_t</code> 类型中进行，右边的加法在 <code>uint32_t</code> 类型中进行，需要把复合表达式 <code>u16a + u16b</code> 隐式转换为 <code>uint32_t</code>。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>以下写法符合本规则：</p>
+<pre><code class="language-c">  u32a * u16a + u16b                    /* No composite conversion       */
+( u32a * u16a ) + u16b                  /* No composite conversion       */
+  u32a * ( ( uint32_t ) u16a + u16b )   /* Both operands of * have
+                                         * same essential type           */
+ u32a += ( u32b + u16b )                /* No composite conversion       */
+</code></pre>
+<p>以下写法不符合本规则：</p>
+<pre><code class="language-c">  u32a * ( u16a + u16b )   /* Implicit conversion of ( u16a + u16b )     */
+ u32a += ( u16a + u16b )   /* Implicit conversion of ( u16a + u16b )     */
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="10-04.html#rule-10-4">Rule 10.4</a>、<a href="10-06.html#rule-10-6">Rule 10.6</a>、<a href="10-06.html#s8-10-3">§8.10.3</a>。</p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> 前三式分别为：没有复合表达式转换、没有复合表达式转换、乘号两侧本质类型相同。第四式没有复合表达式转换。两项反例都隐式转换了 u16a + u16b。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-10-7.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="10-06.html">上一篇：Rule 10.6 · 复合表达式的赋值目标</a><a href="../index.html">全部译文</a><a href="10-08.html">下一篇：Rule 10.8 · 对复合结果的强制转换</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

@@ -1,0 +1,50 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 11.9 · 整型空指针常量与 NULL · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b06">译文目录</a><span>B06 · §8.10–§8.11</span></nav><p class="eyebrow">中文译文　/　88 · 88</p><h1 id="rule-11-9">Rule 11.9 · 整型空指针常量与 NULL</h1><p class="muted locator">底本定位 规则 PDF／印刷 109–110／101–102。</p><section class="source-translation" aria-labelledby="rule-11-9-text">
+<h2 id="rule-11-9-text"><a class="header" href="#rule-11-9-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 11.9</strong>　宏 <code>NULL</code> 必须是整型空指针常量唯一允许使用的形式。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>值为 0 的整型常量表达式出现在以下任一上下文中时，必须来源于宏 <code>NULL</code> 的展开：</p>
+<ul>
+<li>作为赋给指针的值；</li>
+<li>作为 <code>==</code> 或 <code>!=</code> 的一个操作数，而另一个操作数是指针；</li>
+<li>作为 <code>?:</code> 的第二操作数，而第三操作数是指针；</li>
+<li>作为 <code>?:</code> 的第三操作数，而第二操作数是指针。</li>
+</ul>
+<p>忽略空白及外围括号后，这样的整型常量表达式必须代表 <code>NULL</code> 的完整展开结果。</p>
+<p><strong>注：</strong> 允许使用 <code>(void *)0</code> 形式的空指针常量，无论它是否由 <code>NULL</code> 展开而来。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>使用 <code>NULL</code> 而不是 <code>0</code>，可以明确表明此处要表达的是空指针常量。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>下例中，<code>p2</code> 的初始化符合本规则，因为整型常量表达式 <code>0</code> 并未出现在本规则禁止其出现的上下文中。</p>
+<pre><code class="language-c">int32_t *p1 = 0;              /* Non-compliant */
+
+int32_t *p2 = ( void * ) 0;   /* Compliant     */
+</code></pre>
+<p>下例中，<code>p2</code> 与 <code>(void *)0</code> 的比较符合本规则，因为整型常量表达式 <code>0</code> 是强制转换的操作数，并未出现在本规则禁止其出现的上下文中。</p>
+<pre><code class="language-c">#define MY_NULL_1 0
+#define MY_NULL_2 ( void * ) 0
+
+if ( p1 == MY_NULL_1 )    /* Non-compliant */
+{
+}
+if ( p2 == MY_NULL_2 )    /* Compliant     */
+{
+}
+</code></pre>
+<p>下例符合本规则，因为总是允许使用实现提供的宏 <code>NULL</code>，即使它展开为值为 0 的整型常量表达式也是如此。</p>
+<pre><code class="language-c">/* Could also be stdio.h, stdlib.h and others */
+#include &lt;stddef.h&gt;
+
+extern void f ( uint8_t *p );
+
+/* Compliant for any conforming definition of NULL, such as:
+ *    0
+ *    ( void * ) 0
+ *    ( ( ( 0 ) ) )
+ *    ( ( ( 1 - 1 ) ) )
+ */
+f ( NULL );
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="11-04.html#rule-11-4">Rule 11.4</a>。</p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> p1 的初始化不符合，p2 的初始化符合；与 MY_NULL_1 比较不符合，与 MY_NULL_2 比较符合。取得 NULL 的头文件也可为 stdio.h、stdlib.h 等。对 NULL 的任何符合标准的定义，末尾的调用均符合规则；原注释依次列出 0、指针形式的零、多层括号包围的 0 和多层括号包围的 1 - 1。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-11-9.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="11-08.html">上一篇：Rule 11.8 · 保留所指类型的限定符</a><a href="../index.html">全部译文</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

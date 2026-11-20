@@ -1,0 +1,40 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 10.4 · 通常算术转换的两侧 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b06">译文目录</a><span>B06 · §8.10–§8.11</span></nav><p class="eyebrow">中文译文　/　75 · 88</p><h1 id="rule-10-4">Rule 10.4 · 通常算术转换的两侧</h1><p class="muted locator">底本定位 规则 PDF／印刷 95–96／87–88。</p><section class="source-translation" aria-labelledby="rule-10-4-text">
+<h2 id="rule-10-4-text"><a class="header" href="#rule-10-4-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 10.4</strong>　对于实施通常算术转换的运算符，两个操作数必须具有相同的本质类型类别。</p>
+<p>C90 [实现定义 21]；C99 [实现定义 3.6(4)]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>本规则适用于通常算术转换所述的运算符（见 C90 §6.2.1.5、C99 §6.3.1.8）。这包括除移位、逻辑 <code>&amp;&amp;</code>、逻辑 <code>||</code> 和逗号运算符以外的所有二元运算符。此外，本规则也涵盖三元运算符的第二、第三操作数。</p>
+<p><strong>注：</strong> 自增和自减运算符不在本规则范围内。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>C 语言给程序员很大自由，允许不同算术类型之间自动转换。然而，使用这些隐式转换可能产生意外结果，可能损失数值、符号或精度。有关 C 类型系统的问题，附录 C 有更详细的说明。</p>
+<p>MISRA 本质类型模型实施更强的类型约束，从而可以把隐式转换限制在应当能产生开发者预期结果的情形。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<p>为允许一种常见的字符处理方式，可使用下列写法：</p>
+<ol>
+<li>二元 <code>+</code> 和 <code>+=</code> 运算符的一个操作数可以是本质字符型，另一个可以是本质有符号型或本质无符号型；</li>
+<li>二元 <code>-</code> 和 <code>-=</code> 运算符可以使用本质字符型左操作数，以及本质有符号型或本质无符号型右操作数。</li>
+</ol>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">enum enuma { A1, A2, A3 } ena;
+enum enumb { B1, B2, B3 } enb;
+</code></pre>
+<p>以下写法符合本规则，因为操作数具有相同的本质类型类别：</p>
+<pre><code class="language-c">ena &gt; A1
+u8a + u16b
+</code></pre>
+<p>以下写法根据例外 1 符合本规则：</p>
+<pre><code class="language-c">cha += u8a
+</code></pre>
+<p>以下写法不符合本规则，同时也违反 <a href="10-03.html#rule-10-3">Rule 10.3</a>：</p>
+<pre><code class="language-c">s8a += u8a   /* signed and unsigned         */
+</code></pre>
+<p>以下写法不符合本规则：</p>
+<pre><code class="language-c">u8b + 2      /* unsigned and signed         */
+enb &gt; A1     /* enum&lt;enumb&gt; and enum&lt;enuma&gt; */
+ena == enb   /* enum&lt;enuma&gt; and enum&lt;enumb&gt; */
+u8a += cha   /* unsigned and char           */
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="10-03.html#rule-10-3">Rule 10.3</a>、<a href="10-07.html#rule-10-7">Rule 10.7</a>。</p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> s8a += u8a 混合有符号和无符号。最后四式依次混合无符号和有符号、enum<enumb> 和 enum<enuma>、enum<enuma> 和 enum<enumb>、无符号和字符。</enumb></enuma></enuma></enumb></p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-10-4.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="10-03.html">上一篇：Rule 10.3 · 赋值的类别与宽度</a><a href="../index.html">全部译文</a><a href="10-05.html">下一篇：Rule 10.5 · 显式转换的目标类别</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

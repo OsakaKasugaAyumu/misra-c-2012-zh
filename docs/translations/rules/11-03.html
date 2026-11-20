@@ -1,0 +1,47 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 11.3 · 不同对象类型之间的指针强转 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b06">译文目录</a><span>B06 · §8.10–§8.11</span></nav><p class="eyebrow">中文译文　/　82 · 88</p><h1 id="rule-11-3">Rule 11.3 · 不同对象类型之间的指针强转</h1><p class="muted locator">底本定位 规则 PDF／印刷 104–105／96–97。</p><section class="source-translation" aria-labelledby="rule-11-3-text">
+<h2 id="rule-11-3-text"><a class="header" href="#rule-11-3-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 11.3</strong>　不得在指向某一对象类型的指针与指向不同对象类型的指针之间进行强制转换。</p>
+<p>C90 [未定义 20]；C99 [未定义 22、34]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>本规则针对指针所指向的类型，判断时取该类型的非限定形式。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>将指向对象的指针强制转换为指向不同对象的指针，可能产生未正确对齐的指针，导致未定义行为。</p>
+<p>即使已知转换所得指针正确对齐，用它访问对象仍可能引发未定义行为。例如，通过 <code>short</code> 类型访问 <code>int</code> 对象，即使 <code>int</code> 和 <code>short</code> 具有相同的表示和对齐要求，行为仍是未定义的。详见 C90 §6.3、C99 §6.5 第 7 段。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<p>允许把指向对象类型的指针转换为指向 <code>char</code>、<code>signed char</code> 或 <code>unsigned char</code> 这三种对象类型之一的指针。C 标准保证可用指向这些类型的指针逐字节访问一个对象。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">uint8_t  *p1;
+uint32_t *p2;
+
+/* Non-compliant - possible incompatible alignment */
+p2 = ( uint32_t * ) p1;
+
+extern uint32_t read_value ( void );
+extern void print ( uint32_t n );
+
+void f ( void )
+{
+  uint32_t  u    = read_value ( );
+  uint16_t *hi_p = ( uint16_t * ) &amp;u;   /* Non-compliant even though
+                                         * probably correctly aligned   */
+
+  *hi_p = 0;     /* Attempt to clear high 16-bits on big-endian machine */
+  print ( u );   /* Line above may appear not to have been performed    */
+}
+</code></pre>
+<p>下例符合本规则，因为本规则针对的是非限定的指针类型。它不禁止给对象类型增加类型限定符。</p>
+<pre><code class="language-c">const short *p;
+const volatile short *q;
+
+q = ( const volatile short * ) p;   /* Compliant */
+</code></pre>
+<p>下例不符合本规则，因为非限定的指针类型不同，分别为“指向经 <code>const</code> 限定的 <code>int</code> 的指针”和“指向 <code>int</code> 的指针”。</p>
+<pre><code class="language-c">int * const * pcpi;
+const int * const * pcpci;
+
+pcpci = ( const int * const * ) pcpi;
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="11-04.html#rule-11-4">Rule 11.4</a>、<a href="11-05.html#rule-11-5">Rule 11.5</a>、<a href="11-08.html#rule-11-8">Rule 11.8</a>。</p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> p2 的转换不符合：对齐要求可能不兼容。取得 hi_p 的转换即使很可能正确对齐也不符合。写入的意图是在大端机器上清除高 16 位；打印时，前一行看起来可能像是没有执行。向 q 赋值的限定符转换符合本规则。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-11-3.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="11-02.html">上一篇：Rule 11.2 · 指向不完整类型的指针</a><a href="../index.html">全部译文</a><a href="11-04.html">下一篇：Rule 11.4 · 对象指针与整数</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

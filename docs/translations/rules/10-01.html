@@ -1,0 +1,119 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 10.1 · 算术操作数与本质类型 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"><style>.table-scroll>table{min-width:38rem}</style></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b06">译文目录</a><span>B06 · §8.10–§8.11</span></nav><p class="eyebrow">中文译文　/　72 · 88</p><h1 id="rule-10-1">Rule 10.1 · 算术操作数与本质类型</h1><p class="muted locator">底本定位 规则 PDF／印刷 90–92／82–84。上接 PDF 89（印刷 81）的 §8.10、§8.10.1–2。</p><section class="source-translation" aria-labelledby="rule-10-1-text">
+<h2 id="rule-10-1-text"><a class="header" href="#rule-10-1-text">原文译文</a></h2>
+<h3 id="s8-10"><a class="header" href="#s8-10">8.10　本质类型模型</a></h3>
+<h4 id="8101-理由"><a class="header" href="#8101-%E7%90%86%E7%94%B1">8.10.1　理由</a></h4>
+<p>本节各条规则共同定义了本质类型模型，并对 C 的类型系统施加限制，目的是：</p>
+<ol>
+<li>支持更强的类型检查；</li>
+<li>为制定控制隐式和显式类型转换的规则提供合理依据；</li>
+<li>提倡可移植的编码做法；</li>
+<li>处理 ISO C 中某些反常的类型转换现象。</li>
+</ol>
+<p>对于 ISO C 视为算术类型的对象和表达式，本质类型模型分别赋予其本质类型。例如，<code>int</code> 与 <code>char</code> 相加，结果的本质类型是字符，而不是整型提升实际产生的 <code>int</code> 类型。</p>
+<p>附录 C 完整阐述了采用本质类型模型的理由；附录 D 全面定义了如何确定任一算术表达式的本质类型。</p>
+<h4 id="8102-本质类型"><a class="header" href="#8102-%E6%9C%AC%E8%B4%A8%E7%B1%BB%E5%9E%8B">8.10.2　本质类型</a></h4>
+<p>对象或表达式的本质类型由其本质类型类别和大小共同确定。表达式的本质类型类别反映其底层行为，可以是：</p>
+<ul>
+<li>本质布尔型；</li>
+<li>本质字符型；</li>
+<li>本质枚举型；</li>
+<li>本质有符号型；</li>
+<li>本质无符号型；</li>
+<li>本质浮点型。</li>
+</ul>
+<p><strong>注：</strong> 每种枚举类型都是一种独有的本质枚举类型，以 <code>enum&lt;i&gt;</code> 标识。这使不同枚举类型能够作为互不相同的类型处理，从而支持更强的类型检查。一个例外是 C90 中用枚举类型定义布尔值的情形：这样的类型被视为本质布尔型。另一个例外是使用附录 D 定义的匿名枚举。匿名枚举是定义一组相关整型常量的方法，被视为具有本质有符号类型。</p>
+<p>比较同一类型类别中的两个类型时，用“较宽”和“较窄”描述两者按字节计的相对大小。两种不同类型在某些实现中的大小相同。</p>
+<p>下表给出标准整数类型与本质类型类别的对应关系。</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="可左右滚动的数据表"><table id="type-map"><caption>本质类型类别</caption><thead><tr><th scope="col">布尔</th><th scope="col">字符</th><th scope="col">有符号</th><th scope="col">无符号</th><th scope="col">枚举 enum&lt;i&gt;</th><th scope="col">浮点</th></tr></thead><tbody><tr><td>_Bool</td><td>char</td><td>signed char</td><td>unsigned char</td><td>具名枚举</td><td>float</td></tr><tr><td></td><td></td><td>signed short</td><td>unsigned short</td><td></td><td>double</td></tr><tr><td></td><td></td><td>signed int</td><td>unsigned int</td><td></td><td>long double</td></tr><tr><td></td><td></td><td>signed long</td><td>unsigned long</td><td></td><td></td></tr><tr><td></td><td></td><td>signed long long</td><td>unsigned long long</td><td></td><td></td></tr></tbody></table></div>
+<p><strong>注：</strong> C99 实现可以提供扩展整数类型；每一种都按其秩和符号性放在适当的位置（见 C99 §6.3.1.1）。</p>
+<p>本节规则施加的限制同样适用于复合赋值运算符（例如 <code>^=</code>），因为其效果相当于将算术、按位或移位运算符所得的结果赋回。例如：</p>
+<pre><code class="language-c">u8a += u8b + 1U;
+</code></pre>
+<p>等价于：</p>
+<pre><code class="language-c">u8a = u8a + ( u8b + 1U );
+</code></pre>
+<p class="guideline"><strong>Rule 10.1</strong>　操作数不得具有不适当的本质类型。</p>
+<p>C90 [未指定 23；实现定义 14、17、19、32]；C99 [未定义 13、49；实现定义 J3.4(2, 5)、J3.5(5)、J3.9(6)]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>下表中，单元格内的数字表示：以相应本质类型的操作数使用该运算符时，存在一项限制。数字对应下文“理由”的段落编号，说明施加该项限制的原因。</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="可左右滚动的数据表"><table id="operands"><caption>算术操作数的本质类型类别</caption><thead><tr><th scope="col">运算符</th><th scope="col">操作数</th><th scope="col">布尔</th><th scope="col">字符</th><th scope="col">枚举</th><th scope="col">有符号</th><th scope="col">无符号</th><th scope="col">浮点</th></tr></thead><tbody><tr><td>[]</td><td>整数</td><td>3</td><td>4</td><td></td><td></td><td></td><td>1</td></tr><tr><td>+（一元）</td><td></td><td>3</td><td>4</td><td>5</td><td></td><td></td><td></td></tr><tr><td>-（一元）</td><td></td><td>3</td><td>4</td><td>5</td><td></td><td>8</td><td></td></tr><tr><td>+ -</td><td>任一</td><td>3</td><td></td><td>5</td><td></td><td></td><td></td></tr><tr><td>* /</td><td>任一</td><td>3</td><td>4</td><td>5</td><td></td><td></td><td></td></tr><tr><td>%</td><td>任一</td><td>3</td><td>4</td><td>5</td><td></td><td></td><td>1</td></tr><tr><td>&lt; &gt; &lt;= &gt;=</td><td>任一</td><td>3</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>== !=</td><td>任一</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>! &amp;&amp; ||</td><td>任一</td><td></td><td>2</td><td>2</td><td>2</td><td>2</td><td>2</td></tr><tr><td>&lt;&lt; &gt;&gt;</td><td>左</td><td>3</td><td>4</td><td>5, 6</td><td>6</td><td></td><td>1</td></tr><tr><td>&lt;&lt; &gt;&gt;</td><td>右</td><td>3</td><td>4</td><td>7</td><td>7</td><td></td><td>1</td></tr><tr><td>~ &amp; | ^</td><td>任一</td><td>3</td><td>4</td><td>5, 6</td><td>6</td><td></td><td>1</td></tr><tr><td>?:</td><td>第一</td><td></td><td>2</td><td>2</td><td>2</td><td>2</td><td>2</td></tr><tr><td>?:</td><td>第二和第三</td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p>就本规则而言，<code>++</code> 和 <code>--</code> 的行为分别与二元 <code>+</code> 和 <code>-</code> 相同。对于表达式中可以组合使用哪些本质类型，另有其他规则作进一步限制。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<ol>
+<li>将本质浮点型表达式用作这些操作数违反约束。</li>
+<li>当操作数被解释为布尔值时，始终应使用本质布尔型表达式。</li>
+<li>当操作数被解释为数值时，不应使用本质布尔型操作数。</li>
+<li>当操作数被解释为数值时，不应使用本质字符型操作数。字符数据的数值由实现定义。</li>
+<li>算术运算不应使用本质枚举型操作数，因为枚举对象使用的整数类型由实现定义。因此，涉及枚举对象的运算可能得到类型出乎预期的结果。注意：匿名枚举的枚举常量具有本质有符号类型。</li>
+<li>移位和按位运算只应对本质无符号型操作数进行。对本质有符号类型进行这些运算所得到的数值由实现定义。</li>
+<li>移位运算符的右操作数应具有本质无符号类型，以避免移位量为负而引发未定义行为。</li>
+<li>一元负号运算符不应使用本质无符号型操作数，因为结果的符号性取决于实现中 <code>int</code> 的大小。</li>
+</ol>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<p>本质有符号型的非负整型常量表达式可用作移位运算符的右操作数。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">enum enuma { a1, a2, a3 } ena, enb;   /* Essentially enum&lt;enuma&gt;         */
+enum { K1 = 1, K2 = 2 };              /* Essentially signed              */
+</code></pre>
+<p>以下示例不符合本规则。注释给出导致不符合的理由编号。</p>
+<pre><code class="language-c">f32a &amp; 2U        /* Rationale 1 - constraint violation                   */
+f32a &lt;&lt; 2        /* Rationale 1 - constraint violation                   */
+</code></pre>
+<pre><code class="language-c">cha &amp;&amp; bla       /* Rationale 2 - char type used as a Boolean value      */
+ena ? a1 : a2    /* Rationale 2 - enum type used as a Boolean value      */
+s8a &amp;&amp; bla       /* Rationale 2 - signed type used as a Boolean value    */
+u8a ? a1 : a2    /* Rationale 2 - unsigned type used as a Boolean value  */
+f32a &amp;&amp; bla      /* Rationale 2 - floating type used as a Boolean value  */
+
+bla * blb        /* Rationale 3 - Boolean used as a numeric value        */
+bla &gt; blb        /* Rationale 3 - Boolean used as a numeric value        */
+
+cha &amp; chb        /* Rationale 4 - char type used as a numeric value      */
+cha &lt;&lt; 1         /* Rationale 4 - char type used as a numeric value      */
+
+ena--            /* Rationale 5 - enum type used in arithmetic operation */
+ena * a1         /* Rationale 5 - enum type used in arithmetic operation */
+
+s8a &amp; 2          /* Rationale 6 - bitwise operation on signed type       */
+50 &lt;&lt; 3U         /* Rationale 6 - shift operation on signed type         */
+
+u8a &lt;&lt; s8a       /* Rationale 7 - shift magnitude uses signed type       */
+u8a &lt;&lt; -1        /* Rationale 7 - shift magnitude uses signed type       */
+
+-u8a             /* Rationale 8 - unary minus on unsigned type           */
+</code></pre>
+<p>下例不符合本规则，同时也违反 <a href="10-03.html#rule-10-3">Rule 10.3</a>：</p>
+<pre><code class="language-c">ena += a1        /* Rationale 5 - enum type used in arithmetic operation */
+</code></pre>
+<p>以下示例符合本规则：</p>
+<pre><code class="language-c">bla &amp;&amp; blb
+bla ? u8a : u8b
+
+cha - chb
+cha &gt; chb
+
+ena &gt; a1
+K1 * s8a         /* Compliant as K1 from anonymous enum                  */
+
+s8a + s16b
+-( s8a ) * s8b
+s8a &gt; 0
+--s16b
+
+u8a + u16b
+u8a &amp; 2U
+
+u8a &gt; 0U
+u8a &lt;&lt; 2U
+u8a &lt;&lt; 1         /* Compliant by exception                               */
+
+f32a + f32b
+f32a &gt; 0.0
+</code></pre>
+<p>下例符合本规则，但违反 <a href="10-02.html#rule-10-2">Rule 10.2</a>：</p>
+<pre><code class="language-c">cha + chb
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="10-02.html#rule-10-2">Rule 10.2</a>。</p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> 具名枚举对象属 enum<enuma>，匿名枚举常量属本质有符号型。反例注释从上到下：理由 1 的两式违反约束；理由 2 依次把字符、枚举、有符号、无符号和浮点值当布尔值；理由 3 的两式把布尔值当数值；理由 4 的两式把字符当数值；理由 5 的两式在算术运算中使用枚举；理由 6 分别是对有符号值做按位运算、移位；理由 7 的两式使用有符号移位量；理由 8 对无符号值取负。ena += a1 对应理由 5。在符合项中 K1 来自匿名枚举；u8a &lt;&lt; 1 适用例外。</enuma></p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-10-1.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="09-05.html">上一篇：Rule 9.5 · 使用指定初始化器时的数组大小</a><a href="../index.html">全部译文</a><a href="10-02.html">下一篇：Rule 10.2 · 字符加减的方向与结果</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>
