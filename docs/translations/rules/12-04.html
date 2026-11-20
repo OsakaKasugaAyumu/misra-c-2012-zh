@@ -6,7 +6,7 @@
 <p>只要表达式满足常量表达式的约束，本规则就适用，不论它是否出现在要求使用常量表达式的上下文中。</p>
 <p>若表达式不求值，本规则就不适用。例如，它位于逻辑与运算符的右操作数中，而左操作数恒为假。</p>
 <h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
-<p>严格地说，无符号整数表达式不会溢出，而是发生回绕。虽然在运行时使用模算术可能有充分理由，但在编译时使用它就不大可能是有意为之。</p>
+<p>严格地说，无符号整数表达式不会溢出，而是发生回绕。虽然在运行时使用模算术可能有充分理由，但相比之下，在编译时使用模算术是出于本意的可能性较低。</p>
 <h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
 <p><code>case</code> 标号对应的表达式必须是常量表达式。在求 <code>case</code> 表达式的值时发生无符号回绕，很可能不是有意的。在 <code>int</code> 为 16 位的机器上，下例中 <code>BASE</code> 的任何大于等于 65 024 的值都会造成回绕：</p>
 <pre><code class="language-c">#define BASE 65024u
@@ -54,4 +54,4 @@ void g ( void )
 
 }
 </code></pre>
-</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> BASE + 512u 不符合：回绕到 0。#if 条件不符合，因为 ( 0u - 10u ) 回绕。用 DELAY + WIDTH 初始化不符合。对象 c 加 1u 的写法符合本条。最后两行初始化分别标为符合、不符合。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-12-4.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="12-03.html">上一篇：Rule 12.3 · 逗号运算符与列表分隔符</a><a href="../index.html">全部译文</a><a href="13-01.html">下一篇：Rule 13.1 · 初始化器列表中的持久副作用</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）：</strong> BASE + 512u 不符合：回绕到 0。#if 条件不符合，因为 ( 0u - 10u ) 回绕。用 DELAY + WIDTH 初始化不符合。对象 c 加 1u 的写法符合本条。最后两行初始化分别标为符合、不符合。</p></aside><aside class="note"><p><strong>源页核对：</strong> PDF 115：说明写 <code>c + 1</code>，紧接的原书代码写 <code>c + 1u</code>。两处都照录，不把这两个字面量写成同一类型。此例不适用本条的理由是表达式读取了对象 <code>c</code>，不是后缀 <code>u</code>。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-12-4.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="12-03.html">上一篇：Rule 12.3 · 逗号运算符与列表分隔符</a><a href="../index.html">全部译文</a><a href="13-01.html">下一篇：Rule 13.1 · 初始化器列表中的持久副作用</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>
