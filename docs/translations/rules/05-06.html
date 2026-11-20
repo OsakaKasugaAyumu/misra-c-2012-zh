@@ -1,0 +1,48 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 5.6 · typedef 名的唯一性 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b04">译文目录</a><span>B04 · §8.5–§8.7</span></nav><p class="eyebrow">中文译文　/　43 · 53</p><h1 id="rule-5-6">Rule 5.6 · typedef 名的唯一性</h1><p class="muted locator">底本定位 §8.5 · PDF 62／印刷 54</p><section class="source-translation" aria-labelledby="rule-5-6-text">
+<h2 id="rule-5-6-text"><a class="header" href="#rule-5-6-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 5.6</strong>　typedef 名必须是唯一的标识符。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>typedef 名在所有名字空间和翻译单元中必须唯一。只有当类型定义写在一个头文件中，而该头文件又被多个源文件包含时，本规则才允许同一 typedef 名有多处声明。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>把一个 typedef 名再次用作另一个 typedef 名，或用作函数、对象或枚举常量的名字，可能使开发者产生混淆。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<p>typedef 名可以与同该 typedef 相关联的结构、联合或枚举的标记名相同。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">void func ( void )
+{
+  {
+    typedef unsigned char u8_t;
+  }
+  {
+    typedef unsigned char u8_t;    /* Non-compliant - reuse */
+  }
+}
+
+typedef float mass;
+
+void func1 ( void )
+{
+  float32_t mass = 0.0f;           /* Non-compliant - reuse */
+}
+
+typedef struct list
+{
+  struct list *next;
+  uint16_t     element;
+} list;                            /* Compliant - exception */
+
+typedef struct
+{
+  struct chain
+  {
+    struct chain *list;
+    uint16_t      element;
+  } s1;
+  uint16_t length;
+} chain;                           /* Non-compliant - tag "chain" not
+                                    * associated with typedef            */
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="05-07.html#rule-5-7">Rule 5.7</a>。</p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）</strong>　第二次定义 u8_t 以及把 mass 用作对象名都是重复使用，不符合。list 按例外符合；chain 的标记并未与该 typedef 相关联，不符合。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-5-6.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="05-05.html">上一篇：Rule 5.5 · 标识符与宏名的区分</a><a href="../index.html">全部译文</a><a href="05-07.html">下一篇：Rule 5.7 · 标记名的唯一性</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

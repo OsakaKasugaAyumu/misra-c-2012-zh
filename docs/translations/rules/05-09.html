@@ -1,0 +1,58 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 5.9 · 内部链接定义的名字唯一性 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b04">译文目录</a><span>B04 · §8.5–§8.7</span></nav><p class="eyebrow">中文译文　/　46 · 53</p><h1 id="rule-5-9">Rule 5.9 · 内部链接定义的名字唯一性</h1><p class="muted locator">底本定位 §8.5 · PDF 65–66／印刷 57–58</p><section class="source-translation" aria-labelledby="rule-5-9-text">
+<h2 id="rule-5-9-text"><a class="header" href="#rule-5-9-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 5.9</strong>　用于定义具有内部链接的对象或函数的标识符应当唯一。</p>
+<dl class="attributes"><dt>类别</dt><dd>建议（Advisory）</dd><dt>分析</dt><dd>可判定（Decidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>标识符名应当在所有名字空间和翻译单元中唯一。以这种方式使用的标识符，不应与任何其他标识符同名，即使后者指代的是一个无链接的对象。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>以这种方式要求标识符名唯一，有助于避免混淆。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<p>具有内部链接的内联函数可以在多个翻译单元中定义，前提是所有这些定义都出自同一个头文件，而且每个这样的翻译单元都包含该头文件。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>在下面的示例中，<code>file1.c</code> 和 <code>file2.c</code> 都属于同一个项目。</p>
+<pre><code class="language-c">/* file1.c */
+static int32_t count;      /* "count" has internal linkage              */
+static void foo ( void )   /* "foo" has internal linkage                */
+{
+  int16_t count;           /* Non-compliant - "count" has no linkage
+                            * but clashes with an identifier with
+                            * internal linkage                          */
+  int16_t index;           /* "index" has no linkage                    */
+}
+
+void bar1 ( void )
+{
+  static int16_t count;    /* Non-compliant - "count" has no linkage
+                            * but clashes with an identifier with
+                            * internal linkage                          */
+  int16_t index;           /* Compliant - "index" is not unique but
+                            * has no linkage                            */
+  foo ( );
+}
+
+/* End of file1.c */
+
+/* file2.c */
+static int8_t count;       /* Non-compliant - "count" has internal
+                            * linkage but clashes with other
+                            * identifiers of the same name              */
+static void foo ( void )   /* Non-compliant - "foo" has internal
+                            * linkage but clashes with a function of
+                            * the same name                             */
+{
+  int32_t index;           /* Compliant - both "index" and "nbytes"     */
+  int16_t nbytes;          /* are not unique but have no linkage        */
+}
+</code></pre>
+<pre><code class="language-c">void bar2 ( void )
+{
+  static uint8_t nbytes;   /* Compliant - "nbytes" is not unique but
+                            * has no linkage and the storage class is
+                            * irrelevant                                */
+}
+
+/* End of file2.c */
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p>Rule 8.10。</p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）</strong>　第一个文件的文件内 count、foo 有内部链接；局部 count 虽无链接，却与内部名冲突，两处都不符合。各处的局部 index 无链接，允许重名。第二个文件的 count 和 foo 均与既有名字冲突；它的 index、nbytes 虽重名却无链接。bar2 中 nbytes 也无链接、符合；其存储类不影响这一点。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-5-9.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="05-08.html">上一篇：Rule 5.8 · 外部链接定义的名字唯一性</a><a href="../index.html">全部译文</a><a href="06-01.html">下一篇：Rule 6.1 · 位域的声明类型</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

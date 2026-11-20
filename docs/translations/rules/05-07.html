@@ -1,0 +1,60 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 5.7 · 标记名的唯一性 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b04">译文目录</a><span>B04 · §8.5–§8.7</span></nav><p class="eyebrow">中文译文　/　44 · 53</p><h1 id="rule-5-7">Rule 5.7 · 标记名的唯一性</h1><p class="muted locator">底本定位 §8.5 · PDF 63–64／印刷 55–56</p><section class="source-translation" aria-labelledby="rule-5-7-text">
+<h2 id="rule-5-7-text"><a class="header" href="#rule-5-7-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 5.7</strong>　标记名必须是唯一的标识符。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>标记在所有名字空间和翻译单元中必须唯一。</p>
+<p>该标记的所有声明都必须指定同一个类型。</p>
+<p>只有当标记声明在一个头文件中，而该头文件又被多个源文件包含时，本规则才允许同一标记有多处完整声明。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>重复使用标记名可能使开发者产生混淆。</p>
+<p>在 C90 中，重复使用标记名还涉及未定义行为，尽管 C 标准的附录并未将它列出。C99 在 §6.7.2.3 中将这一未定义行为列为约束。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<p>标记名可以与同它相关联的 typedef 名相同。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">struct stag
+{
+  uint16_t a;
+  uint16_t b;
+};
+
+struct stag a1 = { 0, 0 };   /* Compliant - compatible with above        */
+union  stag a2 = { 0, 0 };   /* Non-compliant - declares different type
+                              * from struct stag.
+                              * Constraint violation in C99              */
+</code></pre>
+<p>下面的示例还违反了 <a href="05-03.html#rule-5-3">Rule 5.3</a>。</p>
+<pre><code class="language-c">struct deer
+{
+  uint16_t a;
+  uint16_t b;
+};
+
+void foo ( void )
+{
+  struct deer
+  {
+    uint16_t a;
+  };                         /* Non-compliant - tag "deer" reused        */
+}
+
+typedef struct coord
+{
+  uint16_t x;
+  uint16_t y;
+} coord;                     /* Compliant by Exception                   */
+</code></pre>
+<pre><code class="language-c">struct elk
+{
+  uint16_t x;
+};
+
+struct elk       /* Non-compliant - declaration of different type
+                  * Constraint violation in C99                          */
+{
+  uint32_t x;
+};
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="05-06.html#rule-5-6">Rule 5.6</a>。</p>
+</section><aside class="note"><p><strong>原书代码注释中译（按出现顺序）</strong>　a1 与上面的类型相容，符合；a2 使用不同于 struct stag 的类型，在 C99 中违反约束。内层重用了 deer，不符合；coord 适用例外，符合。elk 的后一个声明指定了不同的类型，不符合，在 C99 中违反约束。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-5-7.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="05-06.html">上一篇：Rule 5.6 · typedef 名的唯一性</a><a href="../index.html">全部译文</a><a href="05-08.html">下一篇：Rule 5.8 · 外部链接定义的名字唯一性</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

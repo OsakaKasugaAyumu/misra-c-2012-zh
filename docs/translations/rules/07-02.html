@@ -1,0 +1,47 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 7.2 · 无符号整数常量的后缀 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b04">译文目录</a><span>B04 · §8.5–§8.7</span></nav><p class="eyebrow">中文译文　/　50 · 53</p><h1 id="rule-7-2">Rule 7.2 · 无符号整数常量的后缀</h1><p class="muted locator">底本定位 §8.7 · PDF 68–69／印刷 60–61</p><section class="source-translation" aria-labelledby="rule-7-2-text">
+<h2 id="rule-7-2-text"><a class="header" href="#rule-7-2-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 7.2</strong>　凡以无符号类型表示的整数常量，都必须加上 <code>u</code> 或 <code>U</code> 后缀。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>本规则适用于：</p>
+<ul>
+<li>出现在 <code>#if</code> 和 <code>#elif</code> 预处理指令控制表达式中的整数常量；</li>
+<li>预处理后仍存在的任何其他整数常量。</li>
+</ul>
+<p><strong>注：</strong> 在预处理期间，整数常量类型的确定方式与预处理后相同，但有下列差别：</p>
+<ul>
+<li>所有有符号整数类型的表现都如同 <code>long</code>（C90）或 <code>intmax_t</code>（C99）；</li>
+<li>所有无符号整数类型的表现都如同 <code>unsigned long</code>（C90）或 <code>uintmax_t</code>（C99）。</li>
+</ul>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>整数常量的类型容易引起混淆，因为它取决于多个因素的复杂组合，包括：</p>
+<ul>
+<li>常量的数值大小；</li>
+<li>实现中各整数类型的大小；</li>
+<li>有无后缀以及使用了哪些后缀；</li>
+<li>采用何种进制表示该值（即十进制、八进制或十六进制）。</li>
+</ul>
+<p>例如，整数常量 <code>40000</code> 在 32 位环境中的类型为 <code>signed int</code>，而在 16 位环境中为 <code>signed long</code>。值 <code>0x8000</code> 在 16 位环境中的类型为 <code>unsigned int</code>，在 32 位环境中则为 <code>signed int</code>。</p>
+<p><strong>注：</strong></p>
+<ul>
+<li>凡带 <code>U</code> 后缀的值均具有无符号类型；</li>
+<li>不带后缀且小于 2³¹ 的十进制值具有有符号类型。</li>
+</ul>
+<p>但是：</p>
+<ul>
+<li>不带后缀且大于或等于 2¹⁵ 的十六进制值，可能具有有符号类型，也可能具有无符号类型；</li>
+<li>在 C90 中，不带后缀且大于或等于 2³¹ 的十进制值，可能具有有符号类型，也可能具有无符号类型。</li>
+</ul>
+<p>常量的符号性应当明确。如果一个常量具有无符号类型，加上 <code>U</code> 后缀就清楚地表明程序员了解该常量是无符号的。</p>
+<p><strong>注：</strong> 本规则不取决于常量的使用上下文；判定是否符合本规则时，不考虑可能对常量施加的提升或其他转换。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>下例假定机器的 <code>int</code> 为 16 位，<code>long</code> 为 32 位。表中列出按 C 标准确定的各整数常量的类型。整数常量 <code>0x8000</code> 不符合规则，因为它具有无符号类型，却没有 <code>U</code> 后缀。</p>
+<div class="table-wrapper"><table><thead><tr><th>常量</th><th>类型</th><th>是否符合规则</th></tr></thead><tbody>
+<tr><td><code>32767</code></td><td><code>signed int</code></td><td>符合</td></tr>
+<tr><td><code>0x7fff</code></td><td><code>signed int</code></td><td>符合</td></tr>
+<tr><td><code>32768</code></td><td><code>signed long</code></td><td>符合</td></tr>
+<tr><td><code>32768u</code></td><td><code>unsigned int</code></td><td>符合</td></tr>
+<tr><td><code>0x8000</code></td><td><code>unsigned int</code></td><td>不符合</td></tr>
+<tr><td><code>0x8000u</code></td><td><code>unsigned int</code></td><td>符合</td></tr>
+</tbody></table>
+</div></section><aside class="note"><p><strong>源页核对：</strong> PDF 68–69：原书表格以 16 位 int、32 位 long 为前提。对照原版可见正文的阈值是 2 的 31 次方和 15 次方，不是数字 231 和 215。原表未标编号；不补造表号。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-7-2.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="07-01.html">上一篇：Rule 7.1 · 八进制常量</a><a href="../index.html">全部译文</a><a href="07-03.html">下一篇：Rule 7.3 · 字面量后缀中的小写 l</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>
