@@ -5,7 +5,7 @@
 <dl class="attributes"><dt>类别</dt><dd>强制（Mandatory）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90</dd></dl>
 <h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
 <p>如果函数调用处有可见的原型，语言约束会保证实参数量与形参数量一致，而且每个实参都可以赋给其对应的形参。</p>
-<p>如果函数是隐式声明的，C90 编译器会假定其返回类型为 <code>int</code>。隐式函数声明不提供原型，所以编译器不知道形参的个数和类型。这样，传递实参和赋用返回值时可能发生不恰当的类型转换，还可能出现其他未定义行为。</p>
+<p>如果函数是隐式声明的，C90 编译器会假定其返回类型为 <code>int</code>。隐式函数声明不提供原型，所以编译器不知道形参的个数和类型。这样，在传递实参时，以及把返回值赋给其他对象时可能发生不恰当的类型转换，还可能出现其他未定义行为。</p>
 <h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
 <p>若函数 <code>power</code> 声明如下：</p>
 <pre><code class="language-c">extern double power ( double d, int n );

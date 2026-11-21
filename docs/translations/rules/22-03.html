@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 22.3 · 按文件身份比较流的打开区间 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b11">译文目录</a><span>B11 · §8.21–§8.22</span></nav><p class="eyebrow">中文译文　/　163 · 166</p><h1 id="rule-22-3">Rule 22.3 · 按文件身份比较流的打开区间</h1><p class="muted locator">底本定位 PDF／印刷 183／175。</p><section class="source-translation" aria-labelledby="rule-22-3-text">
 <h2 id="rule-22-3-text"><a class="header" href="#rule-22-3-text">原文译文</a></h2>
-<p class="guideline"><strong>Rule 22.3</strong>　不得让不同的流同时打开同一文件进行读访问和写访问。</p>
+<p class="guideline"><strong>Rule 22.3</strong>　同一文件不得同时处于这两种打开状态：一个流允许读，另一个流允许写。</p>
 <p>C90 [实现定义 61]；C99 [实现定义 J.3.12(22)]</p>
 <dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>不可判定（Undecidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
 <h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>

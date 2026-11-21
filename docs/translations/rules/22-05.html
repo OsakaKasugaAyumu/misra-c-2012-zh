@@ -5,7 +5,7 @@
 <h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
 <p>不得直接或间接地对指向 <code>FILE</code> 对象的指针进行解引用（间接方式例如调用 <code>memcpy</code> 或 <code>memcmp</code>）。</p>
 <h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
-<p>C 标准（C90 第 7.9.3(6) 节、C99 第 7.19.3(6) 节）指出，用于控制流的 <code>FILE</code> 对象的地址可能有特殊意义，而该对象的副本不一定具有相同的行为。本规则确保不能制作这种副本。</p>
+<p>C 标准（C90 第 7.9.3(6) 节、C99 第 7.19.3(6) 节）指出，用来控制一个流的 <code>FILE</code> 对象，其地址可能有特殊意义，而该对象的副本不一定具有相同的行为。本规则确保不能制作这种副本。</p>
 <p>禁止直接操纵 <code>FILE</code> 对象，因为这可能与它作为流指示器的用途不相容。</p>
 <h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
 <pre><code class="language-c">#include &lt;stdio.h&gt;

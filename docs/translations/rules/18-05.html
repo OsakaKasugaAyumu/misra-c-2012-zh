@@ -5,7 +5,7 @@
 <h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
 <p>连续施加在同一类型上的指针声明符不应超过两个。声明中出现的任何 <code>typedef</code> 名，都要当作用它所代表的类型替换之后再作判断。</p>
 <h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
-<p>超过两级的指针嵌套会严重妨碍对代码行为的理解，因此应当避免。</p>
+<p>超过两级的指针嵌套可能严重妨碍对代码行为的理解，因此应当避免。</p>
 <h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
 <pre><code class="language-c">typedef int8_t * INTPTR;
 

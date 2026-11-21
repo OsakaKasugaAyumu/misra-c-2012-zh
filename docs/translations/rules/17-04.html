@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 17.4 · 让非 void 函数所有出口都返回值 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b08">译文目录</a><span>B08 · §8.15–§8.17</span></nav><p class="eyebrow">中文译文　/　120 · 166</p><h1 id="rule-17-4">Rule 17.4 · 让非 void 函数所有出口都返回值</h1><p class="muted locator">底本定位 PDF／印刷 146–147／138–139。</p><section class="source-translation" aria-labelledby="rule-17-4-text">
 <h2 id="rule-17-4-text"><a class="header" href="#rule-17-4-text">原文译文</a></h2>
-<p class="guideline"><strong>Rule 17.4</strong>　对于返回类型非 <code>void</code> 的函数，每一条退出路径都必须显式执行一条带表达式的 <code>return</code> 语句。</p>
+<p class="guideline"><strong>Rule 17.4</strong>　对于返回类型非 <code>void</code> 的函数，每一条退出路径上都必须有显式写出的、带表达式的 <code>return</code> 语句。</p>
 <p>C90 [未定义 43]；C99 [未定义 82]</p>
 <dl class="attributes"><dt>类别</dt><dd>强制（Mandatory）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
 <h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>

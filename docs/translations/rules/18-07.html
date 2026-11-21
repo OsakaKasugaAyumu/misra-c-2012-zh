@@ -4,7 +4,7 @@
 <p>C99 [未定义 59]</p>
 <dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
 <h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
-<p>柔性数组成员最可能与动态内存分配一起使用，而 <a href="../directives/04-12.html#dir-4-12">Dir 4.12</a> 和 Rule 21.3 禁止动态内存分配。</p>
+<p>柔性数组成员最可能与动态内存分配一起使用，而 <a href="../directives/04-12.html#dir-4-12">Dir 4.12</a> 和 <a href="21-03.html#rule-21-3">Rule 21.3</a> 禁止动态内存分配。</p>
 <p>柔性数组成员的存在会改变 <code>sizeof</code> 运算符的行为，程序员可能对此始料未及。把包含柔性数组成员的结构体赋给另一个同类型的结构体，结果也可能不符合预期：该赋值只复制柔性数组成员起点之前的部分，不包括从该起点开始的元素。</p>
 <h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
 <pre><code class="language-c">#include &lt;stdlib.h&gt;
@@ -29,5 +29,5 @@ struct s *copy ( struct s *s1 )
 </code></pre>
 <p><strong>原书代码注释中译（依次）：</strong> （1）不合规：柔性数组成员。 （2）为简明起见，省略对 malloc() 返回值的检查。 （3）仅复制 s1-&gt;len。</p>
 <h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
-<p><a href="../directives/04-12.html#dir-4-12">Dir 4.12</a>、Rule 21.3。</p>
+<p><a href="../directives/04-12.html#dir-4-12">Dir 4.12</a>、<a href="21-03.html#rule-21-3">Rule 21.3</a>。</p>
 </section><aside class="note"><p><strong>源页核对：</strong> PDF 159：适用栏确为 C90、C99，所引未定义行为编号来自 C99。保留两项字段，不把“本条适用 C90”误写成“严格 C90 支持柔性数组”。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-18-7.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="18-06.html">上一篇：Rule 18.6 · 追踪被保存的地址和对象生存期</a><a href="../index.html">全部译文</a><a href="18-08.html">下一篇：Rule 18.8 · 变长数组的类型与长度求值时机</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>
