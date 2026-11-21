@@ -2,7 +2,7 @@
 
 [📖 在线浏览全部已完成译文](https://osakakasugaayumu.github.io/misra-c-2012-zh/translations/index.html) · [B13：附录 G–J 与封尾](https://osakakasugaayumu.github.io/misra-c-2012-zh/translations/index.html#b13) · [B12：参考文献与附录 A–F](https://osakakasugaayumu.github.io/misra-c-2012-zh/translations/index.html#b12) · [B11：标准库与资源](https://osakakasugaayumu.github.io/misra-c-2012-zh/translations/index.html#b11) · [B10：预处理指令](https://osakakasugaayumu.github.io/misra-c-2012-zh/translations/index.html#b10) · [B09：指针与数组、重叠存储](https://osakakasugaayumu.github.io/misra-c-2012-zh/translations/index.html#b09) · [B08：控制流、switch 语句与函数](https://osakakasugaayumu.github.io/misra-c-2012-zh/translations/index.html#b08) · [B07：表达式、副作用与控制语句表达式](https://osakakasugaayumu.github.io/misra-c-2012-zh/translations/index.html#b07) · [B06：本质类型与指针转换](https://osakakasugaayumu.github.io/misra-c-2012-zh/translations/index.html#b06) · [B05：声明、定义与初始化](https://osakakasugaayumu.github.io/misra-c-2012-zh/translations/index.html#b05) · [B04：15 条新增规则](https://osakakasugaayumu.github.io/misra-c-2012-zh/translations/index.html#b04) · [从卷首开始](https://osakakasugaayumu.github.io/misra-c-2012-zh/translations/b01/front.html) · [原创 C 实验](https://osakakasugaayumu.github.io/misra-c-2012-zh/#experiments)
 
-本站收录**已逐批验收的内容**，全书最终复核尚未进行。中文译文以 2013 年 3 月版 *MISRA C:2012* 为底本，非官方译本。原书 © MIRA Limited 2013；保留原书版权说明及出处，不提供 PDF。
+本站收录**已逐批验收的内容**，全书最终复核已完成，已验收的修订均已同步。中文译文以 2013 年 3 月版 *MISRA C:2012* 为底本，非官方译本。原书 © MIRA Limited 2013；保留原书版权说明及出处，不提供 PDF。
 
 | 部分 | 内容 |
 | --- | --- |
