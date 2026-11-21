@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 20.8 · 分清零一、非零与未求值 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b10">译文目录</a><span>B10 · §8.20</span></nav><p class="eyebrow">中文译文　/　142 · 148</p><h1 id="rule-20-8">Rule 20.8 · 分清零一、非零与未求值</h1><p class="muted locator">底本定位 PDF／印刷 168–169／160–161。</p><section class="source-translation" aria-labelledby="rule-20-8-text">
+<h2 id="rule-20-8-text"><a class="header" href="#rule-20-8-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 20.8</strong>　<code>#if</code> 或 <code>#elif</code> 预处理指令的控制表达式必须求得 0 或 1。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>本规则不适用于预处理指令中未被求值的控制表达式。如果控制表达式位于正被排除的代码中，而且不能影响代码是否被排除，就不会对它求值。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>强类型要求条件包含预处理指令的控制表达式具有布尔值。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">#define FALSE 0
+#define TRUE  1
+
+#if FALSE           /* Compliant                              */
+#endif
+
+#if 10              /* Non-compliant                          */
+#endif
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）合规。 （2）不合规。</p>
+<pre><code class="language-c">#if ! defined ( X ) /* Compliant                              */
+#endif
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）合规。</p>
+<pre><code class="language-c">#if A &gt; B           /* Compliant assuming A and B are numeric */
+#endif
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）假定 A 和 B 是数值，则合规。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="14-04.html#rule-14-4">Rule 14.4</a>。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-20-8.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="20-07.html">上一篇：Rule 20.7 · 检查完全展开后的括号</a><a href="../index.html">全部译文</a><a href="20-09.html">下一篇：Rule 20.9 · 把未定义、定义为零和定义为非零分开</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

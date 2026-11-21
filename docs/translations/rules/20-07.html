@@ -1,0 +1,53 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 20.7 · 检查完全展开后的括号 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b10">译文目录</a><span>B10 · §8.20</span></nav><p class="eyebrow">中文译文　/　141 · 148</p><h1 id="rule-20-7">Rule 20.7 · 检查完全展开后的括号</h1><p class="muted locator">底本定位 PDF／印刷 167–168／159–160。</p><section class="source-translation" aria-labelledby="rule-20-7-text">
+<h2 id="rule-20-7-text"><a class="header" href="#rule-20-7-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 20.7</strong>　宏形参展开后形成的表达式必须用圆括号括起。</p>
+<p>[Koenig 78–81]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>如果某个宏形参展开所得的一个记号或一串记号构成表达式，那么在完全展开的宏中，该表达式必须符合以下条件之一：</p>
+<ul>
+<li>自身就是一个带圆括号的表达式；或</li>
+<li>被圆括号括起。</li>
+</ul>
+<p><strong>注：</strong> 这不一定要求给所有宏形参都加上圆括号；也可以在宏实参中提供圆括号。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>如果不使用圆括号，宏替换时运算符的优先级可能使结果不合预期。</p>
+<p>如果宏形参并非用作表达式，就不需要这些圆括号，因为这时并不涉及运算符。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>在下面这个不合规的示例中，</p>
+<pre><code class="language-c">#define M1( x, y ) ( x * y )
+
+r = M1 ( 1 + 2, 3 + 4 );
+</code></pre>
+<p>宏展开后得到：</p>
+<pre><code class="language-c">r = ( 1 + 2 * 3 + 4 );
+</code></pre>
+<p>表达式 <code>1 + 2</code> 和 <code>3 + 4</code> 分别来自形参 <code>x</code> 和 <code>y</code> 的展开，但两个表达式都没有被括号括起。结果表达式的值是 11，而原本期望的结果可能是 21。</p>
+<p>要写成合规的形式，既可以给宏实参加括号，也可以另写一个在展开时插入括号的宏，例如：</p>
+<pre><code class="language-c">r = M1 ( ( 1 + 2 ), ( 3 + 4 ) );   /* Compliant */
+
+#define M2( x, y ) ( ( x ) * ( y ) )
+
+r = M2 ( 1 + 2, 3 + 4 );           /* Compliant */
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）合规。 （2）合规。</p>
+<p>下例合规，因为 <code>x</code> 的第一次展开用作 <code>##</code> 的操作数，并不产生表达式。<code>x</code> 的第二次展开用作表达式，已按要求用圆括号括起。</p>
+<pre><code class="language-c">#define M3( x ) a ## x = ( x )
+
+int16_t M3 ( 0 );
+</code></pre>
+<p>下例合规，因为形参 <code>M</code> 展开为成员名，不产生表达式。形参 <code>S</code> 的展开产生一个结构体或联合体类型的表达式，因而确实需要圆括号。</p>
+<pre><code class="language-c">#define GET_MEMBER( S, M ) ( S ).M
+
+v = GET_MEMBER ( s1, minval );
+</code></pre>
+<p>下面的合规示例表明，并不总是需要把形参的每一次出现都用括号括起，虽然这往往是满足本规则最容易的做法。</p>
+<pre><code class="language-c">#define F( X ) G( X )
+#define G( Y ) ( ( Y ) + 1 )
+
+int16_t x = F ( 2 );
+</code></pre>
+<p>完全展开的宏是 <code>( ( 2 ) + 1 )</code>。沿展开过程回溯，值 <code>2</code> 来自宏 <code>G</code> 中形参 <code>Y</code> 的展开，而 <code>Y</code> 又来自宏 <code>F</code> 中形参 <code>X</code> 的展开。由于在完全展开的宏中 <code>2</code> 已被圆括号括起，所以代码合规。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="../directives/04-09.html#dir-4-9">Dir 4.9</a>。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-20-7.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="20-06.html">上一篇：Rule 20.6 · 先界定宏实参，再辨认指令</a><a href="../index.html">全部译文</a><a href="20-08.html">下一篇：Rule 20.8 · 分清零一、非零与未求值</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

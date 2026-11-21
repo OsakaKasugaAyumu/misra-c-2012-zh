@@ -1,0 +1,16 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 20.11 · 逐记号检查井号、形参与双井号的相邻关系 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b10">译文目录</a><span>B10 · §8.20</span></nav><p class="eyebrow">中文译文　/　145 · 148</p><h1 id="rule-20-11">Rule 20.11 · 逐记号检查井号、形参与双井号的相邻关系</h1><p class="muted locator">底本定位 PDF／印刷 170／162。</p><section class="source-translation" aria-labelledby="rule-20-11-text">
+<h2 id="rule-20-11-text"><a class="header" href="#rule-20-11-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 20.11</strong>　紧跟在 <code>#</code> 运算符之后的宏形参，其后不得紧接 <code>##</code> 运算符。</p>
+<p>C90 [未指定 12]；C99 [未指定 25]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>对于多个 <code>#</code>、多个 <code>##</code> 或两者混用的情况，这些预处理运算符的求值次序是未指定的。<a href="20-10.html#rule-20-10">Rule 20.10</a> 不鼓励使用 <code>#</code> 和 <code>##</code>。尤其是，<code>#</code> 运算符的结果是一个字符串字面量，把它与其他任何预处理记号拼接，极不可能得到有效记号。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">#define A( x )      #x         /* Compliant     */
+#define B( x, y )   x ## y     /* Compliant     */
+#define C( x, y )   #x ## y    /* Non-compliant */
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）合规。 （2）合规。 （3）不合规。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="20-10.html#rule-20-10">Rule 20.10</a>。</p>
+</section><aside class="note"><p><strong>源页核对：</strong> PDF 170：原书把只含 # 或只含 ## 的两个定义标为合规；此处指 20.11，不撤销 20.10 的建议。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-20-11.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="20-10.html">上一篇：Rule 20.10 · 区分指令起始符、字符串化与记号拼接</a><a href="../index.html">全部译文</a><a href="20-12.html">下一篇：Rule 20.12 · 对照同一实参的展开名与原拼写</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

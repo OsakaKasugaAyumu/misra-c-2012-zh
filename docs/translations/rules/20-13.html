@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 20.13 · 检查被排除分支中的指令拼写 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b10">译文目录</a><span>B10 · §8.20</span></nav><p class="eyebrow">中文译文　/　147 · 148</p><h1 id="rule-20-13">Rule 20.13 · 检查被排除分支中的指令拼写</h1><p class="muted locator">底本定位 PDF／印刷 171–172／163–164。</p><section class="source-translation" aria-labelledby="rule-20-13-text">
+<h2 id="rule-20-13-text"><a class="header" href="#rule-20-13-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 20.13</strong>　某行的第一个记号若为 <code>#</code>，该行就必须是一条有效的预处理指令。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p><code>#</code> 和预处理记号之间允许有空白。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>预处理指令可用于按条件排除源代码，直到遇到相应的 <code>#else</code>、<code>#elif</code> 或 <code>#endif</code> 指令。在被排除的源代码中，如果有格式不正确或无效的预处理指令，编译器可能发现不了，从而排除比原意更多的代码。</p>
+<p>即使指令位于被排除的代码块内，也要求所有预处理指令的语法都有效，这样便能防止上述情况发生。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>在下例中，如果 <code>AAA</code> 已定义，<code>#ifndef</code> 与 <code>#endif</code> 指令之间的代码可能全部被排除。开发者本想把 <code>AAA</code> 赋给 <code>x</code>，却把 <code>#else</code> 指令输错了，而编译器没有诊断出这个错误。</p>
+<pre><code class="language-c">#define AAA 2
+
+int32_t foo ( void )
+{
+  int32_t x = 0;
+
+#ifndef AAA
+  x = 1;
+#else1        /* Non-compliant */
+  x = AAA;
+#endif
+
+  return x;
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）不合规。</p>
+<p>下例合规，因为注释中的文本 <code>#start</code> 不是记号。</p>
+<pre><code class="language-c">/*
+#start is not a token in a comment
+ */
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）注释中的 #start 不是记号。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-20-13.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="20-12.html">上一篇：Rule 20.12 · 对照同一实参的展开名与原拼写</a><a href="../index.html">全部译文</a><a href="20-14.html">下一篇：Rule 20.14 · 按物理文件栈核对条件指令</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>
