@@ -1,0 +1,71 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 15.4 · 逐层计数循环的提前出口 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b08">译文目录</a><span>B08 · §8.15–§8.17</span></nav><p class="eyebrow">中文译文　/　106 · 124</p><h1 id="rule-15-4">Rule 15.4 · 逐层计数循环的提前出口</h1><p class="muted locator">底本定位 PDF／印刷 133–134／125–126。</p><section class="source-translation" aria-labelledby="rule-15-4-text">
+<h2 id="rule-15-4-text"><a class="header" href="#rule-15-4-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 15.4</strong>　对任一迭代语句，用于终止该迭代的 <code>break</code> 或 <code>goto</code> 语句合计不应超过一条。</p>
+<dl class="attributes"><dt>类别</dt><dd>建议（Advisory）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>限制循环的出口数，有助于降低阅读代码时控制流的复杂程度。当确需提前终止循环时，使用一条 <code>break</code> 或 <code>goto</code> 可以建立一条额外的退出路径。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>下面嵌套的两个循环都合规，因为每一层都只使用一条 <code>break</code> 提前终止本层循环。</p>
+<pre><code class="language-c">for ( x = 0; x &lt; LIMIT; ++x )
+{
+  if ( ExitNow ( x ) )
+  {
+    break;
+  }
+
+  for ( y = 0; y &lt; x; ++y )
+  {
+    if ( ExitNow ( LIMIT - y ) )
+    {
+      break;
+    }
+  }
+}
+</code></pre>
+<p>下面的循环不合规，因为用于提前终止循环的 <code>break</code> 和 <code>goto</code> 不止一条。</p>
+<pre><code class="language-c">for ( x = 0; x &lt; LIMIT; ++x )
+{
+  if ( BreakNow ( x ) )
+  {
+    break;
+  }
+  else if ( GotoNow ( x ) )
+  {
+    goto EXIT;
+  }
+  else
+  {
+    KeepGoing ( x );
+  }
+}
+
+EXIT:
+  ;
+</code></pre>
+<p>下例中，内层 <code>while</code> 合规，因为只有一条 <code>goto</code> 能使其提前终止。但外层 <code>while</code> 不合规，因为它既可能由 <code>break</code> 提前终止，也可能由内层 <code>while</code> 中的 <code>goto</code> 提前终止。</p>
+<pre><code class="language-c">while ( x != 0u )
+{
+  x = calc_new_x ( );
+
+  if ( x == 1u )
+  {
+    break;
+  }
+
+  while ( y != 0u )
+  {
+    y = calc_new_y ( );
+
+    if ( y == 1u )
+    {
+      goto L1;
+    }
+  }
+}
+
+L1:
+z = x + y;
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="15-01.html#rule-15-1">Rule 15.1</a>、<a href="15-02.html#rule-15-2">Rule 15.2</a>、<a href="15-03.html#rule-15-3">Rule 15.3</a>。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-15-4.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="15-03.html">上一篇：Rule 15.3 · 不跳入另一块或另一 switch 子句</a><a href="../index.html">全部译文</a><a href="15-05.html">下一篇：Rule 15.5 · 把函数出口放在末尾</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

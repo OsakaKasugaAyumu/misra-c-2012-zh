@@ -1,0 +1,57 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 15.3 · 不跳入另一块或另一 switch 子句 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b08">译文目录</a><span>B08 · §8.15–§8.17</span></nav><p class="eyebrow">中文译文　/　105 · 124</p><h1 id="rule-15-3">Rule 15.3 · 不跳入另一块或另一 switch 子句</h1><p class="muted locator">底本定位 PDF／印刷 131–132／123–124。</p><section class="source-translation" aria-labelledby="rule-15-3-text">
+<h2 id="rule-15-3-text"><a class="header" href="#rule-15-3-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 15.3</strong>　<code>goto</code> 语句所引用的任何标号，都必须声明在该语句所在的块内，或声明在包围该语句的某个块内。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>就本条而言，不由复合语句构成的 <code>switch</code> 子句也视同一个块。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>不加限制地使用 <code>goto</code>，可能使程序缺乏结构，极难理解。</p>
+<p>禁止在不同块之间跳转或跳入嵌套块，有助于降低阅读代码时控制流的复杂程度。</p>
+<p><strong>注：</strong> 使用可变修改类型时，C99 的限制更严。若从具有可变修改类型的标识符的作用域之外跳入该作用域，就违反了约束。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">void f1 ( int32_t a )
+{
+  if ( a &lt;= 0 )
+  {
+    goto L2;            /* Non-compliant */
+  }
+
+  goto L1;              /* Compliant     */
+
+  if ( a == 0 )
+  {
+    goto L1;            /* Compliant     */
+  }
+
+  goto L2;              /* Non-compliant */
+
+L1:
+  if ( a &gt; 0 )
+  {
+  L2:
+    ;
+  }
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）不合规。 （2）合规。 （3）合规。 （4）不合规。</p>
+<p>下例中，标号 <code>L1</code> 定义在一个包围块中，该块包围了含有 <code>goto</code> 语句的块。然而，这次跳转从一个 <code>switch</code> 子句进入另一个子句；就本条而言，<code>switch</code> 子句视同块，因此这条 <code>goto</code> 语句不合规。</p>
+<pre><code class="language-c">switch ( x )
+{
+  case 0:
+    if ( x == y )
+    {
+      goto L1;
+    }
+    break;
+  case 1:
+    y = x;
+L1:
+    ++x;
+    break;
+  default:
+    break;
+}
+</code></pre>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="09-01.html#rule-9-1">Rule 9.1</a>、<a href="15-01.html#rule-15-1">Rule 15.1</a>、<a href="15-02.html#rule-15-2">Rule 15.2</a>、<a href="15-04.html#rule-15-4">Rule 15.4</a>、<a href="16-01.html#rule-16-1">Rule 16.1</a>。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-15-3.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="15-02.html">上一篇：Rule 15.2 · 只向同一函数内的后续标号跳转</a><a href="../index.html">全部译文</a><a href="15-04.html">下一篇：Rule 15.4 · 逐层计数循环的提前出口</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

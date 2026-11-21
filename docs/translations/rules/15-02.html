@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 15.2 · 只向同一函数内的后续标号跳转 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b08">译文目录</a><span>B08 · §8.15–§8.17</span></nav><p class="eyebrow">中文译文　/　104 · 124</p><h1 id="rule-15-2">Rule 15.2 · 只向同一函数内的后续标号跳转</h1><p class="muted locator">底本定位 PDF／印刷 130–131／122–123。</p><section class="source-translation" aria-labelledby="rule-15-2-text">
+<h2 id="rule-15-2-text"><a class="header" href="#rule-15-2-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 15.2</strong>　<code>goto</code> 语句必须跳转到同一函数内在其后声明的标号。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>不加限制地使用 <code>goto</code>，可能使程序缺乏结构，极难理解。</p>
+<p>限制 <code>goto</code> 的使用、禁止向后跳转，可以保证只有使用语言提供的迭代语句才会发生迭代，从而有助于降低阅读代码时控制流的复杂程度。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">void f ( void )
+{
+  int32_t j = 0;
+
+L1:
+  ++j;
+
+  if ( 10 == j )
+  {
+    goto L2;         /* Compliant     */
+  }
+
+  goto L1;           /* Non-compliant */
+
+L2:
+  ++j;
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）合规。 （2）不合规。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="15-01.html#rule-15-1">Rule 15.1</a>、<a href="15-03.html#rule-15-3">Rule 15.3</a>、<a href="15-04.html#rule-15-4">Rule 15.4</a>。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-15-2.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="15-01.html">上一篇：Rule 15.1 · 限制使用 goto</a><a href="../index.html">全部译文</a><a href="15-03.html">下一篇：Rule 15.3 · 不跳入另一块或另一 switch 子句</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

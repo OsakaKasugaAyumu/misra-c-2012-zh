@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 16.3 · 各 switch 子句以无条件 break 结束 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b08">译文目录</a><span>B08 · §8.15–§8.17</span></nav><p class="eyebrow">中文译文　/　112 · 124</p><h1 id="rule-16-3">Rule 16.3 · 各 switch 子句以无条件 break 结束</h1><p class="muted locator">底本定位 PDF／印刷 139–140／131–132。</p><section class="source-translation" aria-labelledby="rule-16-3-text">
+<h2 id="rule-16-3-text"><a class="header" href="#rule-16-3-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 16.3</strong>　每个 <code>switch</code> 子句都必须以一条无条件的 <code>break</code> 语句结束。</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>如果开发者没有以 <code>break</code> 结束某个 <code>switch</code> 子句，控制流就会“贯穿”到下一个子句；若没有下一个子句，则会越过 <code>switch</code> 的末尾，进入其后的语句。贯穿到下一个子句有时是有意为之，但往往是错误。当前位于 <code>switch</code> 末尾的子句如果没有终止，将来可能贯穿到后来追加的子句中。</p>
+<p>为使这类错误能够被发现，每个 <code>switch</code> 子句的最后一条语句都必须是 <code>break</code>；如果子句本身是复合语句，复合语句内的最后一条语句就必须是 <code>break</code>。</p>
+<p><strong>注：</strong> 按定义，<code>switch</code> 子句至少含有一条语句。连续的两个标号（<code>case</code> 或 <code>default</code>）之间没有语句，因此本条允许这种写法。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">switch ( x )
+{
+  case 0:
+    break;          /* Compliant - unconditional break                */
+  case 1:           /* Compliant - empty fall through allows a group  */
+  case 2:
+    break;          /* Compliant                                      */
+  case 4:
+    a = b;          /* Non-compliant - break omitted                  */
+  case 5:
+    if ( a == b )
+    {
+      ++a;
+      break;        /* Non-compliant - conditional break              */
+    }
+  default:
+    ;               /* Non-compliant - default must also have a break */
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）合规：无条件 break。 （2）合规：空的贯穿可将标号分为一组。 （3）合规。 （4）不合规：省略了 break。 （5）不合规：break 带有条件。 （6）不合规：default 也必须有 break。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="16-01.html#rule-16-1">Rule 16.1</a>。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-16-3.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="16-02.html">上一篇：Rule 16.2 · 把 switch 标号放在语句体最外层</a><a href="../index.html">全部译文</a><a href="16-04.html">下一篇：Rule 16.4 · 显式提供 default</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

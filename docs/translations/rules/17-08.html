@@ -1,0 +1,23 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 17.8 · 区分修改形参和修改所指对象 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b08">译文目录</a><span>B08 · §8.15–§8.17</span></nav><p class="eyebrow">中文译文　/　124 · 124</p><h1 id="rule-17-8">Rule 17.8 · 区分修改形参和修改所指对象</h1><p class="muted locator">底本定位 PDF／印刷 150／142。</p><section class="source-translation" aria-labelledby="rule-17-8-text">
+<h2 id="rule-17-8-text"><a class="header" href="#rule-17-8-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 17.8</strong>　不应修改函数形参。</p>
+<dl class="attributes"><dt>类别</dt><dd>建议（Advisory）</dd><dt>分析</dt><dd>不可判定（Undecidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>函数形参的行为与具有自动存储期的对象相同。C 语言虽允许修改形参，但这种用法可能令人困惑，与程序员的预期冲突。把形参复制到一个具有自动存储期的对象中，再修改副本，可能更容易理解。使用现代编译器时，这样做通常不会增加存储或执行时间开销。</p>
+<p>不熟悉 C、但习惯于其他语言的程序员可能会修改形参，误以为调用函数也会受到这种修改的影响。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">int16_t glob = 0;
+
+void proc ( int16_t para )
+{
+  para = glob;                /* Non-compliant */
+}
+
+void f ( char *p, char *q )
+{
+  p = q;                      /* Non-compliant */
+  *p = *q;                    /* Compliant     */
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）不合规。 （2）不合规。 （3）合规。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-17-8.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="17-07.html">上一篇：Rule 17.7 · 使用或明确弃用函数返回值</a><a href="../index.html">全部译文</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

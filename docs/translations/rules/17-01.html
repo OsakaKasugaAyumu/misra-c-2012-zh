@@ -1,0 +1,50 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 17.1 · 不用 stdarg.h 的设施 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b08">译文目录</a><span>B08 · §8.15–§8.17</span></nav><p class="eyebrow">中文译文　/　117 · 124</p><h1 id="rule-17-1">Rule 17.1 · 不用 stdarg.h 的设施</h1><p class="muted locator">底本定位 PDF／印刷 144–145／136–137。</p><section class="source-translation" aria-labelledby="rule-17-1-text">
+<h2 id="rule-17-1-text"><a class="header" href="#rule-17-1-text">原文译文</a></h2>
+<h3 id="s8-17"><a class="header" href="#s8-17">§8.17　函数</a></h3>
+<p class="guideline"><strong>Rule 17.1</strong>　不得使用 <code>&lt;stdarg.h&gt;</code> 提供的设施。</p>
+<p>C90 [未定义 45、70–76]；C99 [未定义 81、128–135]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>不得使用 <code>va_list</code>、<code>va_arg</code>、<code>va_start</code>、<code>va_end</code>；对 C99，还不得使用 <code>va_copy</code>。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>C 标准列出了许多与 <code>&lt;stdarg.h&gt;</code> 设施有关的未定义行为，包括：</p>
+<ul>
+<li>在使用过 <code>va_start</code> 的函数结束之前没有使用 <code>va_end</code>；</li>
+<li>在不同的函数中对同一个 <code>va_list</code> 使用 <code>va_arg</code>；</li>
+<li>某个实参的类型与传给 <code>va_arg</code> 的指定类型不兼容。</li>
+</ul>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">#include &lt;stdarg.h&gt;
+
+void h ( va_list ap )            /* Non-compliant                   */
+{
+  double y;
+
+  y = va_arg ( ap, double );     /* Non-compliant                   */
+}
+
+void f ( uint16_t n, ... )
+{
+  uint32_t x;
+
+  va_list  ap;                   /* Non-compliant                     */
+
+  va_start ( ap, n );            /* Non-compliant                     */
+  x = va_arg ( ap, uint32_t );   /* Non-compliant                     */
+
+  h ( ap );
+
+  /* undefined - ap is indeterminate because va_arg used in h ( )     */
+  x = va_arg ( ap, uint32_t );   /* Non-compliant                     */
+
+  /* undefined - returns without using va_end ( )                     */
+}
+
+void g ( void )
+{
+  /* undefined - uint32_t:double type mismatch when f uses va_arg ( ) */
+  f ( 1, 2.0, 3.0 );
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）不合规。 （2）不合规。 （3）不合规。 （4）不合规。 （5）不合规。 （6）未定义：在 h() 中用过 va_arg，ap 已处于不确定状态。 （7）不合规。 （8）未定义：没有使用 va_end() 就返回。 （9）未定义：f 使用 va_arg() 时，uint32_t 与 double 类型不匹配。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-17-1.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="16-07.html">上一篇：Rule 16.7 · 不用本质布尔表达式控制 switch</a><a href="../index.html">全部译文</a><a href="17-02.html">下一篇：Rule 17.2 · 排查直接与间接递归</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

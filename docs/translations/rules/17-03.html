@@ -1,0 +1,23 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 17.3 · 在 C90 调用点提供可见声明 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b08">译文目录</a><span>B08 · §8.15–§8.17</span></nav><p class="eyebrow">中文译文　/　119 · 124</p><h1 id="rule-17-3">Rule 17.3 · 在 C90 调用点提供可见声明</h1><p class="muted locator">底本定位 PDF／印刷 146／138。</p><section class="source-translation" aria-labelledby="rule-17-3-text">
+<h2 id="rule-17-3-text"><a class="header" href="#rule-17-3-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 17.3</strong>　不得隐式声明函数。</p>
+<p>C90 [未定义 6、22、23]</p>
+<dl class="attributes"><dt>类别</dt><dd>强制（Mandatory）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>如果函数调用处有可见的原型，语言约束会保证实参数量与形参数量一致，而且每个实参都可以赋给其对应的形参。</p>
+<p>如果函数是隐式声明的，C90 编译器会假定其返回类型为 <code>int</code>。隐式函数声明不提供原型，所以编译器不知道形参的个数和类型。这样，传递实参和赋用返回值时可能发生不恰当的类型转换，还可能出现其他未定义行为。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>若函数 <code>power</code> 声明如下：</p>
+<pre><code class="language-c">extern double power ( double d, int n );
+</code></pre>
+<p>但在下列代码处看不到该声明，就会发生未定义行为。</p>
+<pre><code class="language-c">void func ( void )
+{
+  /* Non-compliant - return type and both argument types incorrect */
+  double sq1 = power ( 1, 2.0 );
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> 不合规：返回类型和两个实参的类型都不正确。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="08-02.html#rule-8-2">Rule 8.2</a>、<a href="08.html#rule-8-4">Rule 8.4</a>。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-17-3.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="17-02.html">上一篇：Rule 17.2 · 排查直接与间接递归</a><a href="../index.html">全部译文</a><a href="17-04.html">下一篇：Rule 17.4 · 让非 void 函数所有出口都返回值</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

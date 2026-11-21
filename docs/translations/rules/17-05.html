@@ -1,0 +1,45 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 17.5 · 核对数组实参的剩余元素数 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b08">译文目录</a><span>B08 · §8.15–§8.17</span></nav><p class="eyebrow">中文译文　/　121 · 124</p><h1 id="rule-17-5">Rule 17.5 · 核对数组实参的剩余元素数</h1><p class="muted locator">底本定位 PDF／印刷 147–148／139–140。</p><section class="source-translation" aria-labelledby="rule-17-5-text">
+<h2 id="rule-17-5-text"><a class="header" href="#rule-17-5-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 17.5</strong>　对于声明为数组类型的形参，对应的函数实参必须具有适当数量的元素。</p>
+<dl class="attributes"><dt>类别</dt><dd>建议（Advisory）</dd><dt>分析</dt><dd>不可判定（Undecidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>如果形参声明为指定长度的数组，则在每次函数调用中，对应实参所指向的对象都应至少能提供与该数组一样多的元素。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>用数组声明符而不是指针声明函数形参，能更清楚地规定函数接口。这样可以明示函数所期望的最少元素数，而用指针就无法表明这一点。</p>
+<p>如果函数形参的数组声明符没有指定长度，则视为表示该函数能处理任意长度的数组。在这种情况下，预期会通过其他方式传达数组长度，例如将长度作为另一个形参传入，或用哨兵值标记数组末尾。</p>
+<p>建议使用数组界限，以便在函数体内实施越界检查，并在传参时进行额外检查。对于指定了长度的形参，C 语言允许传入长度不正确的数组，这可能导致意外行为。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">/*
+ * Intent is that function does not access outside the range
+ * array1[ 0 ] .. array1[ 3 ]
+ */
+void fn1 ( int32_t array1[ 4 ] );
+
+/* Intent is that function handles arrays of any size           */
+void fn2 ( int32_t array2[ ] );
+
+void fn ( int32_t *ptr )
+{
+  int32_t arr3[ 3 ] = { 1, 2, 3 };
+  int32_t arr4[ 4 ] = { 0, 1, 2, 3 };
+
+  /* Compliant - size of array matches the prototype            */
+  fn1 ( arr4 );
+
+  /* Non-compliant - size of array does not match prototype     */
+  fn1 ( arr3 );
+
+  /* Compliant only if ptr points to at least 4 elements        */
+  fn1 ( ptr );
+
+  /* Compliant                                                  */
+  fn2 ( arr4 );
+
+  /* Compliant                                                  */
+  fn2 ( ptr );
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）意图：函数不访问 array1[0] 至 array1[3] 以外的位置。 （2）意图：函数处理任意大小的数组。 （3）合规：数组大小符合原型。 （4）不合规：数组大小不符合原型。 （5）只有在 ptr 指向至少四个元素时才合规。 （6）合规。 （7）合规。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="17-06.html#rule-17-6">Rule 17.6</a>。</p>
+</section><aside class="note"><p><strong>源页核对：</strong> PDF 147：主句使用 shall，类别为 Advisory，进一步说明使用 should；分别译为“必须”“建议”“应”，不把三者强行统一。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-17-5.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="17-04.html">上一篇：Rule 17.4 · 让非 void 函数所有出口都返回值</a><a href="../index.html">全部译文</a><a href="17-06.html">下一篇：Rule 17.6 · 不在数组形参的方括号内写 static</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>
