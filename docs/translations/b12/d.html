@@ -24,7 +24,7 @@
 <p>一个有名枚举类型不同于所有其他有名枚举类型，即便在内层作用域中用完全相同的标记和枚举常量声明也不例外。本文档以 <code>enum&lt;i&gt;</code> 表示每个有名枚举类型，不同类型的 <code>i</code> 各不相同。</p>
 <p>用 <code>typedef</code> 为有名枚举类型建立的别名仍表示原来的有名枚举类型，不是新类型。</p>
 <p>匿名枚举类型的本质类型就是它的标准类型。</p>
-<p>以下各项均为有名枚举类型，且其本质类型各不相同：</p>
+<p>下列声明涉及的都是有名枚举类型；各声明中的枚举类型彼此不同，本质类型也各不相同：</p>
 <pre><code class="language-c">      enum ETAG { A, B, C };
 typedef enum  { A, B, C } ETYPE;
 typedef enum ETAG { A, B, C } ETYPE;
