@@ -1,0 +1,50 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 19.1 · 按字节区间判断重叠与复制方式 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b09">译文目录</a><span>B09 · §8.18–§8.19</span></nav><p class="eyebrow">中文译文　/　133 · 134</p><h1 id="rule-19-1">Rule 19.1 · 按字节区间判断重叠与复制方式</h1><p class="muted locator">底本定位 PDF／印刷 161–162／153–154。</p><section class="source-translation" aria-labelledby="rule-19-1-text">
+<h2 id="rule-19-1-text"><a class="header" href="#rule-19-1-text">原文译文</a></h2>
+<h3 id="s8-19"><a class="header" href="#s8-19">§8.19　重叠存储</a></h3>
+<p class="guideline"><strong>Rule 19.1</strong>　不得将一个对象赋值或复制给与其存储区域重叠的对象。</p>
+<p>C90 [未定义 34、55]；C99 [未定义 51、94]</p>
+<dl class="attributes"><dt>类别</dt><dd>强制（Mandatory）</dd><dt>分析</dt><dd>不可判定（Undecidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>当创建的两个对象在内存中有所重叠，而又把一个赋值或复制给另一个时，行为就未定义。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<p>以下两种情形的行为有明确定义，因此允许：</p>
+<ol>
+<li>在存储区域完全重合且类型兼容的两个对象之间进行赋值（判断类型兼容性时忽略类型限定符）。</li>
+<li>使用标准库函数 <code>memmove</code> 在存储区域部分或完全重合的对象之间复制。</li>
+</ol>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>因为使用了联合体，本例还违反 <a href="19-02.html#rule-19-2">Rule 19.2</a>。</p>
+<pre><code class="language-c">void fn ( void )
+{
+  union
+  {
+    int16_t i;
+    int32_t j;
+  } a = { 0 }, b = { 1 };
+
+  a.j = a.i;                /* Non-compliant           */
+  a = b;                    /* Compliant - exception 1 */
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）不合规。 （2）合规：例外 1。</p>
+<pre><code class="language-c">#include &lt;string.h&gt;
+
+int16_t a[ 20 ];
+
+void f ( void )
+{
+  memcpy ( &amp;a[ 5 ], &amp;a[ 4 ], 2u * sizeof ( a[ 0 ] ) ); /* Non-compliant */
+}
+
+void g ( void )
+{
+  int16_t  *p = &amp;a[ 0 ];
+  int16_t  *q = &amp;a[ 0 ];
+
+  *p = *q;   /* Compliant - exception 1 */
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）不合规。 （2）合规：例外 1。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="19-02.html#rule-19-2">Rule 19.2</a>。</p>
+</section><aside class="note"><p><strong>源页核对：</strong> PDF 161：原书给 <code>a = b</code> 标注“合规：例外 1”，但所示声明中的 a、b 是两个不同的联合体对象，未显示它们完全重叠。正文和代码注释均保留；第 162 页 <code>*p = *q</code> 才明确显示了与例外 1 相符的同址赋值。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-19-1.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="18-08.html">上一篇：Rule 18.8 · 变长数组的类型与长度求值时机</a><a href="../index.html">全部译文</a><a href="19-02.html">下一篇：Rule 19.2 · 区分联合体同成员读回与跨成员读取</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

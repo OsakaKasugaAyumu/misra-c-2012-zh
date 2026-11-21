@@ -1,0 +1,106 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 18.1 · 数组元素、尾后指针与子数组边界 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b09">译文目录</a><span>B09 · §8.18–§8.19</span></nav><p class="eyebrow">中文译文　/　125 · 134</p><h1 id="rule-18-1">Rule 18.1 · 数组元素、尾后指针与子数组边界</h1><p class="muted locator">底本定位 PDF／印刷 151–153／143–145。</p><section class="source-translation" aria-labelledby="rule-18-1-text">
+<h2 id="rule-18-1-text"><a class="header" href="#rule-18-1-text">原文译文</a></h2>
+<h3 id="s8-18"><a class="header" href="#s8-18">§8.18　指针与数组</a></h3>
+<p class="guideline"><strong>Rule 18.1</strong>　对指针操作数进行算术运算所得的指针，必须指向与该操作数所指元素属于同一数组的元素。</p>
+<p>C90 [未定义 30]；C99 [未定义 43、44、46、59]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>不可判定（Undecidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>C 标准明确定义了形成指向数组末元素之后一个位置的指针的行为，本条也允许形成这样的指针。对这个尾后指针解引用会导致未定义行为，本条禁止这样做。</p>
+<p>本条适用于所有下列数组索引形式：</p>
+<pre><code class="language-text">integer_expression + pointer_expression
+pointer_expression + integer_expression
+pointer_expression - integer_expression
+pointer_expression += integer_expression
+pointer_expression -= integer_expression
+++pointer_expression
+pointer_expression++
+--pointer_expression
+pointer_expression--
+pointer_expression [ integer_expression ]
+integer_expression [ pointer_expression ]
+</code></pre>
+<p><strong>注：</strong> 子数组本身也是数组。</p>
+<p><strong>注：</strong> 就指针算术而言，对于不属于任何数组的对象，C 标准将其视为只有一个元素的数组（C90 第 6.3.6 节，C99 第 6.5.6 节）。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>有些编译器或许能在编译时发现越过数组边界的情况，但通常不会在运行时检查数组下标是否有效。使用无效下标可能导致程序行为错误。</p>
+<p>最值得关注的是在运行时才得出的下标值，因为静态分析或人工审查都不容易核查这些值。只要有可能且切实可行，就应编写防御性代码，检查这类下标是否属于有效取值，并在必要时采取适当行动。</p>
+<p>如果上述任何表达式的结果既不指向 <code>pointer_expression</code> 所指数组的某个元素，也不指向该数组末元素之后的一个位置，行为就未定义。详见 C90 第 6.3.6 节和 C99 第 6.5.6 节。</p>
+<p>多维数组是“数组的数组”。本条不允许指针运算的结果指向另一个子数组。不得用下标跨越数组的“内部”边界，因为这种行为未定义。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>使用 <code>+</code> 运算符还会违反 <a href="18-04.html#rule-18-4">Rule 18.4</a>。</p>
+<pre><code class="language-c">int32_t f1 ( int32_t * const a1, int32_t a2[ 10 ] )
+{
+  int32_t *p = &amp;a1[ 3 ];        /* Compliant/non-compliant depending on
+                                 * the value of a1                       */
+  return *( a2 + 9 );           /* Compliant                             */
+}
+
+void f2 ( void )
+{
+  int32_t data = 0;
+  int32_t b = 0;
+  int32_t c[ 10 ] = { 0 };
+  int32_t d[ 5 ][ 2 ] = { 0 }; /* 5-element array of 2-element arrays
+                                * of int32_t                             */
+
+int32_t *p1 = &amp;c[ 0 ];         /* Compliant                              */
+
+int32_t *p2 = &amp;c[ 10 ];        /* Compliant - points to one beyond       */
+
+int32_t *p3 = &amp;c[ 11 ];        /* Non-compliant - undefined, points to
+                                *                 two beyond             */
+data = *p2;                    /* Non-compliant - undefined, dereference
+                                *                 one beyond             */
+
+data = f1 ( &amp;b, c );
+data = f1 ( c, c );
+
+p1++;                          /* Compliant                              */
+c[ -1 ] = 0;                   /* Non-compliant - undefined, array
+                                *                 bounds exceeded        */
+data = c[ 10 ];                /* Non-compliant - undefined, dereference
+                                *                 of address one beyond  */
+data = *( &amp;data + 0 );         /* Compliant     - C treats data as an
+                                *                 array of size 1        */
+
+d[ 3 ][ 1 ] = 0;               /* Compliant                              */
+data = *( *( d + 3 ) + 1 );    /* Compliant                              */
+data = d[ 2 ][ 3 ];            /* Non-compliant - undefined, internal
+                                *                 boundary exceeded      */
+
+p1 = d[ 1 ];                   /* Compliant                              */
+data = p1[ 1 ];                /* Compliant     - p1 addresses an array
+                                *                 of size 2              */
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）是否合规取决于 a1 的值。 （2）合规。 （3）一共有五个元素，每个元素又是由两个 int32_t 组成的数组。 （4）合规。 （5）合规：指向尾后一个位置。 （6）不合规：未定义，指向末元素之后第二个位置。 （7）不合规：未定义，对尾后指针解引用。 （8）合规。 （9）不合规：未定义，越过数组边界。 （10）不合规：未定义，对尾后地址解引用。 （11）合规：C 将 data 当成长度为 1 的数组。 （12）合规。 （13）合规。 （14）不合规：未定义，越过内部边界。 （15）合规。 （16）合规：p1 所指的数组有两个元素。</p>
+<p>下例说明对结构体成员进行的指针算术。每个成员本身都是独立的对象，所以本条不允许用指针算术从一个成员移到下一个成员。不过，只要所得指针仍在该成员对象的边界内，本条并不禁止对指向它的指针进行算术运算。</p>
+<pre><code class="language-c">struct
+{
+  uint16_t x;
+  uint16_t y;
+  uint16_t z;
+  uint16_t a[ 10 ];
+} s;
+
+uint16_t *p;
+</code></pre>
+<pre><code class="language-c">void f3 ( void )
+{
+  p = &amp;s.x;
+  ++p;         /* Compliant     - p points one beyond s.x                */
+  p[ 0 ] = 1;  /* Non-compliant - undefined, dereference of address one
+                *                 beyond s.x which is not necessarily
+                *                 the same as s.y                        */
+  p[ 1 ] = 2;  /* Non-compliant - undefined                              */
+
+p = &amp;s.a[ 0 ]; /* Compliant     - p points into s.a                      */
+p = p + 8;     /* Compliant     - p still points into s.a                */
+p = p + 3;     /* Non-compliant - undefined, p points more than one
+                *                 beyond s.a                             */
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）合规：p 指向 s.x 的尾后位置。 （2）不合规：未定义，对 s.x 的尾后地址解引用；此地址不一定与 s.y 的地址相同。 （3）不合规：行为未定义。 （4）合规：p 指向 s.a 内部。 （5）合规：p 仍指向 s.a 内部。 （6）不合规：未定义，p 已越过 s.a 的尾后位置。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="../directives/04-01.html#dir-4-1">Dir 4.1</a>、<a href="18-04.html#rule-18-4">Rule 18.4</a>。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-18-1.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="17-08.html">上一篇：Rule 17.8 · 区分修改形参和修改所指对象</a><a href="../index.html">全部译文</a><a href="18-02.html">下一篇：Rule 18.2 · 先核对两个指针属于哪个数组</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

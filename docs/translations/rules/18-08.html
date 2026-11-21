@@ -1,0 +1,53 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 18.8 · 变长数组的类型与长度求值时机 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b09">译文目录</a><span>B09 · §8.18–§8.19</span></nav><p class="eyebrow">中文译文　/　132 · 134</p><h1 id="rule-18-8">Rule 18.8 · 变长数组的类型与长度求值时机</h1><p class="muted locator">底本定位 PDF／印刷 160–161／152–153。</p><section class="source-translation" aria-labelledby="rule-18-8-text">
+<h2 id="rule-18-8-text"><a class="header" href="#rule-18-8-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 18.8</strong>　不得使用变长数组类型。</p>
+<p>C99 [未指定 21；未定义 69、70]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>在块内或函数原型中声明数组时，如果所指定的长度不是整数常量表达式，所指定的就是变长数组类型。它通常实现为栈上大小可变的对象，因此使用它可能导致无法静态确定必须为栈预留多少内存。</p>
+<p>如果变长数组的大小为负数或为零，行为就未定义。</p>
+<p>如果在某种上下文中要求一个变长数组类型与另一数组类型兼容（后者本身也可能是变长数组），两种数组类型的大小就必须相同。此外，各个大小表达式都必须求得正整数值。若不满足这些条件，行为就未定义。</p>
+<p>如果在 <code>sizeof</code> 运算符的操作数中使用变长数组类型，在某些情况下，是否对数组大小表达式求值是未指定的。</p>
+<p>变长数组类型的每个实例，其大小在生存期开始时就已固定。这可能产生让人困惑的行为，例如：</p>
+<pre><code class="language-c">void f ( void )
+{
+  uint16_t n = 5;
+
+  typedef uint16_t Vector[ n ];  /* An array type with 5 elements     */
+
+  n = 7;
+
+  Vector   a1;                   /* An array type with 5 elements     */
+
+  uint16_t a2[ n ];              /* An array type with 7 elements     */
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）有五个元素的数组类型。 （2）有五个元素的数组类型。 （3）有七个元素的数组类型。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>变长数组的任何用法都不符合本条。下例展示了使用变长数组可能导致的一些未定义行为。</p>
+<pre><code class="language-c">void f ( int16_t n )
+{
+  uint16_t vla[ n ];            /* Non-compliant - Undefined if n &lt;= 0 */
+}
+
+void g ( void )
+{
+  f ( 0 );                      /* Undefined */
+  f ( -1 );                     /* Undefined */
+  f ( 10 );                     /* Defined   */
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）不合规：当 n 小于或等于 0 时行为未定义。 （2）行为未定义。 （3）行为未定义。 （4）行为有定义。</p>
+<pre><code class="language-c">void h ( uint16_t n,
+         uint16_t a[ 10 ][ n ] )    /* Non-compliant */
+{
+  uint16_t ( *p )[ 20 ];
+
+  /* Undefined unless n == 20: incompatible types otherwise */
+  p = a;
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）不合规。 （2）除非 n 等于 20，否则类型不兼容，行为未定义。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="13-06.html#rule-13-6">Rule 13.6</a>。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-18-8.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="18-07.html">上一篇：Rule 18.7 · 柔性数组成员与结构体赋值</a><a href="../index.html">全部译文</a><a href="19-01.html">下一篇：Rule 19.1 · 按字节区间判断重叠与复制方式</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

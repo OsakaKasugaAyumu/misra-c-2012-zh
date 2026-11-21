@@ -1,0 +1,74 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 18.4 · 区分下标写法与地址边界 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b09">译文目录</a><span>B09 · §8.18–§8.19</span></nav><p class="eyebrow">中文译文　/　128 · 134</p><h1 id="rule-18-4">Rule 18.4 · 区分下标写法与地址边界</h1><p class="muted locator">底本定位 PDF／印刷 155–156／147–148。</p><section class="source-translation" aria-labelledby="rule-18-4-text">
+<h2 id="rule-18-4-text"><a class="header" href="#rule-18-4-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 18.4</strong>　不应对指针类型的表达式使用 <code>+</code>、<code>-</code>、<code>+=</code>、<code>-=</code> 运算符。</p>
+<dl class="attributes"><dt>类别</dt><dd>建议（Advisory）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>在各种指针算术写法中，宜优先采用数组下标语法 <code>ptr[expr]</code>，因为它通常比直接操纵指针清楚，也较不容易出错。任何显式计算出来的指针值都有可能被用于访问非预期或无效的内存地址。用数组下标也可能出现这种行为，但下标语法可以让人工审查更容易。</p>
+<p>C 的指针算术容易让初学者困惑。有人可能把 <code>ptr+1</code> 误解为把 <code>ptr</code> 中保存的地址数值加 1。实际上，新地址取决于指针所指类型的字节大小。基于这种误解而错误地使用 <code>sizeof</code>，可能导致意外行为。</p>
+<p>不过，谨慎使用时，某些场合用 <code>++</code> 操纵指针可以说更自然。例如，在内存测试中顺序访问各个位置：这时把存储空间视为一组连续位置更方便，而且地址边界可以在编译时确定。</p>
+<h3 id="例外"><a class="header" href="#%E4%BE%8B%E5%A4%96">例外</a></h3>
+<p>只要满足 <a href="18-02.html#rule-18-2">Rule 18.2</a>，就允许两个指针相减。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">void fn1 ( void )
+{
+  uint8_t  a[ 10 ];
+  uint8_t *ptr;
+  uint8_t  index = 0U;
+
+  index = index + 1U;     /* Compliant - rule only applies to pointers */
+
+  a[ index ] = 0U;        /* Compliant                                 */
+  ptr = &amp;a[ 5 ];          /* Compliant                                 */
+
+  ptr = a;
+  ptr++;                  /* Compliant - increment operator not +      */
+  *( ptr + 5 ) = 0U;      /* Non-compliant                             */
+  ptr[ 5 ] = 0U;          /* Compliant                                 */
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）合规：本条仅适用于指针。 （2）合规。 （3）合规。 （4）合规：使用的是自增运算符，而不是加法运算符。 （5）不合规。 （6）合规。</p>
+<pre><code class="language-c">void fn2 ( void )
+{
+  uint8_t array_2_2[ 2 ][ 2 ] = { { 1U, 2U }, { 4U, 5U } };
+  uint8_t i = 0U;
+  uint8_t j = 0U;
+  uint8_t sum = 0U;
+
+  for ( i = 0U; i &lt; 2U; i++ )
+  {
+    uint8_t *row = array_2_2[ i ];
+
+    for ( j = 0U; j &lt; 2U; j++ )
+    {
+      sum += row[ j ];   /* Compliant */
+    }
+  }
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> 合规。</p>
+<p>在下例中，如果 <code>p1</code> 没有指向至少含六个元素的数组，且 <code>p2</code> 没有指向至少含四个元素的数组，还可能违反 <a href="18-01.html#rule-18-1">Rule 18.1</a>。</p>
+<pre><code class="language-c">void fn3 ( uint8_t *p1, uint8_t p2[ ] )
+{
+  p1++;                  /* Compliant     */
+  p1 = p1 + 5;           /* Non-compliant */
+  p1[ 5 ] = 0U;          /* Compliant     */
+
+  p2++;                  /* Compliant     */
+  p2 = p2 + 3;           /* Non-compliant */
+  p2[ 3 ] = 0U;          /* Compliant     */
+}
+
+uint8_t a1[ 16 ];
+uint8_t a2[ 16 ];
+uint8_t data = 0U;
+
+void fn4 ( void )
+{
+  fn3 ( a1, a2 );
+  fn3 ( &amp;data, &amp;a2[ 4 ] );
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）合规。 （2）不合规。 （3）合规。 （4）合规。 （5）不合规。 （6）合规。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="18-01.html#rule-18-1">Rule 18.1</a>、<a href="18-02.html#rule-18-2">Rule 18.2</a>。</p>
+</section><aside class="note"><p><strong>源页核对：</strong> PDF 156：原文举出 6 和 4 两个数，用的是“可能违反”，并没有给出充分的安全界限。若从传入位置起依次执行 fn3，最后两次下标写入的位置分别距初始指针 11 和 7 个元素，也就是各需至少 12 和 8 个剩余元素。对 18.4 标为合规的下标写法，并不免于 18.1 的边界检查。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-18-4.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="18-03.html">上一篇：Rule 18.3 · 按对象归属审查指针的关系比较</a><a href="../index.html">全部译文</a><a href="18-05.html">下一篇：Rule 18.5 · 展开 typedef 并按连续层级计数</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>
