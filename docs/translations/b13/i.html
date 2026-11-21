@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>附录 I　偏离记录示例 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"><link rel="stylesheet" href="../../assets/b13.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b13">译文目录 · B13</a></nav><p class="eyebrow">B13　/　5 · 7</p><h1 id="annex-i">附录 I　偏离记录示例</h1><p class="muted locator">底本定位 PDF 228–230 ／ 印刷 220–222 · <a href="#source-notes">源页说明</a></p><details class="jump"><summary>本页目录</summary><ul><li><a href="#i-1">I.1　概述</a></li><li><a href="#i-2">I.2　详细说明</a></li><li><a href="#i-3">I.3　理由</a></li><li><a href="#i-4">I.4　申请偏离所适用的条件</a></li><li><a href="#i-5">I.5　不合规的后果</a></li><li><a href="#i-6">I.6　控制诊断报告的措施</a></li></ul></details><section class="source-translation b13-text" aria-labelledby="translation"><h2 id="translation"><a class="header" href="#translation">原文译文</a></h2>
+<div id="record-fields"><div class="table-scroll" role="region" aria-label="数据表，可左右滑动" tabindex="0"><table class="form"><tbody><tr><th scope="row">项目</th><td>F10_BCM</td><th scope="row">偏离编号</th><td>R_00102</td></tr><tr><th scope="row">MISRA C 引用</th><td><a href="../rules/10-06.html#rule-10-6">Rule 10.6</a></td><th scope="row">状态</th><td>已批准</td></tr><tr><th scope="row">来源</th><td>工具：MMMC</td><th scope="row">范围</th><td>项目</td></tr></tbody></table></div><div class="table-scroll" role="region" aria-label="数据表，可左右滑动" tabindex="0"><table class="form"><tbody><tr><th rowspan="2">提出人</th><td>E C Unwin</td><th rowspan="2">批准人</th><td>D B Stevens</td></tr><tr><td><em>签名</em></td><td><em>签名</em></td></tr><tr><th>职务</th><td>软件团队负责人</td><th>职务</th><td>工程总监</td></tr><tr><th>日期</th><td>27-Jul-2012</td><th>日期</th><td>12-Aug-2012</td></tr></tbody></table></div></div>
+<h3 id="i-1"><a class="header" href="#i-1">I.1　概述</a></h3>
+<p>MISRA C:2012 <a href="../rules/10-06.html#rule-10-6">Rule 10.6</a> 的理由是避免开发者误解某些算术运算实际采用的类型。不幸的是，由于本项目使用的编译器有一项“特性”，要使代码符合这条规则，就不可避免地会严重降低运行时性能。这样，软件便无法在所有情况下都满足时序要求，车辆达不到法定碳氢化合物排放目标的风险也相当大。</p>
+<h3 id="i-2"><a class="header" href="#i-2">I.2　详细说明</a></h3>
+<p>项目使用了若干变时间步长积分器，用多精度数长期累加求和。待积分的量和积分时间步长都是 16 位无符号量；需要先将两者相乘得到 32 位结果，再进行累加。</p>
+<p>由于本项目所用的 C 编译器把 <code>int</code> 实现为 32 位，计算 32 位乘积的代码如下：</p>
+<pre id="code-228-1"><code class="language-c">extern uint16_t qty, time_step;
+
+uint32_t  prod = ( uint32_t ) qty * ( uint32_t ) time_step;</code></pre>
+<p>显然，尽管乘法运算符的两个操作数均为 32 位，乘积也不可能大到 32 位容纳不下，因为两个操作数都是从 16 位经零扩展得到的。</p>
+<p>按照我们的标准开发程序，所有目标模块都要交给最坏情况执行时间分析工具，以确保每个函数符合架构设计中为它规定的执行时间预算。分析工具指出，为这些积分器生成的代码远远超出了分配给它们的时间预算。调查发现，执行时间过长，是因为编译器生成了对采用“移位加法”的长乘法例程的调用。这一点令人意外：处理器配有一条 <code>IMUL</code> 指令，能在一个时钟周期内把两个 16 位无符号整数相乘，得到 32 位结果。尽管乘法的两个操作数是 32 位的，编译器有办法知道它们的高 16 位全是 0，因此应该能选择 <code>IMUL</code> 指令。</p>
+<p>用该编译器所做的实验表明，只要让乘法操作数从 16 位隐式转换到 32 位，它就会选择 <code>IMUL</code> 指令，即：</p>
+<pre id="code-228-2"><code class="language-c">uint32_t  prod = qty * time_step;</code></pre>
+<p>这尤其奇怪，因为按照 C 标准的描述，这段代码的行为并不取决于转换是隐式还是显式。无论乘法使用 <code>IMUL</code> 还是库调用，程序都会得到相同的结果，但库调用在最坏情况下需要 100 个周期才能执行完毕。编译器供应商已书面确认，这正是他们在该情况下所预期的行为。</p>
+<h3 id="i-3"><a class="header" href="#i-3">I.3　理由</a></h3>
+<p>项目中有多个函数使用这种积分器，平均每 100 微秒至少执行一次，因此库函数的性能不能接受。在规定的 25 MHz CPU 内部时钟频率下，这意味着仅这些乘法就要占去 4% 的时间。这一点本身并不严重，总体时序预算中有余量可以容纳。然而，设计规定积分器必须在最多 10 微秒内给出结果，才能满足其他函数的时序要求。达不到这一要求，就会给实现排放目标带来重大风险，其商业影响超过 1,000 万美元。</p>
+<p>我们首选的解决办法是使用隐式转换来编写积分器。这要求为此类积分器的实例申请偏离 MISRA C:2012 <a href="../rules/10-06.html#rule-10-6">Rule 10.6</a>。这样生成的代码与使用符合 MISRA 的写法所生成的代码在功能上相同，但执行速度最高可达后者的 100 倍。</p>
+<p>还考虑了以下其他方案：</p>
+<ul><li>提高时钟频率——要达到所需性能，时钟频率必须提高到原来的 10 倍；但该处理器的 PLL 最高频率为 100 MHz。</li><li>更换处理器——硬件设计确认工作已深入进行，从商业角度看不可行；项目的额外成本约为 25 万美元，进度也会受到影响。</li><li>更换编译器——没有其他得到商业认可的编译器可用于这款处理器。虽有一款无人提供支持的公有领域编译器，但认为其质量不适合本项目。</li><li>重写库例程——该库使用以 2 为基数的长乘法。可以改写为用 3 条 <code>IMUL</code> 指令实现以 65 536 为基数的长乘法，但我们不愿改动编译器供应商的代码。我们就这个方案征求了供应商意见，得到的答复是：“他们无法为我们修改其库的做法提供支持。”</li></ul>
+<h3 id="i-4"><a class="header" href="#i-4">I.4　申请偏离所适用的条件</a></h3>
+<p>本次偏离申请适用于项目中所有变时间步长积分器的实例。</p>
+<h3 id="i-5"><a class="header" href="#i-5">I.5　不合规的后果</a></h3>
+<p>在本偏离记录所述情形下，不符合 MISRA C:2012 <a href="../rules/10-06.html#rule-10-6">Rule 10.6</a> 不产生后果。</p>
+<p>本次偏离不会带来额外的验证和确认要求。</p>
+<h3 id="i-6"><a class="header" href="#i-6">I.6　控制诊断报告的措施</a></h3>
+<p>用于检查该规则合规性的 MMMC 工具提供了在表达式内抑制诊断消息的功能。由于所有积分器均具有以下形式：</p>
+<pre id="code-230-1"><code class="language-c">prod = qty * time_step;</code></pre>
+<p>可以用宏实现积分器并抑制警告。将使用下面的宏来进行乘法，并把结果赋给乘积项：</p>
+<pre id="code-230-2"><code class="language-c">/* Violates Rule 10.6: See deviation R_00102 */
+#define INTEG(prod, qty, time_step) \
+   ( /* -mmmc-R10_6 */ (prod) = (qty) * (time_step) /* -mmmc-pop */ )</code></pre>
+<p class="comment-zh"><strong>原书代码注释中译：</strong>违反 <a href="../rules/10-06.html#rule-10-6">Rule 10.6</a>；见偏离记录 R_00102。</p>
+<p>虽然可以把这个宏实现为函数，但考虑到所执行的运算很简单，调用和返回的开销太大。因此，即使这意味着违反 <a href="../directives/04-09.html#dir-4-9">Dir 4.9</a>，这里仍优先选择宏而不是函数。</p>
+</section><aside class="note b13-note" id="source-notes"><strong>源页核对（译外注，非原文）</strong><ul><li><a href="#i-2">PDF 228–229</a>：隐式乘法的结果和时序是偏离示例自身的陈述。原书未给出两个输入在项目中的取值上界；当 int 为 32 位时，不可据此推广为任意两个 uint16_t 的隐式乘法都等价或都安全。未运行片段，也未用本机计时替代项目证据。</li></ul></aside><nav class="navline" aria-label="篇目切换"><a href="h2.html#h-2">上一篇：H.2　关键的未指定行为</a><a href="../index.html#b13">返回 B13 目录与搜索</a><a href="j.html#annex-j">下一篇：附录 J　术语表</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

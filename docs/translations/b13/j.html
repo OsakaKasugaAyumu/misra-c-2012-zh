@@ -1,0 +1,118 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>附录 J　术语表 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"><link rel="stylesheet" href="../../assets/b13.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b13">译文目录 · B13</a></nav><p class="eyebrow">B13　/　6 · 7</p><h1 id="annex-j">附录 J　术语表</h1><p class="muted locator">底本定位 PDF 231–234 ／ 印刷 223–226 · <a href="#source-notes">源页说明</a></p><details class="jump"><summary>本页目录</summary><ul><li><a href="#assigned">被赋值（Assigned）</a></li><li><a href="#assignment">赋值（Assignment）</a></li><li><a href="#code">代码（Code）</a></li><li><a href="#dead-code">死代码（Dead code）</a></li><li><a href="#external-identifier">外部标识符（External identifier）</a></li><li><a href="#header-file">头文件（Header file）</a></li><li><a href="#inline-function">内联函数（Inline function）</a></li><li><a href="#loop-counter">循环计数器（Loop counter）</a></li><li><a href="#macro-identifier">宏标识符（Macro identifier）</a></li><li><a href="#opaque-type">不透明类型（Opaque type）</a></li><li><a href="#persistent-side-effect">持久副作用（Persistent side effect）</a></li><li><a href="#project">项目（Project）</a></li><li><a href="#prototype-form">原型形式（Prototype form）</a></li><li><a href="#standard-type">标准类型（Standard type）</a></li><li><a href="#unreachable-code">不可达代码（Unreachable code）</a></li><li><a href="#used">被使用（Used）</a></li></ul></details><section class="source-translation b13-text" aria-labelledby="translation"><h2 id="translation"><a class="header" href="#translation">原文译文</a></h2>
+<h3 id="assigned"><a class="header" href="#assigned">被赋值（Assigned）</a></h3>
+<p>如果表达式是赋值所作用的对象，就称该表达式被赋值。</p>
+<h3 id="assignment"><a class="header" href="#assignment">赋值（Assignment）</a></h3>
+<p>有时用“赋值”一词指称任何按赋值方式进行的操作会比较方便。该词涵盖以下操作：</p>
+<ul><li>使用赋值运算符之一进行赋值；</li><li>向函数传递实参，此时实参的值如同通过赋值一样被复制到相应的形参；</li><li>从函数返回一个表达式，此时该表达式的值如同通过赋值一样被复制到一个具有该函数返回类型的对象中；</li><li>使用表达式初始化对象的全部或一部分（包括 C99 中的复合字面量），此时表达式的值如同通过赋值一样被复制到目的对象。</li></ul>
+<h3 id="code"><a class="header" href="#code">代码（Code）</a></h3>
+<p>代码由翻译单元中未被条件编译排除的所有内容组成。</p>
+<h3 id="dead-code"><a class="header" href="#dead-code">死代码（Dead code）</a></h3>
+<p>凡是结果不影响程序行为的操作，都是死代码。</p>
+<p><strong>注：</strong>初始化不等同于赋值运算，因此不属于可能被判为死代码的操作。</p>
+<p>死代码的例子包括：</p>
+<ul><li>将值存入此后始终不会用到的非 <code>volatile</code> 对象；</li><li>不向对象赋值的表达式语句。</li></ul>
+<p>以下操作绝不是死代码：</p>
+<ul><li>访问 <code>volatile</code> 对象；</li><li>使用语言扩展。</li></ul>
+<p>在嵌入式程序中，动作发生的时间通常是其行为的一个重要方面。因此，起插入延时作用的代码不是死代码。不过，这类代码很可能要用到定时器硬件，因而无论如何都会涉及对 <code>volatile</code> 对象的访问。例如：</p>
+<pre id="code-231-1"><code class="language-c">extern const volatile uint16_t MILLISEC_TIMER;
+
+void delay_ms ( uint16_t n )
+{
+  uint16_t  start_time = MILLISEC_TIMER;
+
+  while ( ( MILLISEC_TIMER - start_time ) &lt; n )
+  {
+    /* wait */
+  }
+}</code></pre>
+<p class="comment-zh"><strong>原书代码注释中译：</strong>等待。</p>
+<h3 id="external-identifier"><a class="header" href="#external-identifier">外部标识符（External identifier）</a></h3>
+<p>外部标识符是具有外部链接属性的标识符，因此它必定表示对象或函数。</p>
+<h3 id="header-file"><a class="header" href="#header-file">头文件（Header file）</a></h3>
+<p>凡是 <code>#include</code> 指令所包含的文件就是头文件。</p>
+<p><strong>注：</strong>文件的扩展名无关紧要。</p>
+<h3 id="inline-function"><a class="header" href="#inline-function">内联函数（Inline function）</a></h3>
+<p>用函数说明符 <code>inline</code> 声明的函数是内联函数。</p>
+<h3 id="loop-counter"><a class="header" href="#loop-counter">循环计数器（Loop counter）</a></h3>
+<p>循环计数器的定义见 <a href="../rules/14-01.html#s8-14">§8.14</a>。</p>
+<h3 id="macro-identifier"><a class="header" href="#macro-identifier">宏标识符（Macro identifier）</a></h3>
+<p>宏标识符是作为宏名或宏形参的标识符。</p>
+<h3 id="opaque-type"><a class="header" href="#opaque-type">不透明类型（Opaque type）</a></h3>
+<p>不向使用者提供实现细节的类型。</p>
+<h3 id="persistent-side-effect"><a class="header" href="#persistent-side-effect">持久副作用（Persistent side effect）</a></h3>
+<p>如果一个副作用可能影响执行过程中某一点的执行状态，就称该副作用在该点是持久的。就程序中的某一给定点而言，以下副作用均为持久副作用：</p>
+<ul><li>修改文件；</li><li>修改对象；</li><li>访问 <code>volatile</code> 对象。</li></ul>
+<p>调用函数可能产生副作用。从调用方来看，修改文件或访问 <code>volatile</code> 对象是持久的。但是，如果被调函数修改了某些对象，而在它返回时这些对象的生存期已经结束，它们就不影响调用方的执行状态。对调用方而言，修改这些对象所产生的副作用不是持久的。</p>
+<p>例如：</p>
+<pre id="code-232-1"><code class="language-c">uint16_t f ( void )
+{
+  uint16_t  temp = 1;           /* Side effect of modifying temp is not
+                                 * persistent to the caller */
+
+  return ( temp );
+}
+
+x = f ( );</code></pre>
+<p class="comment-zh"><strong>原书代码注释中译：</strong>修改 temp 的副作用对调用方而言不是持久的。</p>
+<h3 id="project"><a class="header" href="#project">项目（Project）</a></h3>
+<p>一个项目的代码来自用以构建一个可执行文件的一组翻译单元。典型的嵌入式控制器可能包含若干个在逻辑上相互独立的项目，例如：</p>
+<ul><li>一级引导加载程序；</li><li>二级引导加载程序；</li><li>主应用程序。</li></ul>
+<h3 id="prototype-form"><a class="header" href="#prototype-form">原型形式（Prototype form）</a></h3>
+<p>如果一个函数类型包含原型，就称它采用原型形式；也就是说，它列出了形参类型，也可以给出形参名。例如，以下声明均采用原型形式：</p>
+<pre id="code-233-1"><code class="language-c">void  f ( void );            /* Prototype specifying no parameters      */
+void  g ( int16_t, char );   /* Prototype specifying types but no names */
+void  h ( uint32_t n );      /* Prototype specifying type and name      */</code></pre>
+<p class="comment-zh"><strong>原书代码注释中译：</strong>原型指明没有形参；原型指明类型而未给名称；原型同时指明类型和名称。</p>
+<p>以下写法则不采用原型形式：</p>
+<pre id="code-233-2"><code class="language-c">void      f ( );                /* No information about parameters      */
+
+void g ( x, y )                 /* Function definition "K&amp;R"-style      */
+int16_t x;
+char y;
+{
+}</code></pre>
+<p class="comment-zh"><strong>原书代码注释中译：</strong>没有提供形参信息；采用“K&amp;R”风格的函数定义。</p>
+<h3 id="standard-type"><a class="header" href="#standard-type">标准类型（Standard type）</a></h3>
+<p>表达式的标准类型，是按 C 语言标准确定的该表达式的类型。</p>
+<h3 id="unreachable-code"><a class="header" href="#unreachable-code">不可达代码（Unreachable code）</a></h3>
+<p>如果在没有硬件故障且忽略未定义行为影响的情况下，不存在能使一段代码得到执行的程序输入组合，则这段代码不可达。</p>
+<p>不可达代码可能源于程序控制流图的结构。例如，<code>return</code> 语句之后的代码都不可达；逻辑运算符或条件运算符的一些操作数也可能不可达：</p>
+<pre id="code-233-3"><code class="language-c">uint16_t  y;
+
+uint16_t f ( void )
+{
+  uint16_t  x;
+
+  return true ? y : ( y + 1U );    /* y + 1 is never executed     */
+  x = 10U;                         /* statement is never executed */
+}</code></pre>
+<p class="comment-zh"><strong>原书代码注释中译：</strong>y + 1 永不执行；这条语句永不执行。</p>
+<p>即使存在到达某条语句的控制流路径，如果这条路径绝不可能被走到，也会出现不可达代码。例如：</p>
+<pre id="code-234-1"><code class="language-c">uint16_t  x, y;
+
+switch ( 2u * x )
+{
+case 0:
+  y = 10u;
+  break;
+case 1:
+  y = 0u;   /* unreachable: 2 * x can never be odd */
+  break;
+
+case 2:
+  y = x;
+  break;
+default:
+  break;
+}</code></pre>
+<p class="comment-zh"><strong>原书代码注释中译：</strong>不可达：2 * x 不可能是奇数。</p>
+<h3 id="used"><a class="header" href="#used">被使用（Used）</a></h3>
+<p>当一个表达式出现在以下任一上下文中时，就称该表达式被使用：</p>
+<ul><li>作为运算符的操作数，包括作为函数调用运算符的参数；</li><li>作为 <code>if</code>、<code>while</code>、<code>for</code>、<code>do … while</code> 或 <code>switch</code> 语句的控制表达式；</li><li>作为 <code>return</code> 语句返回的值；</li><li>作为初始化器。</li></ul>
+<p>不应将这个术语与读取对象的值混为一谈。例如：</p>
+<pre id="code-234-2"><code class="language-c">uint16_t  x = 3;
+uint16_t *p = &amp;x;               /* x is used but not read */
+
+return *p;                      /* x is read but not used */</code></pre>
+<p class="comment-zh"><strong>原书代码注释中译：</strong>x 被使用但没有被读取；x 被读取但没有被使用。</p>
+</section><aside class="note b13-note" id="source-notes"><strong>源页核对（译外注，非原文）</strong><ul><li><a href="#unreachable-code">PDF 233–234</a>：第 234 页开头的 switch 是 Unreachable code 的第二个示例；Used 是随后的独立术语。最后两行注释分别针对“使用”和“读取”，不互换。</li></ul></aside><nav class="navline" aria-label="篇目切换"><a href="i.html#annex-i">上一篇：附录 I　偏离记录示例</a><a href="../index.html#b13">返回 B13 目录与搜索</a><a href="end.html#end-cover">下一篇：封三与封底</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>
