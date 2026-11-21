@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 21.2 · 辨认声明来自应用还是标准头 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b11">译文目录</a><span>B11 · §8.21–§8.22</span></nav><p class="eyebrow">中文译文　/　150 · 166</p><h1 id="rule-21-2">Rule 21.2 · 辨认声明来自应用还是标准头</h1><p class="muted locator">底本定位 PDF／印刷 174–175／166–167。</p><section class="source-translation" aria-labelledby="rule-21-2-text">
+<h2 id="rule-21-2-text"><a class="header" href="#rule-21-2-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 21.2</strong>　不得声明保留标识符或保留宏名。</p>
+<p>C90 [未定义 57、58、64、71]；C99 [未定义 93、100、101、104、108、116、118、130]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>相关标识符和宏名的说明见 <a href="21-01.html#rule-21-1">Rule 21.1</a> 的“进一步说明”。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>实现可以依赖保留标识符按 C 标准所述方式行事，也可以对它们作特殊处理。如果这些保留标识符被挪作他用，程序可能表现出未定义行为。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<p>在下列不合规示例中，函数 <code>memcpy</code> 是显式声明的。声明该函数的合规方式是包含 <code>&lt;string.h&gt;</code>。</p>
+<pre><code class="language-c">/*
+ * Include &lt;stddef.h&gt; to define size_t
+ */
+#include &lt;stddef.h&gt;
+extern void *memcpy ( void *restrict s1, const void *restrict s2, size_t n );
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）包含 <code>&lt;stddef.h&gt;</code> 以定义 <code>size_t</code>。</p>
+<p>除库函数本身之外，实现还可以为每个标准库函数提供一个函数式宏定义。编译器开发者常利用这一特性，在库函数调用处生成高效的内联操作。借助函数式宏，可以把库函数调用替换为对某个保留函数的调用；编译器在代码生成阶段识别后者，再用内联操作替代它。例如，<code>&lt;math.h&gt;</code> 中声明 <code>sqrt</code> 的片段可能采用如下函数式宏，由此生成一次对 <code>_BUILTIN_sqrt</code> 的调用；在支持该指令的处理器上，这次调用会被替换成一条内联的 <code>SQRT</code> 指令：</p>
+<pre><code class="language-c">extern double sqrt ( double x );
+
+#define sqrt( x ) ( _BUILTIN_sqrt ( x ) )
+</code></pre>
+<p>以下不合规代码可能干扰编译器处理 <code>sqrt</code> 的内建机制，因而产生未定义行为：</p>
+<pre><code class="language-c">#define _BUILTIN_sqrt( x ) ( x )            /* Non-compliant           */
+#include &lt;math.h&gt;
+
+float64_t x = sqrt ( ( float64_t ) 2.0 );   /* sqrt may not behave as
+                                             * defined in The Standard */
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）不合规。 （2）sqrt 的行为可能不再符合 C 标准的规定。</p>
+</section><aside class="note" id="source-note"><p><strong>源页核对：</strong> PDF 174–175：_BUILTIN_sqrt 是原书假设的实现内部名字，不是对所有编译器的描述；跨页的干扰示例仍属本条。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-21-2.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="21-01.html">上一篇：Rule 21.1 · 查被定义或撤销的名字</a><a href="../index.html">全部译文</a><a href="21-03.html">下一篇：Rule 21.3 · 从别名追到分配和释放接口</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

@@ -1,0 +1,39 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 22.2 · 区分内存块身份、所有者与别名 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b11">译文目录</a><span>B11 · §8.21–§8.22</span></nav><p class="eyebrow">中文译文　/　162 · 166</p><h1 id="rule-22-2">Rule 22.2 · 区分内存块身份、所有者与别名</h1><p class="muted locator">底本定位 PDF／印刷 182／174。</p><section class="source-translation" aria-labelledby="rule-22-2-text">
+<h2 id="rule-22-2-text"><a class="header" href="#rule-22-2-text">原文译文</a></h2>
+<p class="guideline"><strong>Rule 22.2</strong>　只有经由标准库函数分配的内存块才可被释放。</p>
+<p>C90 [未定义 92]；C99 [未定义 169]</p>
+<dl class="attributes"><dt>类别</dt><dd>强制（Mandatory）</dd><dt>分析</dt><dd>不可判定（Undecidable），系统（System）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>分配内存的标准库函数是 <code>malloc</code>、<code>calloc</code> 和 <code>realloc</code>。</p>
+<p>把内存块的地址传给 <code>free</code> 就会释放该块；把地址传给 <code>realloc</code> 则可能释放该块。内存块一经释放，就不再被视为已分配，因此之后不能再次释放。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>释放未分配的内存，或多次释放同一已分配内存块，都会导致未定义行为。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">#include &lt;stdlib.h&gt;
+
+void fn ( void )
+{
+  int32_t a;
+
+  /* Non-compliant - a does not point to allocated storage     */
+  free ( &amp;a );
+}
+
+void g ( void )
+{
+  char *p = ( char * ) malloc ( 512 );
+  char *q = p;
+
+  free ( p );
+
+  /* Non-compliant - allocated block freed a second time       */
+  free ( q );
+
+  /* Non-compliant - allocated block may be freed a third time */
+  p = ( char * ) realloc ( p, 1024 );
+}
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）不合规：a 不指向已分配的存储。 （2）不合规：同一已分配块被第二次释放。 （3）不合规：该已分配块可能被第三次释放。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="../directives/04-12.html#dir-4-12">Dir 4.12</a>、<a href="../directives/04-13.html#dir-4-13">Dir 4.13</a>、<a href="21-03.html#rule-21-3">Rule 21.3</a>。</p>
+</section><aside class="note" id="source-note"><p><strong>源页核对：</strong> PDF 182：free(&amp;a) 前的英文注释以 a 为主语；实际传入的是 &amp;a，是具有自动存储期的对象的地址。保留原注措辞，不将它误作动态分配。</p></aside><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-22-2.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="22-01.html">上一篇：Rule 22.1 · 逐个归还成功取得的资源</a><a href="../index.html">全部译文</a><a href="22-03.html">下一篇：Rule 22.3 · 按文件身份比较流的打开区间</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

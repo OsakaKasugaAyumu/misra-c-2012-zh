@@ -1,0 +1,43 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>Rule 21.1 · 查被定义或撤销的名字 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b11">译文目录</a><span>B11 · §8.21–§8.22</span></nav><p class="eyebrow">中文译文　/　149 · 166</p><h1 id="rule-21-1">Rule 21.1 · 查被定义或撤销的名字</h1><p class="muted locator">底本定位 PDF／印刷 173–174／165–166。</p><section class="source-translation" aria-labelledby="rule-21-1-text">
+<h2 id="rule-21-1-text"><a class="header" href="#rule-21-1-text">原文译文</a></h2>
+<h2 id="s8-21"><a class="header" href="#s8-21">8.21　标准库</a></h2>
+<p class="guideline"><strong>Rule 21.1</strong>　不得对保留标识符或保留宏名使用 <code>#define</code> 或 <code>#undef</code>。</p>
+<p>C90 [未定义 54、57、58、62、71]</p>
+<p>C99 [未定义 93、100、101、104、108、116、118、130]</p>
+<dl class="attributes"><dt>类别</dt><dd>必需（Required）</dd><dt>分析</dt><dd>可判定（Decidable），单一翻译单元（Single Translation Unit）</dd><dt>适用标准</dt><dd>C90、C99</dd></dl>
+<h3 id="进一步说明"><a class="header" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%B4%E6%98%8E">进一步说明</a></h3>
+<p>本条适用于：</p>
+<ul>
+<li>以下划线开头的标识符或宏名；</li>
+<li>C 标准第 7 节“库”中所述的文件作用域标识符；</li>
+<li>C 标准第 7 节“库”中指明在标准头文件中定义的宏名。</li>
+</ul>
+<p>本条也禁止对标识符 <code>defined</code> 使用 <code>#define</code> 或 <code>#undef</code>，因为这会导致标准明确规定的未定义行为。</p>
+<p>本条不包括所适用的 C 标准在“库的未来发展方向”（Future Library Directions）一节中描述的那些标识符或宏名。</p>
+<p>C 标准指出，可以定义与下列名字同名的宏：</p>
+<ul>
+<li>标准头文件中定义的宏，或</li>
+<li>标准头文件中声明的、具有文件作用域的标识符。</li>
+</ul>
+<p>只要不包含该头文件，这种定义的行为就是有定义的。本规则不允许这样的定义，因为它们容易引起混淆。</p>
+<p><strong>注：</strong> 宏 <code>NDEBUG</code> 并非定义在标准头文件中，因此可以用 <code>#define</code> 定义它。</p>
+<h3 id="理由"><a class="header" href="#%E7%90%86%E7%94%B1">理由</a></h3>
+<p>保留标识符和保留宏名是留给实现使用的。撤销保留宏或改变其含义，可能导致未定义行为。</p>
+<h3 id="原书示例"><a class="header" href="#%E5%8E%9F%E4%B9%A6%E7%A4%BA%E4%BE%8B">原书示例</a></h3>
+<pre><code class="language-c">#undef  __LINE__                 /* Non-compliant - begins with _        */
+#define _GUARD_H 1               /* Non-compliant - begins with _        */
+#undef  _BUILTIN_sqrt            /* Non-compliant - the implementation
+                                  * may use _BUILTIN_sqrt for other
+                                  * purposes, e.g. generating a sqrt
+                                  * instruction                          */
+
+#define defined                  /* Non-compliant - reserved identifier  */
+#define errno my_errno           /* Non-compliant - library identifier   */
+#define isneg( x ) ( ( x ) &lt; 0 ) /* Compliant     - rule doesn't include
+                                  *                 future library
+                                  *                 directions           */
+</code></pre>
+<p><strong>原书代码注释中译（依次）：</strong> （1）不合规：以下划线开头。 （2）不合规：以下划线开头。 （3）不合规：实现可能将 _BUILTIN_sqrt 用于其他目的，例如生成一条平方根指令。 （4）不合规：保留标识符。 （5）不合规：库标识符。 （6）合规：本规则不包括库的未来发展方向。</p>
+<h3 id="另见"><a class="header" href="#%E5%8F%A6%E8%A7%81">另见</a></h3>
+<p><a href="20-04.html#rule-20-4">Rule 20.4</a>。</p>
+</section><aside class="bound"><h2>自编 C 示例（非原文）</h2><p><a href="../../lab/rule-21-1.html">阅读这条准则的自编源码、验证步骤和证据边界 →</a></p></aside><nav class="navline" aria-label="篇目切换"><a href="20-14.html">上一篇：Rule 20.14 · 按物理文件栈核对条件指令</a><a href="../index.html">全部译文</a><a href="21-02.html">下一篇：Rule 21.2 · 辨认声明来自应用还是标准头</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>
