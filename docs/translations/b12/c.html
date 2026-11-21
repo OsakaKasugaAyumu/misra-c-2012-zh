@@ -1,0 +1,46 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>附录 C　C 的类型安全问题 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"><link rel="stylesheet" href="../../assets/b12.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b12">译文目录 · B12</a></nav><p class="eyebrow">B12　/　4 · 7</p><h1 id="annex-c">附录 C　C 的类型安全问题</h1><p class="muted locator">底本定位 PDF 201–203 ／ 印刷 193–195 · <a href="#source-note">源页说明</a></p><details class="jump"><summary>本页目录</summary><ul><li><a href="#c-1">C.1 类型转换</a></li><li><a href="#c-2">C.2 开发者可能产生的误解</a></li></ul></details><section class="source-translation b12-text" aria-label="原文译文" aria-labelledby="translation">
+<h2 id="translation"><a class="header" href="#translation">原文译文</a></h2>
+<p>由于 ISO C 允许多种隐式类型转换，可以认为它的类型安全性较弱。这些转换有些方面由实现定义，容易使开发者误解，从而危及安全。</p>
+<p>下面说明这些转换，并举例展示它们如何使开发者产生误解。</p>
+<h3 id="c-1"><a class="header" href="#c-1">C.1 类型转换</a></h3>
+<h4 id="c-1-1"><a class="header" href="#c-1-1">C.1.1 隐式转换</a></h4>
+<p>ISO C 的隐式类型转换使表达式可以混合使用不同类型；即使所用类型完全相同，也可能发生转换。隐式转换分为三种：</p>
+<ol class="b12-list"><li value="1">按照 C90 §6.2.1.1、C99 §6.3.1.1，只要将位域，或类型为有符号／无符号 <code>char</code>、有符号／无符号 <code>short</code> 或 <code>enum</code> 的对象用于算术运算，就会发生整数提升，转换为 <code>signed int</code> 或 <code>unsigned int</code>。整数提升保留原值，但符号性可能改变（例如 <code>unsigned char</code> 会转换为 <code>signed int</code>）。</li><li value="2">如 C90 §6.2.1.5、C99 §6.3.1.8 所述，当某些运算符的操作数类型不同时，通常算术转换将操作数转换（平衡）到一个共同类型。</li><li value="3">赋值时的转换。</li></ol>
+<p>如下例所示，一个表达式可能不发生上述任何转换，也可能发生一种、两种或全部三种转换（<code>si</code> 和 <code>ui</code> 分别是 32 位有符号和无符号整数，<code>u8</code> 是 8 位的 <code>unsigned char</code>）：</p>
+<div class="table-scroll" role="region" aria-label="数据表格" tabindex="0"><table id="conversions"><thead><tr><th scope="col">表达式</th><th scope="col">提升</th><th scope="col">平衡</th><th scope="col">转换</th><th scope="col">说明</th></tr></thead><tbody><tr><td><code>si = si + si;</code></td><td></td><td></td><td></td><td></td></tr><tr><td><code>si = uc + uc;</code></td><td>是</td><td></td><td></td><td><code>uc</code> 提升为 <code>signed int</code></td></tr><tr><td><code>ui = si + ui;</code></td><td></td><td>是</td><td></td><td><code>si</code> 平衡到 <code>unsigned int</code></td></tr><tr><td><code>ui = ui + uc;</code></td><td>是</td><td>是</td><td></td><td><code>uc</code> 提升为 <code>signed int</code>，再平衡到 <code>unsigned int</code></td></tr><tr><td><code>ui = si;</code></td><td></td><td></td><td>是</td><td><code>si</code> 转换为 <code>unsigned int</code></td></tr><tr><td><code>ui = uc + uc;</code></td><td>是</td><td></td><td>是</td><td><code>uc</code> 提升为 <code>signed int</code>，表达式的结果转换为 <code>unsigned int</code></td></tr><tr><td><code>si = si + ui;</code></td><td></td><td>是</td><td>是</td><td><code>si</code> 平衡到 <code>unsigned int</code>，表达式的结果转换为 <code>signed int</code></td></tr><tr><td><code>si = ui + uc;</code></td><td>是</td><td>是</td><td>是</td><td><code>uc</code> 提升为 <code>signed int</code>，再平衡到 <code>unsigned int</code>，表达式的结果转换为 <code>signed int</code></td></tr></tbody></table>
+</div><h4 id="c-1-2"><a class="header" href="#c-1-2">C.1.2 显式转换</a></h4>
+<p>可以出于以下功能上的原因引入显式类型转换（强制转换）：</p>
+<ul><li>改变后续算术运算所使用的类型；</li><li>有意截断一个值；</li><li>明确写出类型转换，使含义更清楚。</li></ul>
+<p>ISO C 并不要求检查所有显式强制转换，因此不兼容类型之间也能进行转换。</p>
+<h4 id="c-1-3"><a class="header" href="#c-1-3">C.1.3 转换带来的问题</a></h4>
+<p>隐式转换和显式转换都可能带来若干问题，包括：</p>
+<ul><li>数值损失：例如，转换到不能表示该值大小的类型。</li><li>符号丢失：例如，从有符号类型转换到无符号类型，导致符号丢失。</li><li>精度损失：例如，从浮点类型转换到整数类型，因而损失精度。</li><li>存储布局不再匹配：例如，把指向一种类型的指针转换为指向另一种类型的指针，导致存储布局不兼容。</li></ul>
+<p>许多类型转换都是安全的，但对所有数据值以及所有可能的符合标准的实现都能保证安全的转换只有：</p>
+<ul><li>把整数值转换到符号性相同、宽度更大的整数类型；</li><li>把浮点类型转换到宽度更大的浮点类型。</li></ul>
+<p>取决于实现采用的整数宽度，其他类型转换也可能是安全的。不过，凡是有潜在危险的类型转换，都应显式写出，以便识别。</p>
+<h3 id="c-2"><a class="header" href="#c-2">C.2 开发者可能产生的误解</a></h3>
+<p>不同实现中类型的大小可能不同，因此发生隐式转换的场合也可能不同。这要求开发者对每个具体项目使用的类型系统都要心中有数。开发者很容易偶尔用错模型，尤其是在同时参与采用不同实现的多个项目时。</p>
+<h4 id="c-2-1"><a class="header" href="#c-2-1">C.2.1 整数提升中的类型拓宽</a></h4>
+<p>整数表达式以何种类型求值，取决于操作数经过整数提升后的类型。两个 8 位值相乘，结果的宽度总是至少为 16 位；但两个 16 位值相乘，只有在实现的 <code>int</code> 至少为 32 位时才会得到 32 位结果。较安全的做法是始终不依赖整数提升带来的类型拓宽，因为相关的实现定义行为可能使开发者产生误解。考虑以下示例：</p>
+<pre><code class="language-c">uint16_t u16a = 40000; /* unsigned short or unsigned int ? */
+uint16_t u16b = 30000; /* unsigned short or unsigned int ? */
+uint32_t u32x;         /* unsigned int or unsigned long ? */
+u32x = u16a + u16b;    /* u32x = 70000 or 4464 ?  */</code></pre><p>原注：前两个对象的类型是 unsigned short 还是 unsigned int？第三个是 unsigned int 还是 unsigned long？结果是 70000 还是 4464？</p>
+<p>预期的结果可能是 70 000，但赋给 <code>u32x</code> 的值取决于实现的 <code>int</code> 大小。若为 32 位，加法使用 32 位有符号算术，得到“正确”的值。若仅为 16 位，加法使用 16 位无符号算术，发生回绕，得到 4 464（70 000 % 65 536）。无符号算术中的回绕有明确定义，但其效果取决于运算所用的类型，因此有意利用回绕时应形成文档。</p>
+<h4 id="c-2-2"><a class="header" href="#c-2-2">C.2.2 对求值类型的误解</a></h4>
+<p>类似的问题是，开发者误以为计算所用的类型会受接收结果的类型或结果要转换到的类型影响。例如，在下面的代码中，两个 16 位对象以 16 位算术相加（假设 <code>int</code> 为 16 位），到赋值时才将结果转换为 <code>uint32_t</code>。</p>
+<pre><code class="language-c">u32x = u16a + u16b;</code></pre>
+<p>由于 <code>u32x</code> 的类型而误以为加法使用 32 位算术，这种情况并不少见。</p>
+<p>这类误解不限于整数算术，也不限于隐式转换。以下语句的结果都有明确定义，但计算未必以开发者预期的类型进行：</p>
+<pre><code class="language-c">u32a = (uint32_t)(u16a * u16b); /* May not be a 32-bit operation */
+f64a = u16a / u16b;       /* Not floating point division */
+f32a = (float32_t)(u16a / u16b); /* Not floating point division */
+f64a = f32a + f32b;       /* May be a low precision operation */
+f64a = (float64_t)(f32a + f32b); /* May be a low precision operation */</code></pre><p>原注（依语句顺序）：第一行未必是 32 位运算；第二、三行都不是浮点除法；第四、五行都可能是低精度运算。</p>
+<h4 id="c-2-3"><a class="header" href="#c-2-3">C.2.3 算术运算中符号性的改变</a></h4>
+<p>整数提升可能使表达式的结果不符合开发者的预期。例如，表达式 <code>10 - u16a</code> 的结果取决于 <code>int</code> 的大小。若 <code>u16a</code> 为 100 且 <code>int</code> 为 32 位，则结果有符号，值为 −90。但若 <code>int</code> 为 16 位，结果将是无符号的 65 446。</p>
+<h4 id="c-2-4"><a class="header" href="#c-2-4">C.2.4 按位运算中符号性的改变</a></h4>
+<p>对较小的无符号类型使用按位运算符时，整数提升可能造成误解。例如，对 <code>unsigned char</code> 类型的操作数按位取反，通常会得到类型为（有符号）<code>int</code> 的负值。运算前，操作数被提升到 <code>int</code>，取反会将新增的高位置一。是否有新增位以及有多少位，取决于 <code>int</code> 的大小；取反之后再右移尤其危险，因为这会导致实现定义行为。</p>
+<pre><code class="language-c">u8a = 0xff;
+if ( ~u8a == 0x00U ) /* This test will always fail */</code></pre><p>原注：这项测试总会失败。</p>
+</section><aside class="note b12-issues" id="source-note"><strong>译外注 · 源页核对</strong><p>PDF 201：表前说明写作 u8，表内表达式及说明写作 uc。两处分别照录，不把二者擅自统一。</p></aside><nav class="navline" aria-label="篇目切换"><a href="b.html#annex-b">上一篇：附录 B　准则属性</a><a href="../index.html#b12">返回 B12 目录与搜索</a><a href="d.html#annex-d">下一篇：附录 D　本质类型</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

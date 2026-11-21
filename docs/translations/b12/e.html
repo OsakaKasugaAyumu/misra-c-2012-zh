@@ -1,0 +1,55 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>附录 E　对自动生成代码的适用性 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"><link rel="stylesheet" href="../../assets/b12.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b12">译文目录 · B12</a></nav><p class="eyebrow">B12　/　6 · 7</p><h1 id="annex-e">附录 E　对自动生成代码的适用性</h1><p class="muted locator">底本定位 PDF 210–212 ／ 印刷 202–204 · <a href="#source-note">源页说明</a></p><details class="jump"><summary>本页目录</summary><ul><li><a href="#e-1">E.1 自动生成代码的准则类别</a></li><li><a href="#e-2">E.2 对自动代码生成工具的文档要求</a></li></ul></details><section class="source-translation b12-text" aria-label="原文译文" aria-labelledby="translation">
+<h2 id="translation"><a class="header" href="#translation">原文译文</a></h2>
+<h3 id="e-1"><a class="header" href="#e-1">E.1 自动生成代码的准则类别</a></h3>
+<p>对大多数 MISRA C 准则，自动生成代码与人工编写代码的类别相同。</p>
+<p>本节列出类别不同的准则。为方便起见，将理由相近的准则列在一起。</p>
+<h4 id="e-1-1"><a class="header" href="#e-1-1">E.1.1 附加类别</a></h4>
+<p>自动生成代码采用一个附加的准则类别：</p>
+<h5 id="e-1-1-1"><a class="header" href="#e-1-1-1">E.1.1.1 可读性</a></h5>
+<p>若一条准则归为“可读性”，并且自动生成的代码不打算交由程序员阅读、审查或修改，就不必遵守该条准则。若有人使用该代码，则类别仍与人工编写代码相同。</p>
+<h4 id="e-1-2"><a class="header" href="#e-1-2">E.1.2 标识符隐藏</a></h4>
+<div class="table-scroll" role="region" aria-label="数据表格" tabindex="0"><table><thead><tr><th scope="col">准则</th><th scope="col">类别</th></tr></thead><tbody><tr><td><a href="../rules/05-03.html#rule-5-3">Rule 5.3</a></td><td>建议</td></tr></tbody></table>
+</div><p>自动代码生成器能够跟踪自己使用的标识符，不应因标识符复用而产生混淆。因此，该准则用于自动生成代码时为建议类。</p>
+<p>将人工编写的代码插入自动生成代码，或反过来插入时，标识符可能在代码生成器不知情的情况下被隐藏。因此，只要被隐藏的标识符或隐藏其他标识符的那个标识符是在人工编写的代码中声明的，本准则仍为必需类。</p>
+<h4 id="e-1-3"><a class="header" href="#e-1-3">E.1.3 八进制常量</a></h4>
+<div class="table-scroll" role="region" aria-label="数据表格" tabindex="0"><table><thead><tr><th scope="col">准则</th><th scope="col">类别</th></tr></thead><tbody><tr><td><a href="../rules/07-01.html#rule-7-1">Rule 7.1</a></td><td>建议</td></tr></tbody></table>
+</div><p>自动代码生成器不大可能无意中生成八进制常量。</p>
+<h4 id="e-1-4"><a class="header" href="#e-1-4">E.1.4 具有外部链接属性的兼容声明</a></h4>
+<div class="table-scroll" role="region" aria-label="数据表格" tabindex="0"><table><thead><tr><th scope="col">准则</th><th scope="col">类别</th></tr></thead><tbody><tr><td><a href="../rules/08.html#rule-8-4">Rule 8.4</a></td><td>建议</td></tr><tr><td><a href="../rules/08-05.html#rule-8-5">Rule 8.5</a></td><td>建议</td></tr></tbody></table>
+</div><p>这些准则要求：</p>
+<ul><li>定义具有外部链接属性的对象或函数时，有兼容的声明可见；</li><li>每个具有外部链接属性的对象或函数只在一个文件中声明。</li></ul>
+<p>两项要求共同提供一种机制，确保使用该对象或函数声明的所有翻译单元，其使用方式都与定义兼容。不过，这不是保证兼容性的唯一策略。例如，自动代码生成器可以在数据字典中保存各对象或函数的声明，在每个需要它的翻译单元中使用该声明。</p>
+<h5 id="e-1-4-1"><a class="header" href="#e-1-4-1">E.1.4.1 <code>restrict</code> 类型限定符</a></h5>
+<div class="table-scroll" role="region" aria-label="数据表格" tabindex="0"><table><thead><tr><th scope="col">准则</th><th scope="col">类别</th></tr></thead><tbody><tr><td><a href="../rules/08-14.html#rule-8-14">Rule 8.14</a></td><td>建议</td></tr></tbody></table>
+</div><p>若自动代码生成器能够确定两个指针不互为别名，它可能希望使用 <code>restrict</code> 类型限定符。</p>
+<h4 id="e-1-5"><a class="header" href="#e-1-5">E.1.5 本质类型</a></h4>
+<div class="table-scroll" role="region" aria-label="数据表格" tabindex="0"><table><thead><tr><th scope="col">准则</th><th scope="col">类别</th></tr></thead><tbody><tr><td><a href="../rules/10-01.html#rule-10-1">Rule 10.1</a></td><td>建议</td></tr><tr><td><a href="../rules/10-02.html#rule-10-2">Rule 10.2</a></td><td>建议</td></tr><tr><td><a href="../rules/10-03.html#rule-10-3">Rule 10.3</a></td><td>建议</td></tr><tr><td><a href="../rules/10-04.html#rule-10-4">Rule 10.4</a></td><td>建议</td></tr><tr><td><a href="../rules/10-06.html#rule-10-6">Rule 10.6</a></td><td>建议</td></tr><tr><td><a href="../rules/10-07.html#rule-10-7">Rule 10.7</a></td><td>建议</td></tr><tr><td><a href="../rules/10-08.html#rule-10-8">Rule 10.8</a></td><td>建议</td></tr><tr><td><a href="../rules/14-04.html#rule-14-4">Rule 14.4</a></td><td>建议</td></tr><tr><td><a href="../rules/20-08.html#rule-20-8">Rule 20.8</a></td><td>建议</td></tr></tbody></table>
+</div><p>本质类型概念是避免整数提升和通常算术转换相关问题的一种方法。自动代码生成器可以采用同样有效的其他方法来避免这些问题。此外，它既知道 C 的隐式类型转换规则，也知道目标机器上各类型的大小。</p>
+<p>因此，与本质类型相关的规则用于自动生成代码时，都归为建议类。</p>
+<h4 id="e-1-6"><a class="header" href="#e-1-6">E.1.6 循环计数器</a></h4>
+<div class="table-scroll" role="region" aria-label="数据表格" tabindex="0"><table><thead><tr><th scope="col">准则</th><th scope="col">类别</th></tr></thead><tbody><tr><td><a href="../rules/14-01.html#rule-14-1">Rule 14.1</a></td><td>建议</td></tr></tbody></table>
+</div><p>自动代码生成器了解所用的浮点实现，因而知道采用浮点循环计数器会有什么影响。</p>
+<h4 id="e-1-7"><a class="header" href="#e-1-7">E.1.7 标号与 <code>goto</code></a></h4>
+<div class="table-scroll" role="region" aria-label="数据表格" tabindex="0"><table><thead><tr><th scope="col">准则</th><th scope="col">类别</th></tr></thead><tbody><tr><td><a href="../rules/15-02.html#rule-15-2">Rule 15.2</a></td><td>建议</td></tr><tr><td><a href="../rules/15-03.html#rule-15-3">Rule 15.3</a></td><td>建议</td></tr></tbody></table>
+</div><p>自动代码生成器可能需要生成向后跳转，例如在实现状态机时。它极少会生成跳入所插入人工代码块的跳转，因此应该能够避免跳过初始化。</p>
+<h4 id="e-1-8"><a class="header" href="#e-1-8">E.1.8 <code>switch</code> 语句</a></h4>
+<div class="table-scroll" role="region" aria-label="数据表格" tabindex="0"><table><thead><tr><th scope="col">准则</th><th scope="col">类别</th></tr></thead><tbody><tr><td><a href="../rules/16-01.html#rule-16-1">Rule 16.1</a></td><td>建议</td></tr><tr><td><a href="../rules/16-02.html#rule-16-2">Rule 16.2</a></td><td>建议</td></tr><tr><td><a href="../rules/16-03.html#rule-16-3">Rule 16.3</a></td><td>建议</td></tr><tr><td><a href="../rules/16-04.html#rule-16-4">Rule 16.4</a></td><td>建议</td></tr><tr><td><a href="../rules/16-05.html#rule-16-5">Rule 16.5</a></td><td>建议</td></tr><tr><td><a href="../rules/16-06.html#rule-16-6">Rule 16.6</a></td><td>建议</td></tr><tr><td><a href="../rules/16-07.html#rule-16-7">Rule 16.7</a></td><td>建议</td></tr></tbody></table>
+</div><p>如果自动代码生成器确定可以通过优化省去模型所指示的 <code>default</code> 子句，例如控制表达式的每个值都已被 <code>case</code> 子句覆盖，那么只有在生成的 C 代码中插入注释、解释为什么没有 <code>default</code> 子句时，才可以这样做。这条注释可以在论证 MISRA C 合规性时接受审查和认可。</p>
+<p>自动代码生成器能够处理从一个 <code>switch</code> 子句贯穿到后续子句的情况。</p>
+<p>某些不常见的 <code>switch</code> 语句，例如控制表达式为本质布尔型，或只有一个 <code>switch</code> 子句，在人工编写的代码中可能意味着错误，在自动生成的代码中却可能是必要或可取的。</p>
+<h4 id="e-1-9"><a class="header" href="#e-1-9">E.1.9 可读性</a></h4>
+<div class="table-scroll" role="region" aria-label="数据表格" tabindex="0"><table><thead><tr><th scope="col">准则</th><th scope="col">类别</th></tr></thead><tbody><tr><td><a href="../directives/04-05.html#dir-4-5">Dir 4.5</a></td><td>可读性</td></tr><tr><td><a href="../rules/02-03.html#rule-2-3">Rule 2.3</a></td><td>可读性</td></tr><tr><td><a href="../rules/02-04.html#rule-2-4">Rule 2.4</a></td><td>可读性</td></tr><tr><td><a href="../rules/02-05.html#rule-2-5">Rule 2.5</a></td><td>可读性</td></tr><tr><td><a href="../rules/02-06.html#rule-2-6">Rule 2.6</a></td><td>可读性</td></tr><tr><td><a href="../rules/02-07.html#rule-2-7">Rule 2.7</a></td><td>可读性</td></tr><tr><td><a href="../rules/05-09.html#rule-5-9">Rule 5.9</a></td><td>可读性</td></tr><tr><td><a href="../rules/07-02.html#rule-7-2">Rule 7.2</a></td><td>可读性</td></tr><tr><td><a href="../rules/07-03.html#rule-7-3">Rule 7.3</a></td><td>可读性</td></tr><tr><td><a href="../rules/09-02.html#rule-9-2">Rule 9.2</a></td><td>可读性</td></tr><tr><td><a href="../rules/09-03.html#rule-9-3">Rule 9.3</a></td><td>可读性</td></tr><tr><td><a href="../rules/09-05.html#rule-9-5">Rule 9.5</a></td><td>可读性</td></tr><tr><td><a href="../rules/11-09.html#rule-11-9">Rule 11.9</a></td><td>可读性</td></tr><tr><td><a href="../rules/13-03.html#rule-13-3">Rule 13.3</a></td><td>可读性</td></tr><tr><td><a href="../rules/14-02.html#rule-14-2">Rule 14.2</a></td><td>可读性</td></tr><tr><td><a href="../rules/15-07.html#rule-15-7">Rule 15.7</a></td><td>可读性</td></tr><tr><td><a href="../rules/17-05.html#rule-17-5">Rule 17.5</a></td><td>可读性</td></tr><tr><td><a href="../rules/17-07.html#rule-17-7">Rule 17.7</a></td><td>可读性</td></tr><tr><td><a href="../rules/17-08.html#rule-17-8">Rule 17.8</a></td><td>可读性</td></tr><tr><td><a href="../rules/18-05.html#rule-18-5">Rule 18.5</a></td><td>可读性</td></tr><tr><td><a href="../rules/20-05.html#rule-20-5">Rule 20.5</a></td><td>可读性</td></tr></tbody></table>
+</div><p>这些准则是为开发者和审查人员而设的。</p>
+<p>若在插入的代码中声明了具有内部链接属性的标识符，则在整个翻译单元内，<a href="../rules/05-09.html#rule-5-9">Rule 5.9</a> 应用于该标识符时为建议类。</p>
+<p>若把代码插入自动生成的 <code>for</code> 循环，且不合规是由插入的代码造成的，则就该不合规而言，<a href="../rules/14-02.html#rule-14-2">Rule 14.2</a> 为必需类。</p>
+<h3 id="e-2"><a class="header" href="#e-2">E.2 对自动代码生成工具的文档要求</a></h3>
+<p>自动代码生成工具的开发者必须为本节所列的每一项提供文档。</p>
+<h4 id="e-2-1"><a class="header" href="#e-2-1">E.2.1 实现定义行为与语言扩展</a></h4>
+<p>根据 <a href="../directives/01.html#dir-1-1">Dir 1.1</a>，自动生成代码所依赖的任何实现定义行为，其使用情况都必须形成文档。</p>
+<p>根据 <a href="../rules/01-02.html#rule-1-2">Rule 1.2</a>，自动生成代码对语言扩展的使用，以及用以保证这些扩展得到正确使用的方法，都必须形成文档。</p>
+<p>根据 <a href="../directives/04-02.html#dir-4-2">Dir 4.2</a>，自动生成代码使用汇编语言的情况必须形成文档。</p>
+<h4 id="e-2-2"><a class="header" href="#e-2-2">E.2.2 本质类型模型</a></h4>
+<p>若自动代码生成器不使用本质类型模型，它用来替代该模型的策略必须形成文档。</p>
+<h4 id="e-2-3"><a class="header" href="#e-2-3">E.2.3 运行时错误</a></h4>
+<p>按照 <a href="../directives/04-01.html#dir-4-1">Dir 4.1</a> 的要求，自动代码生成器应选择合适的代码生成策略，尽量降低运行时失效的可能性。若仍可能发生运行时失效，代码生成器所用的错误处理策略必须形成文档。由于很可能需要人工编写的代码来处理错误，错误处理接口也必须作为整体错误处理策略的一部分形成文档。</p>
+</section><aside class="note b12-issues" id="source-note"><strong>译外注 · 源页核对</strong><p>PDF 211：restrict 小节编号为 E.1.4.1，位于 E.1.4 续文与 E.1.5 之间；按底本层级保留。</p></aside><nav class="navline" aria-label="篇目切换"><a href="d.html#annex-d">上一篇：附录 D　本质类型</a><a href="../index.html#b12">返回 B12 目录与搜索</a><a href="f.html#annex-f">下一篇：附录 F　过程与工具检查表</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>

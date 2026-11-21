@@ -1,0 +1,79 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>附录 D　本质类型 · MISRA C:2012 中文学习站</title><link rel="stylesheet" href="../../assets/reader.css"><link rel="stylesheet" href="../../assets/translation.css"><link rel="stylesheet" href="../../assets/b12.css"></head><body><a class="skip" href="#main">跳到正文</a><header><div class="bar"><a class="brand" href="../../index.html"><b>MISRA C:2012</b> / 中文学习站</a><span class="tag">非官方中文译文</span></div></header><main class="wrap trans-page" id="main"><nav class="localnav crumb" aria-label="阅读位置"><a href="../../index.html">首页</a><a href="../index.html#b12">译文目录 · B12</a></nav><p class="eyebrow">B12　/　5 · 7</p><h1 id="annex-d">附录 D　本质类型</h1><p class="muted locator">底本定位 PDF 204–209 ／ 印刷 196–201 · <a href="#source-note">源页说明</a></p><details class="jump"><summary>本页目录</summary><ul><li><a href="#d-1">D.1 表达式的本质类型类别</a></li><li><a href="#d-2">D.2 字符数据的本质类型</a></li><li><a href="#d-3">D.3 最低等级有符号类型和最低等级无符号类型（STLR 与 UTLR）</a></li><li><a href="#d-4">D.4 位域的本质类型</a></li><li><a href="#d-5">D.5 枚举的本质类型</a></li><li><a href="#d-6">D.6 字面常量的本质类型</a></li><li><a href="#d-7">D.7 表达式的本质类型</a></li></ul></details><section class="source-translation b12-text" aria-label="原文译文" aria-labelledby="translation">
+<h2 id="translation"><a class="header" href="#translation">原文译文</a></h2>
+<p>ISO C 标准所定义的 C 语言有若干弱点和不一致之处。不幸的是，表达式的标准类型并不总能充分描述其所表示的数据的本质。例如：</p>
+<ul><li><strong>整数提升。</strong>各种整数类型的行为并不一致。由于整数提升，本来无符号的表达式（如 <code>unsigned char + unsigned char</code>）其标准类型通常是 <code>signed int</code>。</li><li><strong>整数常量。</strong>整数常量只有 <code>int</code>、<code>long</code>、<code>long long</code> 的有符号或无符号类型。这使得保持类型一致更加困难（例如将常量作为函数实参时）。</li><li><strong>字符常量。</strong>字符常量（如 <code>'x'</code>）的标准类型被定义为 <code>int</code>，不是 <code>char</code>。这模糊了字符数据（即“字符”）与数值数据（即“数值”）之间的区别。</li><li><strong>逻辑表达式。</strong>C90 没有布尔类型。C99 引入了 <code>_Bool</code>，但由于向后兼容的原因，相等运算符（<code>==</code>、<code>!=</code>）、关系运算符（<code>&lt;</code>、<code>&lt;=</code>、<code>&gt;=</code>、<code>&gt;</code>）和逻辑运算符（<code>&amp;&amp;</code>、<code>||</code>、<code>!</code>）的结果仍是 <code>int</code> 而非 <code>_Bool</code>。</li><li><strong>位域。</strong>ISO C 没有定义一种位域类型。因此，例如，不可能强制转换到位域类型。ISO C 为位域定义的标准类型是 <code>_Bool</code>、<code>signed int</code> 或 <code>unsigned int</code> 之一。类型写作 <code>int</code> 的位域，其符号性由实现定义。</li><li><strong>枚举。</strong>枚举的类型由实现定义。实现可以自由选用能够表示该枚举的任何整数类型。若枚举包含负值，该类型就是有符号整数类型；若仅含非负值，则既可以是有符号整数类型，也可以是无符号整数类型。</li><li><strong>枚举常量。</strong>无论用什么类型实现枚举，枚举常量始终具有 <code>int</code> 类型。</li></ul>
+<h3 id="d-1"><a class="header" href="#d-1">D.1 表达式的本质类型类别</a></h3>
+<p>为缓解上述问题，MISRA C:2012 引入了本质类型的概念。表达式的本质类型类别是下列之一：</p>
+<ul><li>本质布尔型；</li><li>本质字符型；</li><li>本质枚举型；</li><li>本质有符号型；</li><li>本质无符号型；</li><li>本质浮点型。</li></ul>
+<p>下表给出标准整数类型到本质类型类别的映射。注：C99 实现可以提供扩展整数类型，应按照各自的等级和符号性把它们安排在适当位置（见 C99 §6.3.1.1）。</p>
+<div class="table-scroll" role="region" aria-label="数据表格" tabindex="0"><table id="categories"><caption>本质类型类别</caption><thead><tr><th scope="col">布尔</th><th scope="col">字符</th><th scope="col">有符号</th><th scope="col">无符号</th><th scope="col"><code>enum&lt;i&gt;</code></th><th scope="col">浮点</th></tr></thead><tbody><tr><td><code>_Bool</code></td><td><code>char</code></td><td><code>signed char</code></td><td><code>unsigned char</code></td><td><code>有名枚举</code></td><td><code>float</code></td></tr><tr><td></td><td></td><td><code>signed short</code></td><td><code>unsigned short</code></td><td></td><td><code>double</code></td></tr><tr><td></td><td></td><td><code>signed int</code></td><td><code>unsigned int</code></td><td></td><td><code>long double</code></td></tr><tr><td></td><td></td><td><code>signed long</code></td><td><code>unsigned long</code></td><td></td><td></td></tr><tr><td></td><td></td><td><code>signed long long</code></td><td><code>unsigned long long</code></td><td></td><td></td></tr></tbody></table>
+</div><p>描述有符号和无符号类型集合时，等级的概念尤为重要。有符号和无符号 <code>long long</code> 同处“最高”等级，有符号和无符号 <code>char</code> 同处“最低”等级。在 ISO C99 标准中，“等级”一词仅用于整数类型。</p>
+<p>只有在标准类型为 <code>signed int</code> 或 <code>unsigned int</code> 的表达式中，表达式的本质类型才可能不同于标准 C 类型（标准类型）。</p>
+<p>以下各段规定本质类型与标准类型不同的具体情形。</p>
+<h3 id="d-2"><a class="header" href="#d-2">D.2 字符数据的本质类型</a></h3>
+<p>标准类型为 <code>char</code>（即单字节字符）的对象，具有本质字符类型。</p>
+<h3 id="d-3"><a class="header" href="#d-3">D.3 最低等级有符号类型和最低等级无符号类型（STLR 与 UTLR）</a></h3>
+<p>本质类型模型引入了最低等级有符号类型（STLR）和最低等级无符号类型（UTLR）的概念。这样，整数常量表达式和位域就能以等级低于 <code>int</code> 的本质类型参与表达式。对整数常量表达式而言，这省去了将表达式本身或其操作数强制转换到较低等级类型的麻烦。同样，如果实现不允许位域的类型等级低于 <code>int</code>，也能在某些情况下免去对位域的强制转换。</p>
+<ol class="b12-list"><li value="1">STLR 是能表示给定整数常量表达式的值，或能同时表示给定位域的最大值和最小值的、等级最低的有符号类型。</li><li value="2">UTLR 是能表示给定整数常量表达式的值，或能表示给定位域最大值的、等级最低的无符号类型。</li></ol>
+<h3 id="d-4"><a class="header" href="#d-4">D.4 位域的本质类型</a></h3>
+<p>位域的本质类型由下列从上到下第一项适用的条件确定：</p>
+<ol class="b12-list"><li value="1">若位域以本质布尔类型实现，则为本质布尔型；</li><li value="2">若位域以有符号类型实现，则为能够表示该位域的 STLR；</li><li value="3">若位域以无符号类型实现，则为能够表示该位域的 UTLR。</li></ol>
+<h3 id="d-5"><a class="header" href="#d-5">D.5 枚举的本质类型</a></h3>
+<p>需要区分两种枚举：</p>
+<ol class="b12-list"><li value="1">有名枚举类型：枚举带有标记，或用在任何对象、函数或类型的定义中。</li><li value="2">匿名枚举类型：枚举没有标记，也不用于任何对象、函数或类型的定义。通常用于定义一组常量，这些常量可以相关，也可以互不相关。</li></ol>
+<p>一个有名枚举类型不同于所有其他有名枚举类型，即便在内层作用域中用完全相同的标记和枚举常量声明也不例外。本文档以 <code>enum&lt;i&gt;</code> 表示每个有名枚举类型，不同类型的 <code>i</code> 各不相同。</p>
+<p>用 <code>typedef</code> 为有名枚举类型建立的别名仍表示原来的有名枚举类型，不是新类型。</p>
+<p>匿名枚举类型的本质类型就是它的标准类型。</p>
+<p>以下各项均为有名枚举类型，且其本质类型各不相同：</p>
+<pre><code class="language-c">      enum ETAG { A, B, C };
+typedef enum  { A, B, C } ETYPE;
+typedef enum ETAG { A, B, C } ETYPE;
+      enum    { A, B, C } x;</code></pre>
+<p>以下两个 <code>typedef</code> 都指向同一个 <code>enum&lt;i&gt;</code>：</p>
+<pre><code class="language-c">typedef enum  { A, B, C } ETYPE;
+typedef ETYPE          FTYPE;</code></pre>
+<h3 id="d-6"><a class="header" href="#d-6">D.6 字面常量的本质类型</a></h3>
+<p>ISO C99 标准定义了下列具有整数类型的常量：</p>
+<ul><li>整数常量；</li><li>枚举常量；</li><li>字符常量。</li></ul>
+<p><strong>注：</strong>具有整数类型的常量不一定是整数常量。</p>
+<h4 id="d-sub-7"><a class="header" href="#d-sub-7">整数常量</a></h4>
+<ol class="b12-list"><li value="1">若整数常量的标准类型是 <code>signed int</code>，其本质类型是 STLR；</li><li value="2">若整数常量的标准类型是 <code>unsigned int</code>，其本质类型是 UTLR。</li></ol>
+<h4 id="d-sub-8"><a class="header" href="#d-sub-8">枚举常量</a></h4>
+<p>在 C 中，枚举常量的标准类型始终为 <code>int</code>，无论枚举用什么类型实现，也无论用于定义该常量值的初始化表达式是什么类型。例如，即使用无符号值（如 <code>500U</code>）初始化枚举常量，该常量的标准类型仍视为 <code>signed int</code>。</p>
+<p>枚举常量的本质类型按下列方法确定：</p>
+<ol class="b12-list"><li value="1">若枚举定义了有名枚举类型，则其枚举常量的本质类型为 <code>enum&lt;i&gt;</code>；<ol style="list-style:none;padding-inline-start:1em"><li value="1"><span>1.1</span> 若这个有名枚举类型用于定义本质布尔类型，其枚举常量的本质类型就是本质布尔型。</li></ol></li><li value="2">若枚举定义了匿名枚举类型，则各枚举常量的本质类型为其值的 STLR。</li></ol>
+<p>在下面的例子中，各枚举常量和对象 <code>x</code> 都具有 <code>enum&lt;i&gt;</code> 的本质类型：</p>
+<pre><code class="language-c">enum ETAG { A = 8, B = 64, C = 128 } x;</code></pre>
+<p>以下匿名枚举类型定义了一组常量。每个常量的本质类型为 STLR。因此，在 <code>char</code> 为 8 位、<code>short</code> 为 16 位的机器上，<code>A</code> 和 <code>B</code> 的本质类型是 <code>signed char</code>，而 <code>C</code> 的本质类型是 <code>signed short</code>。</p>
+<pre><code class="language-c">enum { A = 8, B = 64, C = 128 };</code></pre>
+<h4 id="d-sub-9"><a class="header" href="#d-sub-9">字符常量</a></h4>
+<p>字符常量（如 <code>'q'</code>、<code>'xy'</code>）的标准类型是 <code>int</code>，不是 <code>char</code>。</p>
+<ol class="b12-list"><li value="1">若字符常量仅由一个字符组成，其本质类型为 <code>char</code>；</li><li value="2">否则其本质类型与标准类型相同。</li></ol>
+<h4 id="d-sub-10"><a class="header" href="#d-sub-10">布尔常量</a></h4>
+<p>C99 标准没有提供显式定义 <code>_Bool</code> 类型常量的语法。库头文件 <code>&lt;stdbool.h&gt;</code> 使用 <code>int</code> 类型的常量 0 和 1 来定义 <code>false</code> 和 <code>true</code>，但后两者的本质类型为本质布尔型。如果不使用它们，或它们不可用，则可以通过显式强制转换或产生本质布尔值的运算符来声明 <code>_Bool</code> 类型的常量表达式。</p>
+<p>工具还可提供其他识别本质布尔类型的方法。例如，可以配置工具使之识别：</p>
+<pre><code class="language-c">enum Bool {False, True};</code></pre>
+<p>仅当表达式不用于 <code>#if</code> 或 <code>#elif</code> 预处理指令时，才适合使用强制转换定义布尔类型常量表达式（如 <code>(_Bool)0</code>）。在预处理指令中使用强制转换是语法错误。</p>
+<h3 id="d-7"><a class="header" href="#d-7">D.7 表达式的本质类型</a></h3>
+<p>本节未列出的任何表达式，其本质类型都与标准类型相同。</p>
+<h4 id="d-sub-12"><a class="header" href="#d-sub-12">逗号（<code>,</code>）</a></h4>
+<p>结果的本质类型是右操作数的本质类型。</p>
+<h4 id="d-sub-13"><a class="header" href="#d-sub-13">关系（<code>&lt;</code> <code>&lt;=</code> <code>&gt;=</code> <code>&gt;</code>）、相等（<code>==</code> <code>!=</code>）和逻辑（<code>&amp;&amp;</code> <code>||</code> <code>!</code>）</a></h4>
+<p>表达式的结果是本质布尔型。</p>
+<h4 id="d-sub-14"><a class="header" href="#d-sub-14">移位（<code>&lt;&lt;</code> <code>&gt;&gt;</code>）</a></h4>
+<ol class="b12-list"><li value="1">若左操作数为本质无符号型：<ol style="list-style:none;padding-inline-start:1em"><li value="1"><span>1.1</span> 若两个操作数都是整数常量表达式，则结果的本质类型为结果值的 UTLR；</li><li value="2"><span>1.2</span> 否则，结果的本质类型为左操作数的本质类型。</li></ol></li><li value="2">否则，本质类型为标准类型。</li></ol>
+<h4 id="d-sub-15"><a class="header" href="#d-sub-15">按位取反（<code>~</code>）</a></h4>
+<ol class="b12-list"><li value="1">若操作数为本质无符号型：<ol style="list-style:none;padding-inline-start:1em"><li value="1"><span>1.1</span> 若操作数是整数常量表达式，则结果的本质类型为结果值的 UTLR；</li><li value="2"><span>1.2</span> 否则，结果的本质类型为操作数的本质类型。</li></ol></li><li value="2">否则，本质类型为标准类型。</li></ol>
+<h4 id="d-sub-16"><a class="header" href="#d-sub-16">一元正号（<code>+</code>）</a></h4>
+<ol class="b12-list"><li value="1">若操作数为本质有符号型或本质无符号型，则结果的本质类型为操作数的本质类型；</li><li value="2">否则，本质类型为标准类型。</li></ol>
+<h4 id="d-sub-17"><a class="header" href="#d-sub-17">一元负号（<code>-</code>）</a></h4>
+<ol class="b12-list"><li value="1">若操作数为本质有符号型：<ol style="list-style:none;padding-inline-start:1em"><li value="1"><span>1.1</span> 若表达式是整数常量表达式，则结果的本质类型为整个表达式的 STLR；</li><li value="2"><span>1.2</span> 否则，结果的本质类型为操作数的本质类型。</li></ol></li><li value="2">否则，本质类型为标准类型。</li></ol>
+<h4 id="d-sub-18"><a class="header" href="#d-sub-18">条件（<code>?:</code>）</a></h4>
+<ol class="b12-list"><li value="1">若第二、第三操作数的本质类型相同，结果也具有该本质类型；</li><li value="2">否则，若第二、第三操作数都为本质有符号型，结果的本质类型为两者中等级较高者的本质类型；</li><li value="3">否则，若第二、第三操作数都为本质无符号型，结果的本质类型为两者中等级较高者的本质类型；</li><li value="4">否则，本质类型为标准类型。</li></ol>
+<h4 id="d-sub-19"><a class="header" href="#d-sub-19">进行通常算术转换的运算（<code>*</code> <code>/</code> <code>%</code> <code>+</code> <code>-</code> <code>&amp;</code> <code>|</code> <code>^</code>）</a></h4>
+<ol class="b12-list"><li value="1">若两个操作数都为本质有符号型：<ol style="list-style:none;padding-inline-start:1em"><li value="1"><span>1.1</span> 若表达式是整数常量表达式，则结果的本质类型为结果值的 STLR；</li><li value="2"><span>1.2</span> 否则，结果的本质类型为等级较高的操作数的本质类型。</li></ol></li><li value="2">否则，若两个操作数都为本质无符号型：<ol style="list-style:none;padding-inline-start:1em"><li value="1"><span>2.1</span> 若表达式是整数常量表达式，则结果的本质类型为结果值的 UTLR；</li><li value="2"><span>2.2</span> 否则，结果的本质类型为等级较高的操作数的本质类型。</li></ol></li><li value="3">否则，本质类型为标准类型。</li></ol>
+<h4 id="d-sub-20"><a class="header" href="#d-sub-20">与 <code>char</code> 相加</a></h4>
+<ol class="b12-list"><li value="1">若一个操作数为本质字符型，另一个为本质有符号型或本质无符号型，则结果的本质类型为 <code>char</code>；</li><li value="2">否则，本质类型为标准类型。</li></ol>
+<h4 id="d-sub-21"><a class="header" href="#d-sub-21">与 <code>char</code> 相减</a></h4>
+<ol class="b12-list"><li value="1">若第一操作数为本质字符型，第二操作数为本质有符号型或本质无符号型，则结果的本质类型为 <code>char</code>；</li><li value="2">否则，本质类型为标准类型。</li></ol>
+</section><aside class="note b12-issues" id="source-note"><strong>译外注 · 源页核对</strong><p>PDF 205：原文把下表引作“标准整数类型”的映射，但表中也有浮点一列。保留原引语、列名及空格，不据此删列。</p></aside><nav class="navline" aria-label="篇目切换"><a href="c.html#annex-c">上一篇：附录 C　C 的类型安全问题</a><a href="../index.html#b12">返回 B12 目录与搜索</a><a href="e.html#annex-e">下一篇：附录 E　对自动生成代码的适用性</a></nav></main><footer><div class="wrap">英文底本：MISRA C:2012，2013 年 3 月版。原书 © MIRA Limited 2013。本站提供非官方中文译文；自编实验不是标准条文或合规证明。</div></footer></body></html>
