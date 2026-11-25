@@ -1,4 +1,4 @@
-<h1 align="center">MISRA C:2012 中文学习版</h1>
+<h1 align="center">无敌马哥 MISRA C:2012 中文学习版</h1>
 
 <p align="center">16 条指令 · 143 条规则 · 附录 A–J</p>
 
